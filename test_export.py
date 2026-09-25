@@ -1,10 +1,12 @@
 import tempfile
+import pytest
 import pandas as pd
 from openpyxl import load_workbook
 from model import *
 from formula_exporter import export_projection
 
 
+@pytest.mark.parametrize("n", [1, 4, 12])
 def test_n(n):
     sd=empty_direct_start(); sr=empty_reass_start();
     # seed all branches to avoid completely empty output
@@ -17,7 +19,10 @@ def test_n(n):
     out=tempfile.mktemp(suffix='.xlsx')
     export_projection(out,{'cibles_direct':cd,'cibles_reass':cr},d,r,s,diag,apd,apr)
     wb=load_workbook(out,data_only=False)
-    assert wb.sheetnames==['Hyp Direct','Hyp Reass','Cibles','Direct Local','Reass Local','CPC SAZ']
+    assert wb.sheetnames==[
+        'Hyp Direct','Hyp Reass','Cibles','Direct Local','Reass Local',
+        'CPC SAZ Local','Passage IFRS','Direct','Reass','CPC SAZ'
+    ]
     # Detect month blocks by Automobile header.
     for sheet in ['Direct Local','Reass Local']:
         ws=wb[sheet]; starts=[c for c in range(1,ws.max_column+1) if ws.cell(6,c).value=='Automobile']
@@ -35,17 +40,20 @@ def test_n(n):
         assert str(wr.cell(90,rstarts[1]).value).startswith('=')
         assert 'Hyp Direct' in str(wd.cell(7,dstarts[1]).value)
         assert 'Direct Local' in str(wr.cell(7,rstarts[1]).value) and 'Hyp Reass' in str(wr.cell(7,rstarts[1]).value)
-    wc=wb['CPC SAZ']
+    wc=wb['CPC SAZ Local']
     cstarts=[c for c in range(1,wc.max_column+1) if wc.cell(2,c).value=='CONSOLIDATION ']
     assert 'Direct Local' in str(wc.cell(5,cstarts[0]).value)
     assert 'Reass Local' in str(wc.cell(53,cstarts[0]).value)
+    wi=wb['CPC SAZ']
+    assert "'Direct'!" in str(wi.cell(5,cstarts[0]).value)
+    assert "'Reass'!" in str(wi.cell(53,cstarts[0]).value)
     # La feuille Cibles doit être entièrement en français.
     wt=wb['Cibles']
     visible=' '.join(str(wt.cell(r,c).value or '') for r in range(1,min(wt.max_row,250)+1) for c in range(1,min(wt.max_column,20)+1))
     assert 'Cibles optionnelles' in visible and 'Réassurance' in visible and 'Année' in visible and 'Branche' in visible
     assert 'Optional Targets' not in visible and 'Reinsurance' not in visible
-    return out
+    assert out
 
 if __name__=='__main__':
     for n in [1,4,12,18,24,36,48]:
-        f=test_n(n); print('PASS export',n,f)
+        test_n(n); print('PASS export',n)

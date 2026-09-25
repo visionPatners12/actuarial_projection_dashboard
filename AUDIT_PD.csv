@@ -1,0 +1,1028 @@
+onglet,ligne,libelle,categorie_proposee,nature_proposee,premiere_formule_cellule,formule_observee,onglets_references,erreurs_litterales,nombre_formules,statut
+Hyp 2027,1,HYPOTHESES 2027 - seule zone de saisie du modele,À QUALIFIER,En-tête ou autre,B1,=B9+(B9/$J$9)*$M$5,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,2,Bleu = saisie (fichiers M01-M06 et SAZ Marge Tech FORECAST.xlsx) | Noir = formule,À QUALIFIER,En-tête ou autre,B2,=(B12/$J$12)*$L$11+B12,,,9,À valider métier ; formule non reprise automatiquement
+Hyp 2027,3,DIRECT 2026 YTD (fichiers M01-M06),À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,5,Primes emises M01,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,J5,=SUM(B5:I5),,,3,À valider métier ; formule non reprise automatiquement
+Hyp 2027,6,Primes emises M02,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,J6,=SUM(B6:I6),,,10,À valider métier ; formule non reprise automatiquement
+Hyp 2027,7,Primes emises M03,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,E7,=2392440950.21417+1500000000,,,12,À valider métier ; formule non reprise automatiquement
+Hyp 2027,8,Primes emises M04,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C8,=2567548952.1017+200000000,,,12,À valider métier ; formule non reprise automatiquement
+Hyp 2027,9,Primes emises M05,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,E9,=6167562601.13338-700000000,,,13,À valider métier ; formule non reprise automatiquement
+Hyp 2027,10,Primes emises M06,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B10,=4068649041.64682+200000000+200000000,,,13,À valider métier ; formule non reprise automatiquement
+Hyp 2027,11,Primes emises M07,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B11,=4569040691.11808+200000000,,,12,À valider métier ; formule non reprise automatiquement
+Hyp 2027,12,Primes emises M08 (2025),PROJECTION TEMPORELLE,Flux ou stock selon la ligne,J12,=SUM(B12:I12),,,10,À valider métier ; formule non reprise automatiquement
+Hyp 2027,13,Primes emises M09,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,J13,=SUM(B13:I13),,,10,À valider métier ; formule non reprise automatiquement
+Hyp 2027,14,Primes emises M10,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,J14,=SUM(B14:I14),,,10,À valider métier ; formule non reprise automatiquement
+Hyp 2027,15,Primes emises M11,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,J15,=SUM(B15:I15),,,10,À valider métier ; formule non reprise automatiquement
+Hyp 2027,16,Primes emises M12,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,J16,=SUM(B16:I16),,,10,À valider métier ; formule non reprise automatiquement
+Hyp 2027,17,(sans libellé),À QUALIFIER,En-tête ou autre,L17,=K17-J17,,,1,À valider métier ; formule non reprise automatiquement
+Hyp 2027,19,Sinistres payes Per. M01,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,20,Sinistres payes Per. M02,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,21,Sinistres payes Per. M03,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,22,Sinistres payes Per. M04,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,23,Sinistres payes Per. M05,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,24,Sinistres payes Per. M06,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,25,Sinistres payes Per. M07,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,26,Sinistres payes Per. M08 (2025),PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,27,Sinistres payes Per. M09,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,28,Sinistres payes Per. M10,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,29,Sinistres payes Per. M11,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,30,Sinistres payes Per. M12,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,32,Sinistres payes Ant. M01,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,33,Sinistres payes Ant. M02,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,34,Sinistres payes Ant. M03,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,35,Sinistres payes Ant. M04,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,36,Sinistres payes Ant. M05,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,37,Sinistres payes Ant. M06,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,38,Sinistres payes Ant. M07,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,39,Sinistres payes Ant. M08 (2025),PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,40,Sinistres payes Ant. M09,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,41,Sinistres payes Ant. M10,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,42,Sinistres payes Ant. M11,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,43,Sinistres payes Ant. M12,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,45,Commissions M01,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,46,Commissions M02,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,47,Commissions M03,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,48,Commissions M04,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,49,Commissions M05,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,50,Commissions M06,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,51,Commissions M07,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,52,Commissions M08 (2025),PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,53,Commissions M09,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,54,Commissions M10,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,55,Commissions M11,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,56,Commissions M12,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,58,REC Cloture M01,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,59,REC Cloture M02,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,60,REC Cloture M03,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,61,REC Cloture M04,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,62,REC Cloture M05,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,63,REC Cloture M06,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,65,Variation REC  M01,IDENTITÉ COMPTABLE,Calcul,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,66,Variation REC  M02,IDENTITÉ COMPTABLE,Calcul,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,67,Variation REC  M03,IDENTITÉ COMPTABLE,Calcul,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,68,Variation REC  M04,IDENTITÉ COMPTABLE,Calcul,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,69,Variation REC  M05,IDENTITÉ COMPTABLE,Calcul,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,70,Variation REC  M06,IDENTITÉ COMPTABLE,Calcul,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,71,Variation REC  M07,IDENTITÉ COMPTABLE,Calcul,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,72,Variation REC  M08 (2025),IDENTITÉ COMPTABLE,Calcul,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,73,Variation REC  M09,IDENTITÉ COMPTABLE,Calcul,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,74,Variation REC  M10,IDENTITÉ COMPTABLE,Calcul,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,75,Variation REC  M11,IDENTITÉ COMPTABLE,Calcul,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,76,Variation REC  M12,IDENTITÉ COMPTABLE,Calcul,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,78,REASS 2026 YTD (fichiers M01-M06),À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,79,Primes cedees M01,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,80,Primes cedees M02,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,81,Primes cedees M03,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,82,Primes cedees M04,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,83,Primes cedees M05,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,84,Primes cedees M06,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,85,Primes cedees M07,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,86,Primes cedees M08 (2025),PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,87,Primes cedees M09,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,88,Primes cedees M10,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,B88,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,89,Primes cedees M11,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,90,Primes cedees M12,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,92,Sinistres payes Per. M01,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,93,Sinistres payes Per. M02,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,94,Sinistres payes Per. M03,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,95,Sinistres payes Per. M04,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,96,Sinistres payes Per. M05,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,97,Sinistres payes Per. M06,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,98,Sinistres payes Per. M07,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,99,Sinistres payes Per. M08 (2025),PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,100,Sinistres payes Per. M09,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,101,Sinistres payes Per. M10,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,102,Sinistres payes Per. M11,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,103,Sinistres payes Per. M12,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,105,Sinistres payes Ant. M01,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,106,Sinistres payes Ant. M02,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,107,Sinistres payes Ant. M03,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,108,Sinistres payes Ant. M04,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,109,Sinistres payes Ant. M05,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,110,Sinistres payes Ant. M06,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,111,Sinistres payes Ant. M07,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,112,Sinistres payes Ant. M08 (2025),PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,113,Sinistres payes Ant. M09,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,114,Sinistres payes Ant. M10,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,115,Sinistres payes Ant. M11,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,116,Sinistres payes Ant. M12,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,118,Commissions recues M01,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,119,Commissions recues M02,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,120,Commissions recues M03,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,121,Commissions recues M04,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,122,Commissions recues M05,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,123,Commissions recues M06,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,124,Commissions recues M07,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,125,Commissions recues M08 (2025),PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,126,Commissions recues M09,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,127,Commissions recues M10,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,128,Commissions recues M11,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,129,Commissions recues M12,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,131,REC Cloture M01,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,132,REC Cloture M02,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,133,REC Cloture M03,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,134,REC Cloture M04,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,135,REC Cloture M05,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,136,REC Cloture M06,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,137,REC Cloture M07,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,138,REC Cloture M08,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,139,REC Cloture M09,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,140,REC Cloture M10,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,141,REC Cloture M11,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,142,REC Cloture M12,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,146,2026 FY / CIBLE 2027 par LoB (SAZ Marge Tech FORECAST.xlsx - CPC SAZ Local),À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,147,Primes 2026 FY,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,J147,=SUM(B147:I147),,,1,À valider métier ; formule non reprise automatiquement
+Hyp 2027,148,Primes 2027 cible,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,J148,=SUM(B148:I148),,,1,À valider métier ; formule non reprise automatiquement
+Hyp 2027,149,Sinistres payés Per. 2026 FY,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,150,Sinistres payés Per. 2027 cible,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,151,Sinistres payés Ant.2026 FY,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,152,Sinistres payés Ant. 2027 cible,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,153,Commissions 2026 FY,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,154,Commissions 2027 cible,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,156,REASS Primes cedees 2026 FY,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,157,REASS Primes cedees 2027 cible,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,158,REASS Sin. exercice 2026 FY,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,159,REASS Sin. exercice 2027 cible,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,160,REASS Sin. anterieurs 2026 FY,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,161,REASS Sin. anterieurs 2027 cible,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,162,REASS Commissions 2026 FY,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,163,REASS Commissions 2027 cible,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,165,MULTIPLICATEURS k = cible 2027 / 2026 FY (par LoB),TAUX × BASE,Ratio,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,166,k Primes,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B166,=B148/B147,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,167,k Sin. Per.,À QUALIFIER,En-tête ou autre,B167,"=IFERROR(B150/B149,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,168,k Sin. Ant.,À QUALIFIER,En-tête ou autre,B168,"=IFERROR(B152/B151,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,169,taux commission,TAUX × BASE,Ratio,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,171,REASS k Primes,TAUX × BASE,Ratio,B171,=B157/B156,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,172,REASS k Sin. Per.,TAUX × BASE,Ratio,B172,"=IFERROR(B159/B158,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,173,REASS k Sin. Ant.,TAUX × BASE,Ratio,B173,"=IFERROR(B161/B160,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,174,REASS taux commission 2026,TAUX × BASE,Ratio,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,176,"REC CLOTURE 2026 FY par branche (ancrage de l ouverture, fige toute l annee)",FIXE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,177,Direct REC cloture 2026 FY,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,178,Reass REC cloture 2026 FY,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,179,Direct REC cloture 2027 FY,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,180,Reass REC cloture 2027 FY,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,182,2025 RE/ CIBLE 2027 par LoB (SAZ Marge Tech FORECAST.xlsx - CPC SAZ Local),À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,183,Primes 2025 FY,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,184,Primes 2027 cible,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,185,Sinistres payés Per. 2025 FY,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,186,Sinistres payés Per. 2027 cible,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,187,Sinistres payés Ant.2025 FY,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,188,Sinistres payés Ant. 2027 cible,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,189,Commissions 2025 FY,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,190,Commissions 2027 cible,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,192,REASS Primes cedees 2025 FY,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,193,REASS Primes cedees 2027 cible,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,194,REASS Sin. exercice 2025 FY,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,195,REASS Sin. exercice 2027 cible,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,196,REASS Sin. anterieurs 2025 FY,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,197,REASS Sin. anterieurs 2027 cible,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,198,REASS Commissions 2025 FY,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,199,REASS Commissions 2027 cible,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,201,MULTIPLICATEURS k = cible 2027 / 2025 FY (par LoB),TAUX × BASE,Ratio,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,202,k Primes,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B202,=B184/B183,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,203,k Sin. Per.,À QUALIFIER,En-tête ou autre,B203,"=IFERROR(B186/B185,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,204,k Sin. Ant.,À QUALIFIER,En-tête ou autre,B204,"=IFERROR(B188/B187,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,205,taux commission 2026,TAUX × BASE,Ratio,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,206,M01,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,207,M02,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,208,M03,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,209,M04,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,210,M05,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,211,M06,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,212,M07,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,213,M08,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,214,M09,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,215,M10,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,216,M11,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,217,M12,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,219,REASS k Primes,TAUX × BASE,Ratio,B219,=B193/B192,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,220,REASS k Sin. Per.,TAUX × BASE,Ratio,B220,"=IFERROR(B195/B194,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,221,REASS k Sin. Ant.,TAUX × BASE,Ratio,B221,"=IFERROR(B197/B196,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,222,REASS taux commission 2026,TAUX × BASE,Ratio,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,224,"REC CLOTURE 2026 FY par branche (ancrage de l ouverture, fige toute l annee)",FIXE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,225,Direct REC cloture 2026 FY,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,226,Reass REC cloture 2026 FY,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,227,Direct REC cloture 2027 FY,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,228,Reass REC cloture 2027 FY,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,230,TAUX REC 2026 = REC Cloture(m) / Primes YTD(m),TAUX × BASE,Ratio,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,231,Direct taux REC M01,TAUX × BASE,Ratio,B231,"=IFERROR(B58/B177,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,232,Direct taux REC M02,TAUX × BASE,Ratio,B232,"=IFERROR(B59/B6,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,233,Direct taux REC M03,TAUX × BASE,Ratio,B233,"=IFERROR(B60/B7,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,234,Direct taux REC M04,TAUX × BASE,Ratio,B234,"=IFERROR(B61/B8,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,235,Direct taux REC M05,TAUX × BASE,Ratio,B235,"=IFERROR(B62/B9,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,236,Direct taux REC M06,TAUX × BASE,Ratio,B236,"=IFERROR(B63/B10,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,238,Reass taux REC M01,TAUX × BASE,Ratio,B238,"=IFERROR(B131/B79,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,239,Reass taux REC M02,TAUX × BASE,Ratio,B239,"=IFERROR(B132/B80,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,240,Reass taux REC M03,TAUX × BASE,Ratio,B240,"=IFERROR(B133/B81,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,241,Reass taux REC M04,TAUX × BASE,Ratio,B241,"=IFERROR(B134/B82,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,242,Reass taux REC M05,TAUX × BASE,Ratio,B242,"=IFERROR(B135/B83,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,243,Reass taux REC M06,TAUX × BASE,Ratio,B243,"=IFERROR(B136/B84,0)",,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,245,MULTIPLICATEURS eclates par branche (pointent sur la LoB correspondante),TAUX × BASE,Ratio,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,246,k Primes,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B246,=C166,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,247,k Sin. Per.,À QUALIFIER,En-tête ou autre,B247,=C167,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,248,k Sin. Ant.,À QUALIFIER,En-tête ou autre,B248,=C168,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,249,taux commission,TAUX × BASE,Ratio,B249,=C169,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,251,REASS k Primes,TAUX × BASE,Ratio,B251,=C171,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,252,REASS k Sin. Per.,TAUX × BASE,Ratio,B252,=C172,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,253,REASS k Sin. Ant.,TAUX × BASE,Ratio,B253,=C173,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,254,REASS taux commission,TAUX × BASE,Ratio,B254,=C174,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,259,(sans libellé),À QUALIFIER,En-tête ou autre,J259,=SUM(B259:I259),,,1,À valider métier ; formule non reprise automatiquement
+Hyp 2027,260,(sans libellé),À QUALIFIER,En-tête ou autre,J260,=SUM(B260:I260),,,1,À valider métier ; formule non reprise automatiquement
+Hyp 2027,261,(sans libellé),À QUALIFIER,En-tête ou autre,J261,=SUM(B261:I261),,,1,À valider métier ; formule non reprise automatiquement
+Hyp 2027,262,(sans libellé),À QUALIFIER,En-tête ou autre,J262,=SUM(B262:I262),,,1,À valider métier ; formule non reprise automatiquement
+Hyp 2027,263,(sans libellé),À QUALIFIER,En-tête ou autre,B263,=SUM(B259:B262),,,9,À valider métier ; formule non reprise automatiquement
+Hyp 2027,264,(sans libellé),À QUALIFIER,En-tête ou autre,B264,=B263/12,,,9,À valider métier ; formule non reprise automatiquement
+Hyp 2027,265,(sans libellé),À QUALIFIER,En-tête ou autre,B265,=B263/12,,,9,À valider métier ; formule non reprise automatiquement
+Hyp 2027,266,(sans libellé),À QUALIFIER,En-tête ou autre,B266,=1/12,,,1,À valider métier ; formule non reprise automatiquement
+Hyp 2027,268,Delta Prime emise Aout - Decembre,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B268,=(-'Direct Local'!BU7+'Hyp 2027'!B148)/5,"Direct Local, Hyp 2027",,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,272,Rec,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,273,(sans libellé),À QUALIFIER,En-tête ou autre,B273,=B272/12,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,276,(sans libellé),À QUALIFIER,En-tête ou autre,B276,=(B6-B5)*B$166,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,277,(sans libellé),À QUALIFIER,En-tête ou autre,B277,=(B7-B6)*B$166,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,278,(sans libellé),À QUALIFIER,En-tête ou autre,B278,=(B8-B7)*B$166,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,279,(sans libellé),À QUALIFIER,En-tête ou autre,B279,=(B9-B8)*B$166,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,280,(sans libellé),À QUALIFIER,En-tête ou autre,B280,=(B10-B9)*B$166,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,281,(sans libellé),À QUALIFIER,En-tête ou autre,B281,=(B11-B10)*B$166,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,282,(sans libellé),À QUALIFIER,En-tête ou autre,B282,=(B$184-B$11)/5,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,283,(sans libellé),À QUALIFIER,En-tête ou autre,B283,=(B$184-B$11)/5,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,284,(sans libellé),À QUALIFIER,En-tête ou autre,B284,=(B$184-B$11)/5,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,285,(sans libellé),À QUALIFIER,En-tête ou autre,B285,=(B$184-B$11)/5,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,286,(sans libellé),À QUALIFIER,En-tête ou autre,B286,=(B$184-B$11)/5,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,289,Delta Prime cédé Aout - Decembre,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B289,=(B157-'Reass Local'!BV7)/5,Reass Local,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,294,(sans libellé),À QUALIFIER,En-tête ou autre,B294,=SUM(B290:B293),,,9,À valider métier ; formule non reprise automatiquement
+Hyp 2027,295,(sans libellé),À QUALIFIER,En-tête ou autre,B295,=B294/12,,,9,À valider métier ; formule non reprise automatiquement
+Hyp 2027,299,(sans libellé),À QUALIFIER,En-tête ou autre,B299,=(B80-B79)*B$171,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,300,(sans libellé),À QUALIFIER,En-tête ou autre,B300,=(B81-B80)*B$171,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,301,(sans libellé),À QUALIFIER,En-tête ou autre,B301,=(B82-B81)*B$171,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,302,(sans libellé),À QUALIFIER,En-tête ou autre,B302,=(B83-B82)*B$171,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,303,(sans libellé),À QUALIFIER,En-tête ou autre,B303,=(B84-B83)*B$171,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,304,(sans libellé),À QUALIFIER,En-tête ou autre,B304,=(B85-B84)*B$171,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,305,(sans libellé),À QUALIFIER,En-tête ou autre,B305,='Reass Local'!CT7-'Reass Local'!CH7,Reass Local,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,306,(sans libellé),À QUALIFIER,En-tête ou autre,B306,=B$289,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,307,(sans libellé),À QUALIFIER,En-tête ou autre,B307,=B$289,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,308,(sans libellé),À QUALIFIER,En-tête ou autre,B308,=B$289,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,309,(sans libellé),À QUALIFIER,En-tête ou autre,B309,=B$289,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,310,(sans libellé),À QUALIFIER,En-tête ou autre,B310,=B$289,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,313,Taux Prime Emise /REC Cloture,TAUX × BASE,Ratio,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,314,(sans libellé),À QUALIFIER,En-tête ou autre,B314,=(B313-B321)/5,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,315,M01 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,316,M02 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,317,M03 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,318,M04 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,319,M05 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,320,M06 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,321,M07 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,322,M08 2026,À QUALIFIER,En-tête ou autre,B322,=B$321+B314,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,323,M09 2026,À QUALIFIER,En-tête ou autre,B323,=B322+B$314,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,324,M10 2026,À QUALIFIER,En-tête ou autre,B324,=B323+B$314,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,325,M11 2026,À QUALIFIER,En-tête ou autre,B325,=B324+B$314,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,326,M12 2026,À QUALIFIER,En-tête ou autre,B326,=B325+B$314,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,330,Taux Prime Cédée/REC Cloture  Reass,TAUX × BASE,Ratio,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,331,(sans libellé),À QUALIFIER,En-tête ou autre,B331,=(B343-B338)/5,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,332,M01 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,333,M02 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,334,M03 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,335,M04 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,336,M05 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,337,M06 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,338,M07 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,339,M08 2026,À QUALIFIER,En-tête ou autre,B339,=B338+B$331,,,7,À valider métier ; formule non reprise automatiquement
+Hyp 2027,340,M09 2026,À QUALIFIER,En-tête ou autre,B340,=B339+B$331,,,7,À valider métier ; formule non reprise automatiquement
+Hyp 2027,341,M10 2026,À QUALIFIER,En-tête ou autre,B341,=B340+B$331,,,7,À valider métier ; formule non reprise automatiquement
+Hyp 2027,342,M11 2026,À QUALIFIER,En-tête ou autre,B342,=B341+B$331,,,7,À valider métier ; formule non reprise automatiquement
+Hyp 2027,343,M12 2026,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,345,(sans libellé),À QUALIFIER,En-tête ou autre,B345,=(B358-B353)/5,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,347,M01,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,348,M02,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,349,M03,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,350,M04,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,351,M05,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,352,M06,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,353,M07,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,354,M08,À QUALIFIER,En-tête ou autre,B354,=B353+B$345,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,355,M09,À QUALIFIER,En-tête ou autre,B355,=B354+B$345,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,356,M10,À QUALIFIER,En-tête ou autre,B356,=B355+B$345,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,357,M11,À QUALIFIER,En-tête ou autre,B357,=B356+B$345,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,358,M12,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,362,Taux Variation de REC100%/ Prime Cédée 2027,TAUX × BASE,Ratio,,,,,0,À valider métier ; formule non reprise automatiquement
+Hyp 2027,371,(sans libellé),À QUALIFIER,En-tête ou autre,B371,=SUM(B367:B370),,,9,À valider métier ; formule non reprise automatiquement
+Hyp 2027,372,(sans libellé),À QUALIFIER,En-tête ou autre,B372,=B371/12,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,374,M01,À QUALIFIER,En-tête ou autre,B374,=B$372,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,375,M02,À QUALIFIER,En-tête ou autre,B375,=B$372,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,376,M03,À QUALIFIER,En-tête ou autre,B376,=B$372+50000000,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,377,M04,À QUALIFIER,En-tête ou autre,B377,=B$372,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,378,M05,À QUALIFIER,En-tête ou autre,B378,=B$372,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,379,M06,À QUALIFIER,En-tête ou autre,B379,=B$372,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,380,M07,À QUALIFIER,En-tête ou autre,B380,=B$372,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,381,M08,À QUALIFIER,En-tête ou autre,B381,=B$372,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,382,M09,À QUALIFIER,En-tête ou autre,B382,=B$372,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,383,M10,À QUALIFIER,En-tête ou autre,B383,=B$372,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,384,M11,À QUALIFIER,En-tête ou autre,B384,=B$372,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,385,M12,À QUALIFIER,En-tête ou autre,B385,=B$372,,,8,À valider métier ; formule non reprise automatiquement
+Hyp 2027,390,Taux IBNR Direct-IFRS,TAUX × BASE,Ratio,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct Local,1,(sans libellé),À QUALIFIER,En-tête ou autre,A1,=87%,,,1,À valider métier ; formule non reprise automatiquement
+Direct Local,2,(sans libellé),À QUALIFIER,En-tête ou autre,EJ2,=43550000/12,,,2,À valider métier ; formule non reprise automatiquement
+Direct Local,4,Local GAAP,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct Local,5,F CFA,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct Local,7,Primes Emises,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B7,='Hyp 2027'!B5*'Hyp 2027'!B166,Hyp 2027,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,8,PAP Ouverture,FIXE,Stock,J8,=SUM(D8:I8),,,112,À valider métier ; formule non reprise automatiquement
+Direct Local,9,PAP Clôture,PROJECTION TEMPORELLE,Stock,J9,=SUM(D9:I9),,,112,À valider métier ; formule non reprise automatiquement
+Direct Local,10,PANE Ouverture,FIXE,Stock,J10,=SUM(D10:I10),,,117,À valider métier ; formule non reprise automatiquement
+Direct Local,11,PANE Clôture,PROJECTION TEMPORELLE,Stock,B11,=B10,,,117,À valider métier ; formule non reprise automatiquement
+Direct Local,12,Chiffre d'Affaire,IDENTITÉ COMPTABLE,Calcul,B12,=B7-B8+B9-B10+B11,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,14,Sinistres payés Per.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B14,='Hyp 2027'!B264,Hyp 2027,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,15,Sinistres payés Ant.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,J15,=SUM(D15:I15),,,72,À valider métier ; formule non reprise automatiquement
+Direct Local,16,Sinistres Payés net des recours,IDENTITÉ COMPTABLE,Calcul,B16,=B14+B15,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,18,Commisions,À QUALIFIER,En-tête ou autre,B18,=B7*'Hyp 2027'!B206,Hyp 2027,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,20,REC Ouverture,FIXE,Stock,B20,='Hyp 2027'!B$177,Hyp 2027,,125,À valider métier ; formule non reprise automatiquement
+Direct Local,21,REC Clôture,PROJECTION TEMPORELLE,Stock,B21,=B7*'Hyp 2027'!B315,Hyp 2027,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,22,Variation de REC CIMA 72%,IDENTITÉ COMPTABLE,Calcul,B22,=B21-B20,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,24,REC Ouverture,FIXE,Stock,B24,=B20/0.72,,,125,À valider métier ; formule non reprise automatiquement
+Direct Local,25,REC Clôture,PROJECTION TEMPORELLE,Stock,B25,=B21/0.72,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,26,Variation de REC prorata,IDENTITÉ COMPTABLE,Calcul,B26,=B25-B24,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,28,DAC Ouv,FIXE,Stock,J28,=SUM(D28:I28),,,24,À valider métier ; formule non reprise automatiquement
+Direct Local,29,DAC Clo,PROJECTION TEMPORELLE,Stock,J29,=SUM(D29:I29),,,24,À valider métier ; formule non reprise automatiquement
+Direct Local,30,Var DAC,IDENTITÉ COMPTABLE,Calcul,B30,=B28-B29,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,32,REC Ouverture,FIXE,Stock,B32,=B24-B20,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,33,REC Clôture,PROJECTION TEMPORELLE,Stock,B33,=B25-B21,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,34,Variation des FAR 28%,IDENTITÉ COMPTABLE,Calcul,B34,=B33-B32,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,36,IBNR Ouverture,FIXE,Stock,J36,=SUM(D36:I36),,,117,À valider métier ; formule non reprise automatiquement
+Direct Local,37,IBNR Clôture,VARIABLE ACTUARIELLE,Stock ou mouvement,B37,=B36,,,125,À valider métier ; formule non reprise automatiquement
+Direct Local,38,Variation de IBNR CIMA,IDENTITÉ COMPTABLE,Calcul,B38,=B37-B36,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,41,IBNR BE Per.,VARIABLE ACTUARIELLE,Stock ou mouvement,J41,=SUM(D41:I41),,,24,À valider métier ; formule non reprise automatiquement
+Direct Local,42,IBNR BE Ant.,VARIABLE ACTUARIELLE,Stock ou mouvement,J42,=SUM(D42:I42),,,24,À valider métier ; formule non reprise automatiquement
+Direct Local,43,Variation de IBNR BE,IDENTITÉ COMPTABLE,Calcul,B43,=B42-B41,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,45,SAP hors chargement Per.,VARIABLE ACTUARIELLE,Stock ou mouvement,J45,=SUM(D45:I45),,,112,À valider métier ; formule non reprise automatiquement
+Direct Local,46,SAP hors chargement Ant.,VARIABLE ACTUARIELLE,Stock ou mouvement,B46,=7522931981.67789+2357994271.90149,,,118,À valider métier ; formule non reprise automatiquement
+Direct Local,47,Recours Per.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,J47,=SUM(D47:I47),,,117,À valider métier ; formule non reprise automatiquement
+Direct Local,48,Recours Per.Anté,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,J48,=SUM(D48:I48),,,117,À valider métier ; formule non reprise automatiquement
+Direct Local,49,SAP net de recours hors chargement,IDENTITÉ COMPTABLE,Calcul,B49,=(B46-B47*0)+(B45-B48*0),,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,51,Chargement de Gestion IBNR et SAP,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct Local,52,IBNR ouverture,FIXE,Stock,B52,=B36*1.05-B36,,,125,À valider métier ; formule non reprise automatiquement
+Direct Local,53,IBNR cloture,VARIABLE ACTUARIELLE,Stock ou mouvement,B53,=B37*1.05-B37,,,125,À valider métier ; formule non reprise automatiquement
+Direct Local,54,SAP exercice courant,VARIABLE ACTUARIELLE,Stock ou mouvement,B54,=B45*0.05,,,125,À valider métier ; formule non reprise automatiquement
+Direct Local,55,SAP exercices antérieurs,VARIABLE ACTUARIELLE,Stock ou mouvement,B55,=B46*0.05,,,125,À valider métier ; formule non reprise automatiquement
+Direct Local,57,IBNR BE,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct Local,58,Ouverture,FIXE,Stock,J58,=SUM(D58:I58),,,24,À valider métier ; formule non reprise automatiquement
+Direct Local,59,Clôture Per.,PROJECTION TEMPORELLE,Stock,B59,=B41,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,60,Clôture Ant.,PROJECTION TEMPORELLE,Stock,B60,=B42,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,61,Variation Per.,IDENTITÉ COMPTABLE,Calcul,B61,=B59,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,62,Variation Ant.,IDENTITÉ COMPTABLE,Calcul,B62,=B60-B58,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,64,SAP hors chargement,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct Local,65,Ouverture,FIXE,Stock,J65,=SUM(D65:I65),,,117,À valider métier ; formule non reprise automatiquement
+Direct Local,66,Clôture Per.,PROJECTION TEMPORELLE,Stock,B66,=B45-B47*0,,,125,À valider métier ; formule non reprise automatiquement
+Direct Local,67,Clôture Ant.,PROJECTION TEMPORELLE,Stock,B67,=B46-B48*0,,,125,À valider métier ; formule non reprise automatiquement
+Direct Local,68,Variation Per.,IDENTITÉ COMPTABLE,Calcul,B68,=B66,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,69,Variation Ant.,IDENTITÉ COMPTABLE,Calcul,B69,=B67-B65,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,71,SAP hors chargement,VARIABLE ACTUARIELLE,Stock ou mouvement,M71,=M66+M67,,,8,À valider métier ; formule non reprise automatiquement
+Direct Local,72,ULAE Ouverture,FIXE,Stock,J72,=SUM(D72:I72),,,24,À valider métier ; formule non reprise automatiquement
+Direct Local,73,ULAE Clôture,PROJECTION TEMPORELLE,Stock,B73,=B57,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,74,Variation Per.,IDENTITÉ COMPTABLE,Calcul,B74,=B73-B72,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,75,Chargement SAP,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct Local,76,Ouverture,FIXE,Stock,J76,=SUM(D76:I76),,,117,À valider métier ; formule non reprise automatiquement
+Direct Local,77,Clôture Per.,PROJECTION TEMPORELLE,Stock,B77,=B45*0.05,,,125,À valider métier ; formule non reprise automatiquement
+Direct Local,78,Clôture Ant.,PROJECTION TEMPORELLE,Stock,B78,=B46*0.05,,,125,À valider métier ; formule non reprise automatiquement
+Direct Local,79,Variation chargement Per.,IDENTITÉ COMPTABLE,Calcul,B79,=B77,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,80,Variation chargement Ant.,IDENTITÉ COMPTABLE,Calcul,B80,=B78-B76,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,81,(sans libellé),À QUALIFIER,En-tête ou autre,K81,=K69+K80,,,11,À valider métier ; formule non reprise automatiquement
+Direct Local,82,Chargement SAP,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct Local,83,Ouverture,FIXE,Stock,B83,=+B72*0.05,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,84,Clôture Per.,PROJECTION TEMPORELLE,Stock,B84,=B52*0.05,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,85,Clôture Ant.,PROJECTION TEMPORELLE,Stock,B85,=B53*0.05,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,86,Variation chargement Per.,IDENTITÉ COMPTABLE,Calcul,B86,=B84,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,87,Variation chargement Ant.,IDENTITÉ COMPTABLE,Calcul,B87,=B85-B83,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,89,Variation chargement Per.(SAP+IBNR),IDENTITÉ COMPTABLE,Calcul,B89,=B79+B52,,,33,À valider métier ; formule non reprise automatiquement
+Direct Local,90,Variation chargement Ant.(SAP+IBNR),IDENTITÉ COMPTABLE,Calcul,J90,=SUM(D90:I90),,,24,À valider métier ; formule non reprise automatiquement
+Direct Local,91,(sans libellé),À QUALIFIER,En-tête ou autre,B91,=B45-B89,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,92,(sans libellé),À QUALIFIER,En-tête ou autre,M92,=(M11-M91)/M91,,,8,À valider métier ; formule non reprise automatiquement
+Direct Local,93,Contrôle,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct Local,96,(sans libellé),À QUALIFIER,En-tête ou autre,B96,=B24-B20,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,97,(sans libellé),À QUALIFIER,En-tête ou autre,B97,=B25-B21,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,98,(sans libellé),À QUALIFIER,En-tête ou autre,B98,=B97-B96,,,120,À valider métier ; formule non reprise automatiquement
+Direct Local,101,(sans libellé),À QUALIFIER,En-tête ou autre,E101,=C101-D101,,"N101, O101",12,À valider métier ; formule non reprise automatiquement
+Direct Local,102,(sans libellé),À QUALIFIER,En-tête ou autre,E102,=C102-D102,,"N102, O102",12,À valider métier ; formule non reprise automatiquement
+Direct Local,103,(sans libellé),À QUALIFIER,En-tête ou autre,C103,=C101-C102,,,36,À valider métier ; formule non reprise automatiquement
+Direct Local,105,(sans libellé),À QUALIFIER,En-tête ou autre,D105,=C103-D103,,,12,À valider métier ; formule non reprise automatiquement
+Direct Local,109,DAC OUV REC 100%,FIXE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct Local,110,DAC CLO REC 100%,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct Local,117,(sans libellé),À QUALIFIER,En-tête ou autre,M117,=M116/12,,,20,À valider métier ; formule non reprise automatiquement
+Direct Local,118,(sans libellé),À QUALIFIER,En-tête ou autre,B118,=B117/12,,,20,À valider métier ; formule non reprise automatiquement
+Direct Local,119,(sans libellé),À QUALIFIER,En-tête ou autre,EC119,=1-(EC117-EC118),,,10,À valider métier ; formule non reprise automatiquement
+Direct Local,120,(sans libellé),À QUALIFIER,En-tête ou autre,EL120,=EL21*EL119,,,1,À valider métier ; formule non reprise automatiquement
+Direct Local,127,(sans libellé),À QUALIFIER,En-tête ou autre,,,,"D127, E127, F127, G127, H127, I127, O127, P127, Q127, R127, S127, T127",0,À valider métier ; formule non reprise automatiquement
+Direct Local,163,(sans libellé),À QUALIFIER,En-tête ou autre,C163,=C157-C162,,,7,À valider métier ; formule non reprise automatiquement
+Direct Local,168,(sans libellé),À QUALIFIER,En-tête ou autre,O168,=O176-O179,,,6,À valider métier ; formule non reprise automatiquement
+Direct Local,169,(sans libellé),À QUALIFIER,En-tête ou autre,C169,=C159-C163,,,7,À valider métier ; formule non reprise automatiquement
+Direct Local,179,(sans libellé),À QUALIFIER,En-tête ou autre,N179,=SUM(O179:T179),,,1,À valider métier ; formule non reprise automatiquement
+Direct Local,180,(sans libellé),À QUALIFIER,En-tête ou autre,N180,=SUM(O180:T180),,,7,À valider métier ; formule non reprise automatiquement
+Direct Local,181,(sans libellé),À QUALIFIER,En-tête ou autre,N181,=SUM(O181:T181),,,1,À valider métier ; formule non reprise automatiquement
+Direct Local,182,(sans libellé),À QUALIFIER,En-tête ou autre,N182,=SUM(O182:T182),,,1,À valider métier ; formule non reprise automatiquement
+Direct Local,183,(sans libellé),À QUALIFIER,En-tête ou autre,N183,=SUM(O183:T183),,,1,À valider métier ; formule non reprise automatiquement
+Direct Local,184,(sans libellé),À QUALIFIER,En-tête ou autre,N184,=SUM(O184:T184),,,1,À valider métier ; formule non reprise automatiquement
+Direct Local,185,(sans libellé),À QUALIFIER,En-tête ou autre,N185,=SUM(O185:T185),,,1,À valider métier ; formule non reprise automatiquement
+Direct Local,186,(sans libellé),À QUALIFIER,En-tête ou autre,D186,=D181/$Q$180,,,10,À valider métier ; formule non reprise automatiquement
+Direct Local,187,(sans libellé),À QUALIFIER,En-tête ou autre,N187,=SUM(O187:T187),,,1,À valider métier ; formule non reprise automatiquement
+Direct Local,188,(sans libellé),À QUALIFIER,En-tête ou autre,N188,=SUM(O188:T188),,,1,À valider métier ; formule non reprise automatiquement
+Direct Local,190,(sans libellé),À QUALIFIER,En-tête ou autre,B190,=P186,,,8,À valider métier ; formule non reprise automatiquement
+Direct Local,194,(sans libellé),À QUALIFIER,En-tête ou autre,L194,=K37-N186,,,1,À valider métier ; formule non reprise automatiquement
+Direct Local,215,(sans libellé),À QUALIFIER,En-tête ou autre,B215,=B214*(1+C169),,,1,À valider métier ; formule non reprise automatiquement
+Reass Local,1,(sans libellé),À QUALIFIER,En-tête ou autre,E1,"=TEXT(TODAY(), ""mmmm yyyy"")",,,1,À valider métier ; formule non reprise automatiquement
+Reass Local,3,(sans libellé),À QUALIFIER,En-tête ou autre,Z3,=Z18/Z7,,,10,À valider métier ; formule non reprise automatiquement
+Reass Local,4,Local GAAP,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,5,F CFA,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,7,Primes Emises,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B7,='Hyp 2027'!B79*'Hyp 2027'!B171,Hyp 2027,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,8,PAP Ouverture,FIXE,Stock,J8,=SUM(D8:I8),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,9,PAP Clôture,PROJECTION TEMPORELLE,Stock,J9,=SUM(D9:I9),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,10,PANE Ouverture,FIXE,Stock,J10,=SUM(D10:I10),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,11,PANE Clôture,PROJECTION TEMPORELLE,Stock,J11,=SUM(D11:I11),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,12,Chiffre d'Affaire,IDENTITÉ COMPTABLE,Calcul,B12,=B7-B8+B9+B10-B11,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,14,Sinistres payés Per.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B14,='Hyp 2027'!B295,Hyp 2027,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,15,Sinistres payés Ant.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,J15,=SUM(D15:I15),,,71,À valider métier ; formule non reprise automatiquement
+Reass Local,16,Sinistres Payés net des recours,IDENTITÉ COMPTABLE,Calcul,B16,=B14+B15,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,18,Commisions,À QUALIFIER,En-tête ou autre,B18,=B7*'Hyp 2027'!B174,Hyp 2027,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,20,REC Ouverture,FIXE,Stock,J20,=SUM(D20:I20),,,108,À valider métier ; formule non reprise automatiquement
+Reass Local,21,REC Clôture,PROJECTION TEMPORELLE,Stock,B21,='Hyp 2027'!B332*'Reass Local'!B7,"Hyp 2027, Reass Local",,120,À valider métier ; formule non reprise automatiquement
+Reass Local,22,Variation de REC CIMA,IDENTITÉ COMPTABLE,Calcul,B22,=B21-B20,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,24,REC Ouverture,FIXE,Stock,B24,=B20/0.72,,,109,À valider métier ; formule non reprise automatiquement
+Reass Local,25,REC Clôture,PROJECTION TEMPORELLE,Stock,B25,=B21/0.72,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,26,Variation de REC prorata,IDENTITÉ COMPTABLE,Calcul,B26,=B25-B24,,,140,À valider métier ; formule non reprise automatiquement
+Reass Local,28,(sans libellé),À QUALIFIER,En-tête ou autre,J28,=SUM(D28:I28),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,29,(sans libellé),À QUALIFIER,En-tête ou autre,J29,=SUM(D29:I29),,,112,À valider métier ; formule non reprise automatiquement
+Reass Local,30,Variation de REC100%,IDENTITÉ COMPTABLE,Calcul,B30,=B29-B28,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,32,DAC Ouv,FIXE,Stock,J32,=SUM(D32:I32),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,33,DAC Clo,PROJECTION TEMPORELLE,Stock,J33,=SUM(D33:I33),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,34,Var DAC,IDENTITÉ COMPTABLE,Calcul,B34,=B32-B33,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,36,IBNR Ouverture,FIXE,Stock,J36,=SUM(D36:I36),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,37,IBNR Clôture,VARIABLE ACTUARIELLE,Stock ou mouvement,J37,=SUM(D37:I37),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,38,Variation de IBNR CIMA,IDENTITÉ COMPTABLE,Calcul,B38,=B37-B36,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,40,IBNR BE Per.,VARIABLE ACTUARIELLE,Stock ou mouvement,J40,=SUM(D40:I40),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,41,IBNR BE Ant.,VARIABLE ACTUARIELLE,Stock ou mouvement,J41,=SUM(D41:I41),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,42,Variation de IBNR BE,IDENTITÉ COMPTABLE,Calcul,B42,=B41-B40,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,44,SAP hors chargement Per.,VARIABLE ACTUARIELLE,Stock ou mouvement,J44,=SUM(D44:I44),,,112,À valider métier ; formule non reprise automatiquement
+Reass Local,45,SAP hors chargement Ant.,VARIABLE ACTUARIELLE,Stock ou mouvement,J45,=SUM(D45:I45),,,112,À valider métier ; formule non reprise automatiquement
+Reass Local,46,SAP hors chargement,VARIABLE ACTUARIELLE,Stock ou mouvement,B46,=B45+B44,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,48,Chargement de Gestion IBNR et SAP,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,49,IBNR exercice courant,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,50,IBNR exercices antérieurs,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,51,SAP exercice courant,VARIABLE ACTUARIELLE,Stock ou mouvement,J51,=SUM(D51:I51),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,52,SAP exercices antérieurs,VARIABLE ACTUARIELLE,Stock ou mouvement,J52,=SUM(D52:I52),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,54,IBNR BE,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,55,Ouverture,FIXE,Stock,J55,=SUM(D55:I55),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,56,Clôture Per.,PROJECTION TEMPORELLE,Stock,B56,=B40,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,57,Clôture Ant.,PROJECTION TEMPORELLE,Stock,B57,=B41,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,58,Variation Per.,IDENTITÉ COMPTABLE,Calcul,B58,=B56,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,59,Variation Ant.,IDENTITÉ COMPTABLE,Calcul,B59,=B57-B55,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,61,SAP hors chargement,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,62,Ouverture,FIXE,Stock,K62,=B62+C62+J62,,,101,À valider métier ; formule non reprise automatiquement
+Reass Local,63,Clôture Per.,PROJECTION TEMPORELLE,Stock,J63,=SUM(D63:I63),,,112,À valider métier ; formule non reprise automatiquement
+Reass Local,64,Clôture Ant.,PROJECTION TEMPORELLE,Stock,J64,=SUM(D64:I64),,,112,À valider métier ; formule non reprise automatiquement
+Reass Local,65,Variation Per.,IDENTITÉ COMPTABLE,Calcul,B65,=B63,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,66,Variation Ant.,IDENTITÉ COMPTABLE,Calcul,B66,=B64-B62,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,68,SAP hors chargement,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,69,ULAE Ouverture,FIXE,Stock,J69,=SUM(D69:I69),,,24,À valider métier ; formule non reprise automatiquement
+Reass Local,70,ULAE Clôture,PROJECTION TEMPORELLE,Stock,B70,=B54,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,71,Variation Per.,IDENTITÉ COMPTABLE,Calcul,B71,=B70-B69,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,72,Chargement SAP,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,73,Ouverture,FIXE,Stock,J73,=SUM(D73:I73),,,112,À valider métier ; formule non reprise automatiquement
+Reass Local,74,Clôture Per.,PROJECTION TEMPORELLE,Stock,J74,=SUM(D74:I74),,,112,À valider métier ; formule non reprise automatiquement
+Reass Local,75,Clôture Ant.,PROJECTION TEMPORELLE,Stock,J75,=SUM(D75:I75),,,112,À valider métier ; formule non reprise automatiquement
+Reass Local,76,Variation chargement Per.,IDENTITÉ COMPTABLE,Calcul,B76,=B74,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,77,Variation chargement Ant.,IDENTITÉ COMPTABLE,Calcul,B77,=B75-B73,,,120,À valider métier ; formule non reprise automatiquement
+Reass Local,79,Contrôle,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,81,DAC OUV REC 100%,FIXE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,82,DAC CLO REC 100%,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,87,Progression par branche Réass,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,89,Facteur de dev.,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,90,Primes Emises,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,91,PAP Ouverture,FIXE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,92,PAP Clôture,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,93,PANE Ouverture,FIXE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,94,PANE Clôture,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,95,Sinistres payés Per.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,96,Sinistres payés Ant.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,97,Commision,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,98,REC Ouverture,FIXE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,99,REC Clôture,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,100,REC Ouverture 100%,FIXE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,101,REC Clôture 100%,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,102,SAP hors chargement Per.,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,103,SAP hors chargement Ant.,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,104,Recours Per.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,105,Recours Per.Anté,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,106,SAP    Ouverture,FIXE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass Local,107,(sans libellé),À QUALIFIER,En-tête ou autre,B107,=B102*0.72,,,8,À valider métier ; formule non reprise automatiquement
+Reass Local,108,(sans libellé),À QUALIFIER,En-tête ou autre,B108,=B103*0.72,,,8,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,1,F CFA,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,3,(sans libellé),À QUALIFIER,En-tête ou autre,AE3,=AE5-D5,,,66,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,4,BRUT,À QUALIFIER,En-tête ou autre,C4,=C19/C5,,,31,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,5,Primes Emises,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C5,=SUM(D5:I5),,,114,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,6,Variation primes non acquises,IDENTITÉ COMPTABLE,Calcul,C6,=SUM(D6:I6),,,98,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,7,Primes acquises,IDENTITÉ COMPTABLE,Calcul,C7,=+C5+C6,,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,8,(sans libellé),À QUALIFIER,En-tête ou autre,L8,=+E8-H8,,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,9,Sinistres réglés de l'exercice,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C9,=SUM(D9:I9),,,97,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,10,Variation de provision pour sinistres de exercices,IDENTITÉ COMPTABLE,Calcul,C10,=SUM(D10:I10),,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,11,Charges de sinistres de l'exercice,IDENTITÉ COMPTABLE,Calcul,C11,=+C9+C10,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,12,Sinistres réglés sur exercices antérieurs,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C12,=SUM(D12:I12),,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,13,Variation de provision pour sinistres sur exercices antérieurs,IDENTITÉ COMPTABLE,Calcul,C13,=SUM(D13:I13),,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,14,Charges de sinistres sur exercice antérieur,IDENTITÉ COMPTABLE,Calcul,C14,=+C12+C13,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,15,Charge de sinistres globale,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C15,=+C11+C14,,,103,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,16,(sans libellé),À QUALIFIER,En-tête ou autre,L16,=+E16-H16,,,3,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,17,Commissions,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C17,=SUM(D17:I17),,,87,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,18,DAC,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C18,=SUM(D18:I18),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,19,Commissions,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C19,=SUM(D19:I19),,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,20,(sans libellé),À QUALIFIER,En-tête ou autre,L20,=+E20-H20,,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,21,Masse Salariale,À QUALIFIER,En-tête ou autre,C21,=SUM(D21:I21),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,22,Charges Externes,À QUALIFIER,En-tête ou autre,C22,=SUM(D22:I22),,,16,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,23,Management fees,À QUALIFIER,En-tête ou autre,C23,=SUM(D23:I23),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,24,Dépenses de Formation,À QUALIFIER,En-tête ou autre,C24,=SUM(D24:I24),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,25,Dépenses IT (hors amortissements),À QUALIFIER,En-tête ou autre,C25,=SUM(D25:I25),,,13,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,26,Dépenses de communications,À QUALIFIER,En-tête ou autre,C26,=SUM(D26:I26),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,27,"Travaux, fournitures et services",À QUALIFIER,En-tête ou autre,C27,=SUM(D27:I27),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,28,Autres charges externes,À QUALIFIER,En-tête ou autre,C28,=SUM(D28:I28),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,29,Charges administratives – Frais d’audit,À QUALIFIER,En-tête ou autre,C29,=SUM(D29:I29),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,30,Dotations / reprises aux amortissements et provisions,VARIABLE ACTUARIELLE,Stock ou mouvement,C30,=SUM(D30:I30),,,16,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,31,Frais préliminaires,À QUALIFIER,En-tête ou autre,C31,=SUM(D31:I31),,,13,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,32,Equipement,À QUALIFIER,En-tête ou autre,C32,=SUM(D32:I32),,,13,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,33,Logiciels,À QUALIFIER,En-tête ou autre,C33,=SUM(D33:I33),,,37,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,34,Matériel Informatique,À QUALIFIER,En-tête ou autre,C34,=SUM(D34:I34),,,13,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,35,Matériel de transport,À QUALIFIER,En-tête ou autre,C35,=SUM(D35:I35),,,25,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,36,Autres produits opératinnelles,À QUALIFIER,En-tête ou autre,C36,=SUM(D36:I36),,,25,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,37,Autres  charges opérationnels,TAUX × BASE,Ratio,C37,=SUM(D37:I37),,,13,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,38,Dotations sur créances intermédiaires,À QUALIFIER,En-tête ou autre,C38,=SUM(D38:I38),,,16,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,39,Autres Impôts et Taxes,À QUALIFIER,En-tête ou autre,C39,=SUM(D39:I39),,,16,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,40,Frais de contrôle,À QUALIFIER,En-tête ou autre,C40,=SUM(D40:I40),,,16,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,41,Frais généraux,À QUALIFIER,En-tête ou autre,C41,=SUM(D41:I41),,,89,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,42,(sans libellé),À QUALIFIER,En-tête ou autre,L42,=+E42-H42,,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,43,Résultat Technique brute,IDENTITÉ COMPTABLE,Calcul,C43,=+C7+C15+C19+C41,,,87,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,44,(sans libellé),À QUALIFIER,En-tête ou autre,L44,=+(H44-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,45,Ratios Bruts,TAUX × BASE,Ratio,L45,=+(H45-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,46,S/P de l'exercice,TAUX × BASE,Ratio,C46,=+ABS(C11/C7),,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,47,S/P global,TAUX × BASE,Ratio,C47,=+ABS(C15/C7),,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,48,taux commissions,TAUX × BASE,Ratio,C48,=-C19/C7,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,49,taux Frais généraux,TAUX × BASE,Ratio,C49,=-C41/C7,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,50,S/P combiné,TAUX × BASE,Ratio,C50,=SUM(C47:C49),,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,51,(sans libellé),À QUALIFIER,En-tête ou autre,L51,=+(H51-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,52,REASSURANCE,À QUALIFIER,En-tête ou autre,L52,=+(H52-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,53,Primes cédées,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C53,=SUM(D53:I53),,,87,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,54,Variation primes non acquises,IDENTITÉ COMPTABLE,Calcul,C54,=SUM(D54:I54),,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,55,Primes acquises,IDENTITÉ COMPTABLE,Calcul,C55,=+C53+C54,,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,56,(sans libellé),À QUALIFIER,En-tête ou autre,L56,=+(H56-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,57,Sinistres Réglés de l'exercice,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C57,=SUM(D57:I57),,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,58,Variation de provision pour sinistres de l'exercice,IDENTITÉ COMPTABLE,Calcul,C58,=SUM(D58:I58),,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,59,Charges de sinistres de l'exercice,IDENTITÉ COMPTABLE,Calcul,C59,=SUM(C57:C58),,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,60,Sinistres Réglés sur exercices antérieurs,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C60,=SUM(D60:I60),,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,61,Variation de provision pour sinistres sur exercices antérieurs,IDENTITÉ COMPTABLE,Calcul,C61,=SUM(D61:I61),,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,62,Charges de sinistres sur exercice antérieur,IDENTITÉ COMPTABLE,Calcul,C62,=SUM(C60:C61),,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,63,Charge de sinistres globale,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C63,=+C59+C62,,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,64,(sans libellé),À QUALIFIER,En-tête ou autre,L64,=+(H64-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,65,Commissions,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C65,=SUM(D65:I65),,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,66,(sans libellé),À QUALIFIER,En-tête ou autre,C66,=C65/C53,,,9,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,67,Résultat Technique Réassurance,IDENTITÉ COMPTABLE,Calcul,C67,=+C55+C63+C65,,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,68,(sans libellé),À QUALIFIER,En-tête ou autre,L68,=+(H68-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,69,Ratios,TAUX × BASE,Ratio,L69,=+(H69-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,70,Taux de cessions primes,TAUX × BASE,Ratio,C70,=-C53/C5,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,71,Taux de récupération des sinistres,TAUX × BASE,Ratio,C71,=+ABS(C63/C15),,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,72,(sans libellé),À QUALIFIER,En-tête ou autre,L72,=+(H72-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,73,NET,IDENTITÉ COMPTABLE,Calcul,L73,=+(H73-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,74,Primes émises,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C74,=+C5+C53,,,89,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,75,Variations primes non acquises,IDENTITÉ COMPTABLE,Calcul,C75,=+C6+C54,,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,76,(sans libellé),À QUALIFIER,En-tête ou autre,C76,=SUM(C74:C75),,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,77,(sans libellé),À QUALIFIER,En-tête ou autre,K77,=+E77-D77,,,3,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,78,Sinistres réglées de l'exercice,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C78,=+C9+C57,,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,79,Provisions pour sinistres de l'exercice,VARIABLE ACTUARIELLE,Stock ou mouvement,C79,=+C10+C58,,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,80,Charges de sinistres de l'exercice,IDENTITÉ COMPTABLE,Calcul,C80,=SUM(C78:C79),,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,81,Sinistres réglés sur exercices antérieurs,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C81,=+C12+C60,,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,82,Variation de provision pour sinistres sur exercices antérieurs,IDENTITÉ COMPTABLE,Calcul,C82,=+C13+C61,,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,83,Charges de sinistres de l'exercice antérieur,IDENTITÉ COMPTABLE,Calcul,C83,=SUM(C81:C82),,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,84,Charges de sinistres globales,IDENTITÉ COMPTABLE,Calcul,C84,=+C80+C83,,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,85,(sans libellé),À QUALIFIER,En-tête ou autre,K85,=+E85-D85,,,3,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,86,Commissions,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C86,=+C19+C65,,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,87,(sans libellé),À QUALIFIER,En-tête ou autre,K87,=+E87-D87,,,3,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,88,Masse Salariale,À QUALIFIER,En-tête ou autre,C88,=+C21,,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,89,Charges Externes,À QUALIFIER,En-tête ou autre,C89,=+C22,,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,90,Frais Marketing,À QUALIFIER,En-tête ou autre,C90,=+C23,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,91,Frais de gestion,À QUALIFIER,En-tête ou autre,C91,=+C24,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,92,Frais informatique,À QUALIFIER,En-tête ou autre,C92,=+C25,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,93,Char. Immeuble,À QUALIFIER,En-tête ou autre,C93,=+C26,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,94,Frais de conseil,À QUALIFIER,En-tête ou autre,C94,=+C27,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,95,Frais de contrôle,À QUALIFIER,En-tête ou autre,C95,=+C28,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,96,Assis tech,À QUALIFIER,En-tête ou autre,C96,=+C29,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,97,Dotations / reprises aux amortissements et provisions,VARIABLE ACTUARIELLE,Stock ou mouvement,C97,=+C30,,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,98,frs ets,À QUALIFIER,En-tête ou autre,C98,=+C31,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,99,c a r,À QUALIFIER,En-tête ou autre,C99,=+C32,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,100,log,À QUALIFIER,En-tête ou autre,C100,=+C33,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,101,imbl,À QUALIFIER,En-tête ou autre,C101,=+C34,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,102,mat transp,À QUALIFIER,En-tête ou autre,C102,=+C35,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,103,aut mat,À QUALIFIER,En-tête ou autre,C103,=+C36,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,104,mat inf,À QUALIFIER,En-tête ou autre,C104,=+C37,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,105,Dotations sur créances intermédiaires,À QUALIFIER,En-tête ou autre,C105,=+C38,,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,106,Impôts et Taxes,À QUALIFIER,En-tête ou autre,C106,=+C39,,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,107,Autres Charges,À QUALIFIER,En-tête ou autre,C107,=+C40,,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,108,Frais généraux,À QUALIFIER,En-tête ou autre,C108,=SUM(D108:I108),,,90,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,109,(sans libellé),À QUALIFIER,En-tête ou autre,K109,=+E109-D109,,,3,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,110,Résultat technique net,IDENTITÉ COMPTABLE,Calcul,C110,=+C76+C84+C86+C108,,,89,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,111,(sans libellé),À QUALIFIER,En-tête ou autre,L111,=+(H111-#REF!),REF,,3,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,112,Ratios Nets,TAUX × BASE,Ratio,C112,=-ABS(C83/C76),,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,113,S/P de l'exercice,TAUX × BASE,Ratio,C113,=-C80/C76,,,98,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,114,S/P global,TAUX × BASE,Ratio,C114,=-C84/C76,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,115,taux commissions,TAUX × BASE,Ratio,C115,=-C86/C76,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,116,taux Frais généraux,TAUX × BASE,Ratio,C116,=-C108/C76,,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,117,Ratio combiné,TAUX × BASE,Ratio,C117,=SUM(C114:C116),,,86,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,118,(sans libellé),À QUALIFIER,En-tête ou autre,L118,=+(H118-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,119,(sans libellé),À QUALIFIER,En-tête ou autre,D119,='Direct Local'!E12/'Direct Local'!K12,Direct Local,,74,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,120,Produits Financiers,À QUALIFIER,En-tête ou autre,C120,=SUM(C121:C125),,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,121,REV IMB,À QUALIFIER,En-tête ou autre,C121,=SUM(D121:I121),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,122,prdt cession immo,À QUALIFIER,En-tête ou autre,C122,=SUM(D122:I122),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,123,revenu actions,À QUALIFIER,En-tête ou autre,C123,=SUM(D123:I123),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,124,revenu obligation,À QUALIFIER,En-tête ou autre,C124,=SUM(D124:I124),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,125,TRESO & EQUIV,À QUALIFIER,En-tête ou autre,C125,=SUM(D125:I125),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,126,frais de gestion des placement,À QUALIFIER,En-tête ou autre,C126,=SUM(D126:I126),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,127,vnc des actifs cedées,À QUALIFIER,En-tête ou autre,C127,=SUM(D127:I127),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,128,dot déprec autres placmt fin,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,C128,=SUM(D128:I128),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,129,amort imble placement,À QUALIFIER,En-tête ou autre,C129,=SUM(D129:I129),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,130,Charges financières,À QUALIFIER,En-tête ou autre,C130,=SUM(C126:C129),,,85,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,131,Résultat financier net,IDENTITÉ COMPTABLE,Calcul,C131,=C120-C130,,,89,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,132,(sans libellé),À QUALIFIER,En-tête ou autre,L132,=+(H132-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,133,Autres produits opératinnelles,À QUALIFIER,En-tête ou autre,C133,=SUM(D133:I133),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,134,Autres  charges opérationnels,TAUX × BASE,Ratio,C134,=SUM(D134:I134),,,14,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,135,Provision fiscale,VARIABLE ACTUARIELLE,Stock ou mouvement,C135,=SUM(D135:I135),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,136,charges HE,À QUALIFIER,En-tête ou autre,L136,=+(H136-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,137,Produit HE,À QUALIFIER,En-tête ou autre,L137,=+(H137-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,138,Résultat non technique net,IDENTITÉ COMPTABLE,Calcul,C138,=SUM(D138:I138),,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,139,Impôt sur les sociétés,À QUALIFIER,En-tête ou autre,C139,=SUM(D139:I139),,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,140,(sans libellé),À QUALIFIER,En-tête ou autre,L140,=+(H140-#REF!),REF,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,141,Résultat Net Après Impôt,IDENTITÉ COMPTABLE,Calcul,C141,=+C110+C131+C138+C139,,,88,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,142,(sans libellé),À QUALIFIER,En-tête ou autre,D142,=+D143/$C$143,,,72,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,143,RESULTAT D'EXPLOITATION,À QUALIFIER,En-tête ou autre,C143,=SUM(D143:I143),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,144,"2,2% CHIFFRS D'AFFAIRES",À QUALIFIER,En-tête ou autre,C144,=SUM(D144:I144),,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,145,33% RESULTAT AVANT IMPOT,À QUALIFIER,En-tête ou autre,C145,=SUM(D145:I145),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,149,(sans libellé),À QUALIFIER,En-tête ou autre,L149,=916-274,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,150,(sans libellé),À QUALIFIER,En-tête ou autre,L150,=888+100+68+141,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,151,(sans libellé),À QUALIFIER,En-tête ou autre,L151,=196+80+72+50+33+100+265+93,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,152,(sans libellé),À QUALIFIER,En-tête ou autre,L152,=+L150-L151,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,155,(sans libellé),À QUALIFIER,En-tête ou autre,L155,=+(1364-1236)/1236,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,156,(sans libellé),À QUALIFIER,En-tête ou autre,P156,=820+179,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,157,(sans libellé),À QUALIFIER,En-tête ou autre,N157,=35-17,,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,159,(sans libellé),À QUALIFIER,En-tête ou autre,L159,=+(143-197)/197,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,162,(sans libellé),À QUALIFIER,En-tête ou autre,N162,=858954-736341,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,163,(sans libellé),À QUALIFIER,En-tête ou autre,N163,=+N162/736341,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,164,(sans libellé),À QUALIFIER,En-tête ou autre,P164,=655/1.1925,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,167,(sans libellé),À QUALIFIER,En-tête ou autre,N167,=966-170+251-597+352,,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,169,(sans libellé),À QUALIFIER,En-tête ou autre,L169,=80-56,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,170,(sans libellé),À QUALIFIER,En-tête ou autre,L170,=789-116+251-587+352,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,173,(sans libellé),À QUALIFIER,En-tête ou autre,L173,=515+242-363,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,190,(sans libellé),À QUALIFIER,En-tête ou autre,L190,=3.17*3,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,198,(sans libellé),À QUALIFIER,En-tête ou autre,L198,=25-13,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,206,(sans libellé),À QUALIFIER,En-tête ou autre,L206,=265*6/12,,,2,À valider métier ; formule non reprise automatiquement
+CPC SAZ Local,207,(sans libellé),À QUALIFIER,En-tête ou autre,L207,=-221*6/12,,,2,À valider métier ; formule non reprise automatiquement
+Direct,2,(sans libellé),À QUALIFIER,En-tête ou autre,D2,=SUM(D46:H46),,,1,À valider métier ; formule non reprise automatiquement
+Direct,3,(sans libellé),À QUALIFIER,En-tête ou autre,D3,=D67+H67,,,2,À valider métier ; formule non reprise automatiquement
+Direct,4,Local GAAP,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct,5,F CFA,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct,7,Primes Emises,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B7,='Direct Local'!B7,Direct Local,,132,À valider métier ; formule non reprise automatiquement
+Direct,8,PAP Ouverture,FIXE,Stock,B8,='Direct Local'!B8,Direct Local,,129,À valider métier ; formule non reprise automatiquement
+Direct,9,PAP Clôture,PROJECTION TEMPORELLE,Stock,B9,='Direct Local'!B9,Direct Local,,120,À valider métier ; formule non reprise automatiquement
+Direct,10,PANE Ouverture,FIXE,Stock,B10,='Direct Local'!B10,Direct Local,,132,À valider métier ; formule non reprise automatiquement
+Direct,11,PANE Clôture,PROJECTION TEMPORELLE,Stock,B11,='Direct Local'!B11,Direct Local,,132,À valider métier ; formule non reprise automatiquement
+Direct,12,Chiffre d'Affaire,IDENTITÉ COMPTABLE,Calcul,B12,=B7-B8+B9-B10+B11,,,122,À valider métier ; formule non reprise automatiquement
+Direct,14,Sinistres payés Per.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B14,='Hyp 2027'!B374,Hyp 2027,,132,À valider métier ; formule non reprise automatiquement
+Direct,15,Sinistres payés Ant.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B15,='Direct Local'!B15,Direct Local,,132,À valider métier ; formule non reprise automatiquement
+Direct,16,Sinistres Payés net des recours,IDENTITÉ COMPTABLE,Calcul,B16,=B14+B15,,,120,À valider métier ; formule non reprise automatiquement
+Direct,18,Commisions,À QUALIFIER,En-tête ou autre,B18,='Direct Local'!B18,Direct Local,,132,À valider métier ; formule non reprise automatiquement
+Direct,20,REC Ouverture,FIXE,Stock,B20,='Direct Local'!B20,Direct Local,,120,À valider métier ; formule non reprise automatiquement
+Direct,21,REC Clôture,PROJECTION TEMPORELLE,Stock,B21,='Direct Local'!B21,Direct Local,,134,À valider métier ; formule non reprise automatiquement
+Direct,22,Variation de REC CIMA 72%,IDENTITÉ COMPTABLE,Calcul,B22,=B21-B20,,,120,À valider métier ; formule non reprise automatiquement
+Direct,24,REC Ouverture,FIXE,Stock,B24,=B20/0.72,,,120,À valider métier ; formule non reprise automatiquement
+Direct,25,REC Clôture,PROJECTION TEMPORELLE,Stock,B25,=B21/0.72,,,132,À valider métier ; formule non reprise automatiquement
+Direct,26,Variation de REC prorata,IDENTITÉ COMPTABLE,Calcul,B26,=B25-B24,,,120,À valider métier ; formule non reprise automatiquement
+Direct,28,DAC Ouv,FIXE,Stock,B28,=B24*B109,,,132,À valider métier ; formule non reprise automatiquement
+Direct,29,DAC Clo,PROJECTION TEMPORELLE,Stock,B29,=B25*B109,,,132,À valider métier ; formule non reprise automatiquement
+Direct,30,Var DAC,IDENTITÉ COMPTABLE,Calcul,B30,=B28-B29,,,120,À valider métier ; formule non reprise automatiquement
+Direct,32,REC Ouverture,FIXE,Stock,B32,=B24-B20,,,120,À valider métier ; formule non reprise automatiquement
+Direct,33,REC Clôture,PROJECTION TEMPORELLE,Stock,B33,=B25-B21,,,120,À valider métier ; formule non reprise automatiquement
+Direct,34,Variation des FAR 28%,IDENTITÉ COMPTABLE,Calcul,B34,=B33-B32,,,120,À valider métier ; formule non reprise automatiquement
+Direct,36,IBNR Ouverture,FIXE,Stock,B36,='Direct Local'!B36*'Hyp 2027'!B390,"Direct Local, Hyp 2027",,120,À valider métier ; formule non reprise automatiquement
+Direct,37,IBNR Clôture Per.,VARIABLE ACTUARIELLE,Stock ou mouvement,B37,=B36,,,131,À valider métier ; formule non reprise automatiquement
+Direct,38,IBNR Clôture Per. Ant.,VARIABLE ACTUARIELLE,Stock ou mouvement,B38,=B36-B37,,,120,À valider métier ; formule non reprise automatiquement
+Direct,39,Variation de IBNR CIMA,IDENTITÉ COMPTABLE,Calcul,B39,=B37-B36+B38,,,132,À valider métier ; formule non reprise automatiquement
+Direct,41,IBNR BE Per.,VARIABLE ACTUARIELLE,Stock ou mouvement,C41,=1078-923,,,36,À valider métier ; formule non reprise automatiquement
+Direct,42,IBNR BE Ant.,VARIABLE ACTUARIELLE,Stock ou mouvement,J42,=SUM(D42:I42),,,24,À valider métier ; formule non reprise automatiquement
+Direct,43,Variation de IBNR BE,IDENTITÉ COMPTABLE,Calcul,B43,=B42-B41,,,120,À valider métier ; formule non reprise automatiquement
+Direct,45,SAP hors chargement Per.,VARIABLE ACTUARIELLE,Stock ou mouvement,B45,='Direct Local'!B45,Direct Local,,120,À valider métier ; formule non reprise automatiquement
+Direct,46,SAP hors chargement Ant.,VARIABLE ACTUARIELLE,Stock ou mouvement,B46,='Direct Local'!B46,Direct Local,,120,À valider métier ; formule non reprise automatiquement
+Direct,47,Recours Per.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B47,='Direct Local'!B47,Direct Local,,57,À valider métier ; formule non reprise automatiquement
+Direct,48,Recours Per.Anté,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B48,='Direct Local'!B48,Direct Local,,120,À valider métier ; formule non reprise automatiquement
+Direct,49,SAP net de recours hors chargement,IDENTITÉ COMPTABLE,Calcul,B49,=(B46-B47*0)+(B45-B48*0),,,120,À valider métier ; formule non reprise automatiquement
+Direct,51,Chargement de Gestion IBNR et SAP,VARIABLE ACTUARIELLE,Stock ou mouvement,J51,=J46-J48,,,24,À valider métier ; formule non reprise automatiquement
+Direct,52,IBNR exercice courant,VARIABLE ACTUARIELLE,Stock ou mouvement,B52,=B41*$L$52,,,120,À valider métier ; formule non reprise automatiquement
+Direct,53,IBNR exercices antérieurs,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct,54,SAP exercice courant,VARIABLE ACTUARIELLE,Stock ou mouvement,B54,=B45*0.05,,,120,À valider métier ; formule non reprise automatiquement
+Direct,55,SAP exercices antérieurs,VARIABLE ACTUARIELLE,Stock ou mouvement,B55,=B46*0.05,,,120,À valider métier ; formule non reprise automatiquement
+Direct,57,IBNR BE,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct,58,Ouverture,FIXE,Stock,J58,=SUM(D58:I58),,,24,À valider métier ; formule non reprise automatiquement
+Direct,59,Clôture Per.,PROJECTION TEMPORELLE,Stock,B59,=B41,,,120,À valider métier ; formule non reprise automatiquement
+Direct,60,Clôture Ant.,PROJECTION TEMPORELLE,Stock,B60,=B42,,,120,À valider métier ; formule non reprise automatiquement
+Direct,61,Variation Per.,IDENTITÉ COMPTABLE,Calcul,B61,=B59,,,120,À valider métier ; formule non reprise automatiquement
+Direct,62,Variation Ant.,IDENTITÉ COMPTABLE,Calcul,B62,=B60-B58,,,120,À valider métier ; formule non reprise automatiquement
+Direct,64,SAP hors chargement,VARIABLE ACTUARIELLE,Stock ou mouvement,L64,=0.05*K49,,,1,À valider métier ; formule non reprise automatiquement
+Direct,65,Ouverture,FIXE,Stock,B65,='Direct Local'!B46,Direct Local,,120,À valider métier ; formule non reprise automatiquement
+Direct,66,Clôture Per.,PROJECTION TEMPORELLE,Stock,B66,=B45-B47*0,,,120,À valider métier ; formule non reprise automatiquement
+Direct,67,Clôture Ant.,PROJECTION TEMPORELLE,Stock,B67,=B46-B48*0,,,120,À valider métier ; formule non reprise automatiquement
+Direct,68,Variation Per.,IDENTITÉ COMPTABLE,Calcul,B68,=B66,,,120,À valider métier ; formule non reprise automatiquement
+Direct,69,Variation Ant.,IDENTITÉ COMPTABLE,Calcul,B69,=B67-B65,,,120,À valider métier ; formule non reprise automatiquement
+Direct,71,SAP hors chargement,VARIABLE ACTUARIELLE,Stock ou mouvement,M71,=E66-4540372162,,,12,À valider métier ; formule non reprise automatiquement
+Direct,72,ULAE Ouverture,FIXE,Stock,J72,=SUM(D72:I72),,,24,À valider métier ; formule non reprise automatiquement
+Direct,73,ULAE Clôture,PROJECTION TEMPORELLE,Stock,B73,=B57,,,120,À valider métier ; formule non reprise automatiquement
+Direct,74,Variation Per.,IDENTITÉ COMPTABLE,Calcul,B74,=B73-B72,,,132,À valider métier ; formule non reprise automatiquement
+Direct,75,Chargement SAP,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct,76,Ouverture,FIXE,Stock,B76,=+B65*0.05,,,120,À valider métier ; formule non reprise automatiquement
+Direct,77,Clôture Per.,PROJECTION TEMPORELLE,Stock,B77,=B45*0.05,,,120,À valider métier ; formule non reprise automatiquement
+Direct,78,Clôture Ant.,PROJECTION TEMPORELLE,Stock,B78,=B46*0.05,,,120,À valider métier ; formule non reprise automatiquement
+Direct,79,Variation chargement Per.,IDENTITÉ COMPTABLE,Calcul,B79,=B77,,,120,À valider métier ; formule non reprise automatiquement
+Direct,80,Variation chargement Ant.,IDENTITÉ COMPTABLE,Calcul,B80,=B78-B76,,,120,À valider métier ; formule non reprise automatiquement
+Direct,82,Chargement SAP,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct,83,Ouverture,FIXE,Stock,B83,=+B72*0.05,,,120,À valider métier ; formule non reprise automatiquement
+Direct,84,Clôture Per.,PROJECTION TEMPORELLE,Stock,B84,=B52*0.05,,,120,À valider métier ; formule non reprise automatiquement
+Direct,85,Clôture Ant.,PROJECTION TEMPORELLE,Stock,B85,=B53*0.05,,,120,À valider métier ; formule non reprise automatiquement
+Direct,86,Variation chargement Per.,IDENTITÉ COMPTABLE,Calcul,B86,=B84,,,120,À valider métier ; formule non reprise automatiquement
+Direct,87,Variation chargement Ant.,IDENTITÉ COMPTABLE,Calcul,B87,=B85-B83,,,120,À valider métier ; formule non reprise automatiquement
+Direct,89,Variation chargement Per.(SAP+IBNR),IDENTITÉ COMPTABLE,Calcul,B89,=B46-Reass!B45,Reass,,120,À valider métier ; formule non reprise automatiquement
+Direct,90,Variation chargement Ant.(SAP+IBNR),IDENTITÉ COMPTABLE,Calcul,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct,93,Contrôle,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct,96,(sans libellé),À QUALIFIER,En-tête ou autre,B96,=B24-B20,,,120,À valider métier ; formule non reprise automatiquement
+Direct,97,(sans libellé),À QUALIFIER,En-tête ou autre,B97,=B25-B21,,,120,À valider métier ; formule non reprise automatiquement
+Direct,98,(sans libellé),À QUALIFIER,En-tête ou autre,B98,=B97-B96,,,120,À valider métier ; formule non reprise automatiquement
+Direct,101,(sans libellé),À QUALIFIER,En-tête ou autre,C101,=#REF!,REF,,36,À valider métier ; formule non reprise automatiquement
+Direct,102,(sans libellé),À QUALIFIER,En-tête ou autre,C102,=#REF!*1000000,REF,,36,À valider métier ; formule non reprise automatiquement
+Direct,103,(sans libellé),À QUALIFIER,En-tête ou autre,C103,=C101-C102,,,36,À valider métier ; formule non reprise automatiquement
+Direct,109,DAC OUV REC 100%,FIXE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct,110,DAC CLO REC 100%,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Direct,130,(sans libellé),À QUALIFIER,En-tête ou autre,O130,='Direct Local'!L131,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,131,(sans libellé),À QUALIFIER,En-tête ou autre,O131,='Direct Local'!L132,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,132,(sans libellé),À QUALIFIER,En-tête ou autre,O132,='Direct Local'!L133,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,133,(sans libellé),À QUALIFIER,En-tête ou autre,O133,='Direct Local'!L134,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,134,(sans libellé),À QUALIFIER,En-tête ou autre,O134,='Direct Local'!L135,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,135,(sans libellé),À QUALIFIER,En-tête ou autre,O135,='Direct Local'!L136,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,136,(sans libellé),À QUALIFIER,En-tête ou autre,O136,='Direct Local'!L137,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,137,(sans libellé),À QUALIFIER,En-tête ou autre,O137,='Direct Local'!L138,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,138,(sans libellé),À QUALIFIER,En-tête ou autre,O138,='Direct Local'!L139,Direct Local,,112,À valider métier ; formule non reprise automatiquement
+Direct,139,(sans libellé),À QUALIFIER,En-tête ou autre,O139,='Direct Local'!L140,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,140,(sans libellé),À QUALIFIER,En-tête ou autre,O140,='Direct Local'!L141,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,141,(sans libellé),À QUALIFIER,En-tête ou autre,O141,='Direct Local'!L142,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,142,(sans libellé),À QUALIFIER,En-tête ou autre,O142,='Direct Local'!L143,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,143,(sans libellé),À QUALIFIER,En-tête ou autre,O143,='Direct Local'!L144,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,144,(sans libellé),À QUALIFIER,En-tête ou autre,O144,='Direct Local'!L145,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,145,(sans libellé),À QUALIFIER,En-tête ou autre,O145,='Direct Local'!L146,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,146,(sans libellé),À QUALIFIER,En-tête ou autre,O146,='Direct Local'!L147,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Direct,147,(sans libellé),À QUALIFIER,En-tête ou autre,O147,='Direct Local'!L148,Direct Local,,113,À valider métier ; formule non reprise automatiquement
+Reass,1,(sans libellé),À QUALIFIER,En-tête ou autre,E1,"=TEXT(TODAY(), ""mmmm yyyy"")",,,1,À valider métier ; formule non reprise automatiquement
+Reass,4,Local GAAP,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass,5,F CFA,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass,7,Primes Emises,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B7,='Reass Local'!B7,Reass Local,,120,À valider métier ; formule non reprise automatiquement
+Reass,8,PAP Ouverture,FIXE,Stock,J8,=SUM(D8:I8),,,112,À valider métier ; formule non reprise automatiquement
+Reass,9,PAP Clôture,PROJECTION TEMPORELLE,Stock,J9,=SUM(D9:I9),,,112,À valider métier ; formule non reprise automatiquement
+Reass,10,PANE Ouverture,FIXE,Stock,J10,=SUM(D10:I10),,,112,À valider métier ; formule non reprise automatiquement
+Reass,11,PANE Clôture,PROJECTION TEMPORELLE,Stock,J11,=SUM(D11:I11),,,112,À valider métier ; formule non reprise automatiquement
+Reass,12,Chiffre d'Affaire,IDENTITÉ COMPTABLE,Calcul,B12,=B7-B8+B9+B10-B11,,,120,À valider métier ; formule non reprise automatiquement
+Reass,14,Sinistres payés Per.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B14,='Reass Local'!B14,Reass Local,,120,À valider métier ; formule non reprise automatiquement
+Reass,15,Sinistres payés Ant.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,B15,='Reass Local'!B15,Reass Local,,120,À valider métier ; formule non reprise automatiquement
+Reass,16,Sinistres Payés net des recours,IDENTITÉ COMPTABLE,Calcul,B16,=B14+B15,,,120,À valider métier ; formule non reprise automatiquement
+Reass,18,Commisions,À QUALIFIER,En-tête ou autre,B18,='Reass Local'!B18,Reass Local,,120,À valider métier ; formule non reprise automatiquement
+Reass,20,REC Ouverture,FIXE,Stock,B20,='Reass Local'!B20,Reass Local,,109,À valider métier ; formule non reprise automatiquement
+Reass,21,REC Clôture,PROJECTION TEMPORELLE,Stock,B21,='Reass Local'!B21,Reass Local,,120,À valider métier ; formule non reprise automatiquement
+Reass,22,Variation de REC CIMA,IDENTITÉ COMPTABLE,Calcul,B22,=B21-B20,,,120,À valider métier ; formule non reprise automatiquement
+Reass,24,REC Ouverture,FIXE,Stock,B24,=B20/0.72,,,117,À valider métier ; formule non reprise automatiquement
+Reass,25,REC Clôture,PROJECTION TEMPORELLE,Stock,B25,=B21/0.72,,,120,À valider métier ; formule non reprise automatiquement
+Reass,26,Variation de REC prorata,IDENTITÉ COMPTABLE,Calcul,B26,=B25-B24,,,120,À valider métier ; formule non reprise automatiquement
+Reass,28,REC Ouverture 100%,FIXE,Stock,J28,=J24/0.72,,,112,À valider métier ; formule non reprise automatiquement
+Reass,29,REC Clôture 100%,PROJECTION TEMPORELLE,Stock,B29,=B28+B7*'Hyp 2027'!B362,Hyp 2027,,120,À valider métier ; formule non reprise automatiquement
+Reass,30,Variation de REC100%,IDENTITÉ COMPTABLE,Calcul,B30,=B29-B28,,,120,À valider métier ; formule non reprise automatiquement
+Reass,32,DAC Ouv,FIXE,Stock,B32,=B18/B7*B28,,,120,À valider métier ; formule non reprise automatiquement
+Reass,33,DAC Clo,PROJECTION TEMPORELLE,Stock,B33,=B18/B7*B29,,,120,À valider métier ; formule non reprise automatiquement
+Reass,34,Var DAC,IDENTITÉ COMPTABLE,Calcul,B34,=B32-B33,,,120,À valider métier ; formule non reprise automatiquement
+Reass,36,IBNR Ouverture,FIXE,Stock,J36,=SUM(D36:I36),,,24,À valider métier ; formule non reprise automatiquement
+Reass,37,IBNR Clôture,VARIABLE ACTUARIELLE,Stock ou mouvement,J37,=SUM(D37:I37),,,24,À valider métier ; formule non reprise automatiquement
+Reass,38,Variation de IBNR CIMA,IDENTITÉ COMPTABLE,Calcul,B38,=B37-B36,,,120,À valider métier ; formule non reprise automatiquement
+Reass,40,IBNR BE Per.,VARIABLE ACTUARIELLE,Stock ou mouvement,J40,=SUM(D40:I40),,,24,À valider métier ; formule non reprise automatiquement
+Reass,41,IBNR BE Ant.,VARIABLE ACTUARIELLE,Stock ou mouvement,J41,=SUM(D41:I41),,,24,À valider métier ; formule non reprise automatiquement
+Reass,42,Variation de IBNR BE,IDENTITÉ COMPTABLE,Calcul,B42,=B41-B40,,,120,À valider métier ; formule non reprise automatiquement
+Reass,44,SAP hors chargement Per.,VARIABLE ACTUARIELLE,Stock ou mouvement,B44,='Reass Local'!B44,Reass Local,,120,À valider métier ; formule non reprise automatiquement
+Reass,45,SAP hors chargement Ant.,VARIABLE ACTUARIELLE,Stock ou mouvement,B45,='Reass Local'!B45,Reass Local,,120,À valider métier ; formule non reprise automatiquement
+Reass,46,SAP hors chargement,VARIABLE ACTUARIELLE,Stock ou mouvement,B46,=B45+B44,,,120,À valider métier ; formule non reprise automatiquement
+Reass,48,Chargement de Gestion IBNR et SAP,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass,49,IBNR exercice courant,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass,50,IBNR exercices antérieurs,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass,51,SAP exercice courant,VARIABLE ACTUARIELLE,Stock ou mouvement,J51,=SUM(D51:I51),,,24,À valider métier ; formule non reprise automatiquement
+Reass,52,SAP exercices antérieurs,VARIABLE ACTUARIELLE,Stock ou mouvement,J52,=SUM(D52:I52),,,24,À valider métier ; formule non reprise automatiquement
+Reass,54,IBNR BE,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass,55,Ouverture,FIXE,Stock,J55,=SUM(D55:I55),,,24,À valider métier ; formule non reprise automatiquement
+Reass,56,Clôture Per.,PROJECTION TEMPORELLE,Stock,B56,=B40,,,120,À valider métier ; formule non reprise automatiquement
+Reass,57,Clôture Ant.,PROJECTION TEMPORELLE,Stock,B57,=B41,,,120,À valider métier ; formule non reprise automatiquement
+Reass,58,Variation Per.,IDENTITÉ COMPTABLE,Calcul,B58,=B56,,,120,À valider métier ; formule non reprise automatiquement
+Reass,59,Variation Ant.,IDENTITÉ COMPTABLE,Calcul,B59,=B57-B55,,,120,À valider métier ; formule non reprise automatiquement
+Reass,61,SAP hors chargement,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass,62,Ouverture,FIXE,Stock,B62,='Reass Local'!B62,Reass Local,,108,À valider métier ; formule non reprise automatiquement
+Reass,63,Clôture Per.,PROJECTION TEMPORELLE,Stock,B63,=B44,,,120,À valider métier ; formule non reprise automatiquement
+Reass,64,Clôture Ant.,PROJECTION TEMPORELLE,Stock,B64,=B45,,,120,À valider métier ; formule non reprise automatiquement
+Reass,65,Variation Per.,IDENTITÉ COMPTABLE,Calcul,B65,=B63,,,120,À valider métier ; formule non reprise automatiquement
+Reass,66,Variation Ant.,IDENTITÉ COMPTABLE,Calcul,B66,=B64-B62,,,120,À valider métier ; formule non reprise automatiquement
+Reass,68,SAP hors chargement,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass,69,ULAE Ouverture,FIXE,Stock,J69,=SUM(D69:I69),,,24,À valider métier ; formule non reprise automatiquement
+Reass,70,ULAE Clôture,PROJECTION TEMPORELLE,Stock,B70,=B54,,,120,À valider métier ; formule non reprise automatiquement
+Reass,71,Variation Per.,IDENTITÉ COMPTABLE,Calcul,B71,=B70-B69,,,120,À valider métier ; formule non reprise automatiquement
+Reass,72,Chargement SAP,VARIABLE ACTUARIELLE,Stock ou mouvement,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass,73,Ouverture,FIXE,Stock,B73,=+B62*0.05,,,120,À valider métier ; formule non reprise automatiquement
+Reass,74,Clôture Per.,PROJECTION TEMPORELLE,Stock,B74,=+B63*0.05,,,120,À valider métier ; formule non reprise automatiquement
+Reass,75,Clôture Ant.,PROJECTION TEMPORELLE,Stock,B75,=+B64*0.05,,,120,À valider métier ; formule non reprise automatiquement
+Reass,76,Variation chargement Per.,IDENTITÉ COMPTABLE,Calcul,B76,=B74,,,120,À valider métier ; formule non reprise automatiquement
+Reass,77,Variation chargement Ant.,IDENTITÉ COMPTABLE,Calcul,B77,=B75-B73,,,120,À valider métier ; formule non reprise automatiquement
+Reass,79,Contrôle,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass,81,DAC OUV REC 100%,FIXE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass,82,DAC CLO REC 100%,PROJECTION TEMPORELLE,Stock,,,,,0,À valider métier ; formule non reprise automatiquement
+Reass,85,(sans libellé),À QUALIFIER,En-tête ou autre,N85,='Reass Local'!M87,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,86,(sans libellé),À QUALIFIER,En-tête ou autre,N86,='Reass Local'!M88,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,87,Facteur de dev.,À QUALIFIER,En-tête ou autre,N87,='Reass Local'!M89,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,88,Primes Emises,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,N88,='Reass Local'!M90,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,89,PAP Ouverture,FIXE,Stock,N89,='Reass Local'!M91,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,90,PAP Clôture,PROJECTION TEMPORELLE,Stock,N90,='Reass Local'!M92,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,91,PANE Ouverture,FIXE,Stock,N91,='Reass Local'!M93,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,92,PANE Clôture,PROJECTION TEMPORELLE,Stock,N92,='Reass Local'!M94,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,93,Sinistres payés Per.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,N93,='Reass Local'!M95,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,94,Sinistres payés Ant.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,N94,='Reass Local'!M96,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,95,Commision,À QUALIFIER,En-tête ou autre,N95,='Reass Local'!M97,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,96,REC Ouverture,FIXE,Stock,N96,='Reass Local'!M98,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,97,REC Clôture,PROJECTION TEMPORELLE,Stock,N97,='Reass Local'!M99,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,98,REC Ouverture 100%,FIXE,Stock,N98,='Reass Local'!M100,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,99,REC Clôture 100%,PROJECTION TEMPORELLE,Stock,N99,='Reass Local'!M101,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,100,SAP hors chargement Per.,VARIABLE ACTUARIELLE,Stock ou mouvement,N100,='Reass Local'!M102,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,101,SAP hors chargement Ant.,VARIABLE ACTUARIELLE,Stock ou mouvement,N101,='Reass Local'!M103,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,102,Recours Per.,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,N102,='Reass Local'!M104,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,103,Recours Per.Anté,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,N103,='Reass Local'!M105,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+Reass,104,SAP    Ouverture,FIXE,Stock,N104,='Reass Local'!M106,Reass Local,,112,À valider métier ; formule non reprise automatiquement
+CPC SAZ,1,IFRS 4,À QUALIFIER,En-tête ou autre,,,,,0,À valider métier ; formule non reprise automatiquement
+CPC SAZ,3,(sans libellé),À QUALIFIER,En-tête ou autre,AG3,=AG5/E5-1,,,6,À valider métier ; formule non reprise automatiquement
+CPC SAZ,4,BRUT,À QUALIFIER,En-tête ou autre,M4,=+P8,,,130,À valider métier ; formule non reprise automatiquement
+CPC SAZ,5,Primes Emises,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D5,=SUM(E5:J5),,,179,À valider métier ; formule non reprise automatiquement
+CPC SAZ,6,Variation primes non acquises,IDENTITÉ COMPTABLE,Calcul,D6,=SUM(E6:J6),,,119,À valider métier ; formule non reprise automatiquement
+CPC SAZ,7,Primes acquises,IDENTITÉ COMPTABLE,Calcul,D7,=+D5+D6,,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,8,(sans libellé),À QUALIFIER,En-tête ou autre,D8,=D17/D5,,,30,À valider métier ; formule non reprise automatiquement
+CPC SAZ,9,Sinistres réglés de l'exercice,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D9,=SUM(E9:J9),,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,10,Variation de provision pour sinistres de exercices,IDENTITÉ COMPTABLE,Calcul,D10,=SUM(E10:J10),,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ,11,Charges de sinistres de l'exercice,IDENTITÉ COMPTABLE,Calcul,D11,=+D9+D10,,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,12,Sinistres réglés sur exercices antérieurs,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D12,=SUM(E12:J12),,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ,13,Variation de provision pour sinistres sur exercices antérieurs,IDENTITÉ COMPTABLE,Calcul,D13,=SUM(E13:J13),,,119,À valider métier ; formule non reprise automatiquement
+CPC SAZ,14,Charges de sinistres sur exercice antérieur,IDENTITÉ COMPTABLE,Calcul,D14,=+D12+D13,,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,15,Charge de sinistres globale,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D15,=+D11+D14,,,179,À valider métier ; formule non reprise automatiquement
+CPC SAZ,16,(sans libellé),À QUALIFIER,En-tête ou autre,M16,=+F16-I16,,,112,À valider métier ; formule non reprise automatiquement
+CPC SAZ,17,Commissions,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D17,=SUM(E17:J17),,,119,À valider métier ; formule non reprise automatiquement
+CPC SAZ,18,DAC,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D18,=SUM(E18:J18),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,19,Commissions,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D19,=SUM(E19:J19),,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,20,(sans libellé),À QUALIFIER,En-tête ou autre,M20,=+F20-I20,,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,21,Masse Salariale,À QUALIFIER,En-tête ou autre,D21,=SUM(E21:J21),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,22,Charges Externes,À QUALIFIER,En-tête ou autre,D22,=SUM(E22:J22),,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,23,Management fees,À QUALIFIER,En-tête ou autre,D23,=SUM(E23:J23),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,24,Dépenses de Formation,À QUALIFIER,En-tête ou autre,D24,=SUM(E24:J24),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,25,Dépenses IT (hors amortissements),À QUALIFIER,En-tête ou autre,D25,=SUM(E25:J25),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,26,Dépenses de communications,À QUALIFIER,En-tête ou autre,D26,=SUM(E26:J26),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,27,"Travaux, fournitures et services",À QUALIFIER,En-tête ou autre,D27,=SUM(E27:J27),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,28,Autres charges externes,À QUALIFIER,En-tête ou autre,D28,=SUM(E28:J28),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,29,Charges administratives – Frais d’audit,À QUALIFIER,En-tête ou autre,D29,=SUM(E29:J29),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,30,Dotations / reprises aux amortissements et provisions,VARIABLE ACTUARIELLE,Stock ou mouvement,D30,=SUM(E30:J30),,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,31,Frais préliminaires,À QUALIFIER,En-tête ou autre,D31,=SUM(E31:J31),,,96,À valider métier ; formule non reprise automatiquement
+CPC SAZ,32,Equipement,À QUALIFIER,En-tête ou autre,D32,=SUM(E32:J32),,,96,À valider métier ; formule non reprise automatiquement
+CPC SAZ,33,Logiciels,À QUALIFIER,En-tête ou autre,D33,=SUM(E33:J33),,,96,À valider métier ; formule non reprise automatiquement
+CPC SAZ,34,Matériel Informatique,À QUALIFIER,En-tête ou autre,D34,=SUM(E34:J34),,,96,À valider métier ; formule non reprise automatiquement
+CPC SAZ,35,Matériel de transport,À QUALIFIER,En-tête ou autre,D35,=SUM(E35:J35),,,96,À valider métier ; formule non reprise automatiquement
+CPC SAZ,36,Autres produits opératinnelles,À QUALIFIER,En-tête ou autre,D36,=SUM(E36:J36),,,96,À valider métier ; formule non reprise automatiquement
+CPC SAZ,37,Autres  charges opérationnels,TAUX × BASE,Ratio,D37,=SUM(E37:J37),,,96,À valider métier ; formule non reprise automatiquement
+CPC SAZ,38,Dotations sur créances intermédiaires,À QUALIFIER,En-tête ou autre,D38,=SUM(E38:J38),,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,39,Autres Impôts et Taxes,À QUALIFIER,En-tête ou autre,D39,=SUM(E39:J39),,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,40,Frais de contrôle,À QUALIFIER,En-tête ou autre,D40,=SUM(E40:J40),,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,41,Frais généraux,À QUALIFIER,En-tête ou autre,D41,=SUM(E41:J41),,,143,À valider métier ; formule non reprise automatiquement
+CPC SAZ,42,(sans libellé),À QUALIFIER,En-tête ou autre,M42,=+F42-I42,,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,43,Résultat Technique brute,IDENTITÉ COMPTABLE,Calcul,D43,=+D7+D15+D19+D41,,,120,À valider métier ; formule non reprise automatiquement
+CPC SAZ,44,(sans libellé),À QUALIFIER,En-tête ou autre,M44,=+(I44-#REF!),REF,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,45,Ratios Bruts,TAUX × BASE,Ratio,M45,=+(I45-#REF!),REF,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,46,S/P de l'exercice,TAUX × BASE,Ratio,D46,=+ABS(D11/D7),,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,47,S/P global,TAUX × BASE,Ratio,D47,=+ABS(D15/D7),,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,48,taux commissions,TAUX × BASE,Ratio,D48,=-D19/D7,,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,49,taux Frais généraux,TAUX × BASE,Ratio,D49,=-D41/D7,,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,50,S/P combiné,TAUX × BASE,Ratio,D50,=SUM(D47:D49),,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,51,(sans libellé),À QUALIFIER,En-tête ou autre,M51,=+(I51-#REF!),REF,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,52,REASSURANCE,À QUALIFIER,En-tête ou autre,M52,=+(I52-#REF!),REF,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,53,Primes cédées,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D53,=SUM(E53:J53),,,119,À valider métier ; formule non reprise automatiquement
+CPC SAZ,54,Variation primes non acquises,IDENTITÉ COMPTABLE,Calcul,D54,=SUM(E54:J54),,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ,55,Primes acquises,IDENTITÉ COMPTABLE,Calcul,D55,=+D53+D54,,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,56,(sans libellé),À QUALIFIER,En-tête ou autre,M56,=+(I56-#REF!),REF,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,57,Sinistres Réglés de l'exercice,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D57,=SUM(E57:J57),,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ,58,Variation de provision pour sinistres de l'exercice,IDENTITÉ COMPTABLE,Calcul,D58,=SUM(E58:J58),,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ,59,Charges de sinistres de l'exercice,IDENTITÉ COMPTABLE,Calcul,D59,=SUM(D57:D58),,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ,60,Sinistres Réglés sur exercices antérieurs,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D60,=SUM(E60:J60),,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ,61,Variation de provision pour sinistres sur exercices antérieurs,IDENTITÉ COMPTABLE,Calcul,D61,=SUM(E61:J61),,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ,62,Charges de sinistres sur exercice antérieur,IDENTITÉ COMPTABLE,Calcul,D62,=SUM(D60:D61),,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ,63,Charge de sinistres globale,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D63,=+D59+D62,,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,64,(sans libellé),À QUALIFIER,En-tête ou autre,M64,=+(I64-#REF!),REF,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,65,Commissions,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D65,=+D67+D66,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,66,DAC,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D66,=SUM(E66:J66),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,67,Commissions,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D67,=SUM(E67:J67),,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,69,Résultat Technique Réassurance,IDENTITÉ COMPTABLE,Calcul,D69,=+D55+D63+D67,,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,70,(sans libellé),À QUALIFIER,En-tête ou autre,M70,=+(I70-#REF!),REF,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,71,Ratios,TAUX × BASE,Ratio,M71,=+(I71-#REF!),REF,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,72,Taux de cessions primes,TAUX × BASE,Ratio,D72,=-D53/D5,,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,73,Taux de récupération des sinistres,TAUX × BASE,Ratio,D73,=+ABS(D63/D15),,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,74,(sans libellé),À QUALIFIER,En-tête ou autre,M74,=+(I74-#REF!),REF,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,75,NET,IDENTITÉ COMPTABLE,Calcul,M75,=+(I75-#REF!),REF,,30,À valider métier ; formule non reprise automatiquement
+CPC SAZ,76,Primes émises,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D76,=+D5+D53,,,143,À valider métier ; formule non reprise automatiquement
+CPC SAZ,77,Variations primes non acquises,IDENTITÉ COMPTABLE,Calcul,D77,=+D6+D54,,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ,78,Primes acquises,IDENTITÉ COMPTABLE,Calcul,D78,=SUM(D76:D77),,,143,À valider métier ; formule non reprise automatiquement
+CPC SAZ,79,(sans libellé),À QUALIFIER,En-tête ou autre,L79,=+F79-E79,,,35,À valider métier ; formule non reprise automatiquement
+CPC SAZ,80,Sinistres réglées de l'exercice,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D80,=+D9+D57,,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ,81,Provisions pour sinistres de l'exercice,VARIABLE ACTUARIELLE,Stock ou mouvement,D81,=+D10+D58,,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ,82,Charges de sinistres de l'exercice,IDENTITÉ COMPTABLE,Calcul,D82,=SUM(D80:D81),,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,83,Sinistres réglés sur exercices antérieurs,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D83,=+D12+D60,,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ,84,Variation de provision pour sinistres sur exercices antérieurs,IDENTITÉ COMPTABLE,Calcul,D84,=+D13+D61,,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,85,Charges de sinistres de l'exercice antérieur,IDENTITÉ COMPTABLE,Calcul,D85,=SUM(D83:D84),,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,86,Charges de sinistres globales,IDENTITÉ COMPTABLE,Calcul,D86,=+D82+D85,,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,87,(sans libellé),À QUALIFIER,En-tête ou autre,L87,=+F87-E87,,,35,À valider métier ; formule non reprise automatiquement
+CPC SAZ,88,Commissions,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+CPC SAZ,89,DAC,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,,,,,0,À valider métier ; formule non reprise automatiquement
+CPC SAZ,90,Commissions,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D90,=+D19+D67,,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,91,(sans libellé),À QUALIFIER,En-tête ou autre,L91,=+F91-E91,,,35,À valider métier ; formule non reprise automatiquement
+CPC SAZ,92,Masse Salariale,À QUALIFIER,En-tête ou autre,D92,=+D21,,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,93,Charges Externes,À QUALIFIER,En-tête ou autre,D93,=+D22,,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,94,Frais Marketing,À QUALIFIER,En-tête ou autre,D94,=+D23,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,95,Frais de gestion,À QUALIFIER,En-tête ou autre,D95,=+D24,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,96,Frais informatique,À QUALIFIER,En-tête ou autre,D96,=+D25,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,97,Char. Immeuble,À QUALIFIER,En-tête ou autre,D97,=+D26,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,98,Frais de conseil,À QUALIFIER,En-tête ou autre,D98,=+D27,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,99,Frais de contrôle,À QUALIFIER,En-tête ou autre,D99,=+D28,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,100,Assis tech,À QUALIFIER,En-tête ou autre,D100,=+D29,,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,101,Dotations / reprises aux amortissements et provisions,VARIABLE ACTUARIELLE,Stock ou mouvement,D101,=+D30,,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,102,frs ets,À QUALIFIER,En-tête ou autre,D102,=+D31,,,108,À valider métier ; formule non reprise automatiquement
+CPC SAZ,103,c a r,À QUALIFIER,En-tête ou autre,D103,=+D32,,,108,À valider métier ; formule non reprise automatiquement
+CPC SAZ,104,log,À QUALIFIER,En-tête ou autre,D104,=+D33,,,108,À valider métier ; formule non reprise automatiquement
+CPC SAZ,105,imbl,À QUALIFIER,En-tête ou autre,D105,=+D34,,,108,À valider métier ; formule non reprise automatiquement
+CPC SAZ,106,mat transp,À QUALIFIER,En-tête ou autre,D106,=+D35,,,108,À valider métier ; formule non reprise automatiquement
+CPC SAZ,107,aut mat,À QUALIFIER,En-tête ou autre,D107,=+D36,,,108,À valider métier ; formule non reprise automatiquement
+CPC SAZ,108,mat inf,À QUALIFIER,En-tête ou autre,D108,=+D37,,,108,À valider métier ; formule non reprise automatiquement
+CPC SAZ,109,Dotations sur créances intermédiaires,À QUALIFIER,En-tête ou autre,D109,=+D38,,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,110,Impôts et Taxes,À QUALIFIER,En-tête ou autre,D110,=+D39,,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,111,Autres Charges,À QUALIFIER,En-tête ou autre,D111,=+D40,,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,112,Frais généraux,À QUALIFIER,En-tête ou autre,D112,=SUM(E112:J112),,,156,À valider métier ; formule non reprise automatiquement
+CPC SAZ,113,(sans libellé),À QUALIFIER,En-tête ou autre,L113,=+F113-E113,,,35,À valider métier ; formule non reprise automatiquement
+CPC SAZ,114,Résultat technique net,IDENTITÉ COMPTABLE,Calcul,D114,=+D78+D86+D90+D112,,,143,À valider métier ; formule non reprise automatiquement
+CPC SAZ,115,(sans libellé),À QUALIFIER,En-tête ou autre,M115,=+(I115-#REF!),REF,,35,À valider métier ; formule non reprise automatiquement
+CPC SAZ,116,Ratios Nets,TAUX × BASE,Ratio,D116,=-ABS(D85/D78),,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,117,S/P de l'exercice,TAUX × BASE,Ratio,D117,=-D82/D78,,,118,À valider métier ; formule non reprise automatiquement
+CPC SAZ,118,S/P global,TAUX × BASE,Ratio,D118,=-D86/D78,,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,119,taux commissions,TAUX × BASE,Ratio,D119,=-D90/D78,,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,120,taux Frais généraux,TAUX × BASE,Ratio,D120,=-D112/D78,,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,121,Ratio combiné,TAUX × BASE,Ratio,D121,=SUM(D118:D120),,,107,À valider métier ; formule non reprise automatiquement
+CPC SAZ,122,(sans libellé),À QUALIFIER,En-tête ou autre,M122,=+(I122-#REF!),REF,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,123,(sans libellé),À QUALIFIER,En-tête ou autre,E123,=Direct!E12/Direct!K12,Direct,,95,À valider métier ; formule non reprise automatiquement
+CPC SAZ,124,Produits Financiers,À QUALIFIER,En-tête ou autre,D124,=SUM(D125:D129),,,125,À valider métier ; formule non reprise automatiquement
+CPC SAZ,125,REV IMB,À QUALIFIER,En-tête ou autre,D125,=SUM(E125:J125),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,126,prdt cession immo,À QUALIFIER,En-tête ou autre,D126,=SUM(E126:J126),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,127,revenu actions,À QUALIFIER,En-tête ou autre,D127,=SUM(E127:J127),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,128,revenu obligation,À QUALIFIER,En-tête ou autre,D128,=SUM(E128:J128),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,129,TRESO & EQUIV,À QUALIFIER,En-tête ou autre,D129,=SUM(E129:J129),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,130,frais de gestion des placement,À QUALIFIER,En-tête ou autre,D130,=SUM(E130:J130),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,131,vnc des actifs cedées,À QUALIFIER,En-tête ou autre,D131,=SUM(E131:J131),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,132,dot déprec autres placmt fin,PROJECTION TEMPORELLE,Flux ou stock selon la ligne,D132,=SUM(E132:J132),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,133,amort imble placement,À QUALIFIER,En-tête ou autre,D133,=SUM(E133:J133),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,134,Charges financières,À QUALIFIER,En-tête ou autre,D134,=SUM(D130:D133),,,114,À valider métier ; formule non reprise automatiquement
+CPC SAZ,135,Résultat financier net,IDENTITÉ COMPTABLE,Calcul,D135,=SUM(E135:J135),,,143,À valider métier ; formule non reprise automatiquement
+CPC SAZ,136,(sans libellé),À QUALIFIER,En-tête ou autre,M136,=+(I136-#REF!),REF,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,137,Autres produits opératinnelles,À QUALIFIER,En-tête ou autre,D137,=SUM(E137:J137),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,139,Autres  charges opérationnels,TAUX × BASE,Ratio,D139,=SUM(E139:J139),,,35,À valider métier ; formule non reprise automatiquement
+CPC SAZ,140,Provision fiscale,VARIABLE ACTUARIELLE,Stock ou mouvement,D140,=SUM(E140:J140),,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,141,charges HE,À QUALIFIER,En-tête ou autre,D141,=SUM(E141:J141),,,101,À valider métier ; formule non reprise automatiquement
+CPC SAZ,142,Produit HE,À QUALIFIER,En-tête ou autre,M142,=+(I142-#REF!),REF,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,143,Résultat non technique net,IDENTITÉ COMPTABLE,Calcul,D143,=SUM(E143:J143),,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,144,Impôt sur les sociétés,À QUALIFIER,En-tête ou autre,D144,=SUM(E144:J144),,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,145,(sans libellé),À QUALIFIER,En-tête ou autre,M145,=+(I145-#REF!),REF,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,146,Résultat Net Après Impôt,IDENTITÉ COMPTABLE,Calcul,D146,=+D114+D135+D143+D144,,,131,À valider métier ; formule non reprise automatiquement
+CPC SAZ,147,(sans libellé),À QUALIFIER,En-tête ou autre,E147,=+E148/$D$148,,,72,À valider métier ; formule non reprise automatiquement
+CPC SAZ,148,RESULTAT D'EXPLOITATION,À QUALIFIER,En-tête ou autre,D148,=SUM(E148:J148),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,149,"2,2% CHIFFRS D'AFFAIRES",À QUALIFIER,En-tête ou autre,D149,=SUM(E149:J149),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,150,33% RESULTAT AVANT IMPOT,À QUALIFIER,En-tête ou autre,D150,=SUM(E150:J150),,,84,À valider métier ; formule non reprise automatiquement
+CPC SAZ,155,(sans libellé),À QUALIFIER,En-tête ou autre,BD155,=BG146-AF146,,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ,156,(sans libellé),À QUALIFIER,En-tête ou autre,M156,=196+80+72+50+33+100+265+93,,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,157,(sans libellé),À QUALIFIER,En-tête ou autre,M157,=+M155-M156,,,13,À valider métier ; formule non reprise automatiquement
+CPC SAZ,159,(sans libellé),À QUALIFIER,En-tête ou autre,D159,=D146*(1+5%),,,1,À valider métier ; formule non reprise automatiquement
+CPC SAZ,160,(sans libellé),À QUALIFIER,En-tête ou autre,K160,"=+MAX(K157,K158)",,,191,À valider métier ; formule non reprise automatiquement
+CPC SAZ,161,(sans libellé),À QUALIFIER,En-tête ou autre,Q161,=820+179,,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,162,(sans libellé),À QUALIFIER,En-tête ou autre,O162,=35-17,,,24,À valider métier ; formule non reprise automatiquement
+CPC SAZ,164,(sans libellé),À QUALIFIER,En-tête ou autre,M164,=+(143-197)/197,,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,166,(sans libellé),À QUALIFIER,En-tête ou autre,F166,=D67/1980571164,,,3,À valider métier ; formule non reprise automatiquement
+CPC SAZ,167,(sans libellé),À QUALIFIER,En-tête ou autre,F167,=(D67-1980571164)/1980571164,,,33,À valider métier ; formule non reprise automatiquement
+CPC SAZ,168,(sans libellé),À QUALIFIER,En-tête ou autre,O168,=+O167/736341,,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,169,(sans libellé),À QUALIFIER,En-tête ou autre,Q169,=655/1.1925,,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,172,(sans libellé),À QUALIFIER,En-tête ou autre,O172,=966-170+251-597+352,,,24,À valider métier ; formule non reprise automatiquement
+CPC SAZ,174,(sans libellé),À QUALIFIER,En-tête ou autre,M174,=80-56,,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,175,(sans libellé),À QUALIFIER,En-tête ou autre,M175,=789-116+251-587+352,,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,178,(sans libellé),À QUALIFIER,En-tête ou autre,M178,=515+242-363,,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,195,(sans libellé),À QUALIFIER,En-tête ou autre,M195,=3.17*3,,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,203,(sans libellé),À QUALIFIER,En-tête ou autre,M203,=25-13,,,12,À valider métier ; formule non reprise automatiquement
+CPC SAZ,211,(sans libellé),À QUALIFIER,En-tête ou autre,M211,=265*6/12,,,23,À valider métier ; formule non reprise automatiquement
+CPC SAZ,212,(sans libellé),À QUALIFIER,En-tête ou autre,M212,=-221*6/12,,,23,À valider métier ; formule non reprise automatiquement

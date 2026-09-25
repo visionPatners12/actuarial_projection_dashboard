@@ -112,6 +112,8 @@ def _direct_value(r, row):
         7:_safe(r.get('gwp_ytd')),8:_safe(r.get('pap_open')),9:_safe(r.get('pap_close')),10:_safe(r.get('pane_open')),11:_safe(r.get('pane_close')),12:_safe(r.get('revenue')),
         14:_safe(r.get('paid_current_ytd')),15:_safe(r.get('paid_prior_ytd')),16:_safe(r.get('paid_current_ytd'))+_safe(r.get('paid_prior_ytd'))-_safe(r.get('recourse_current_ytd'))-_safe(r.get('recourse_prior_ytd')),18:_safe(r.get('commission_ytd')),
         20:_safe(r.get('upr_open')),21:_safe(r.get('upr_close')),22:_safe(r.get('upr_close'))-_safe(r.get('upr_open')),
+        24:_safe(r.get('rec100_open')),25:_safe(r.get('rec100_close')),26:_safe(r.get('rec100_close'))-_safe(r.get('rec100_open')),
+        28:_safe(r.get('dac_open')),29:_safe(r.get('dac_close')),30:_safe(r.get('dac_variation')),
         36:open_ibnr,37:close_ibnr,38:close_ibnr-open_ibnr,41:_safe(r.get('ibnr_close_current')),42:_safe(r.get('ibnr_close_prior')),43:close_ibnr-open_ibnr,
         45:_safe(r.get('case_close_current')),46:_safe(r.get('case_close_prior')),47:_safe(r.get('recourse_current_ytd')),48:_safe(r.get('recourse_prior_ytd')),49:close_case,
         58:open_ibnr,59:_safe(r.get('ibnr_close_current')),60:_safe(r.get('ibnr_close_prior')),61:_safe(r.get('ibnr_close_current'))-_safe(r.get('ibnr_open_current')),62:_safe(r.get('ibnr_close_prior'))-_safe(r.get('ibnr_open_prior')),
@@ -127,7 +129,7 @@ def _reass_value(r,row):
     ci=_safe(r.get('recoverable_ibnr_close_current'))+_safe(r.get('recoverable_ibnr_close_prior'))
     oc=_safe(r.get('recoverable_case_open_current'))+_safe(r.get('recoverable_case_open_prior'))
     cc=_safe(r.get('recoverable_case_close_current'))+_safe(r.get('recoverable_case_close_prior'))
-    vals={7:_safe(r.get('ceded_premium_ytd')),12:_safe(r.get('ceded_premium_ytd')),14:_safe(r.get('recovered_paid_current_ytd')),15:_safe(r.get('recovered_paid_prior_ytd')),16:_safe(r.get('recovered_paid_current_ytd'))+_safe(r.get('recovered_paid_prior_ytd')),18:_safe(r.get('reass_commission_ytd')),20:_safe(r.get('ceded_upr_open')),21:_safe(r.get('ceded_upr_close')),22:_safe(r.get('ceded_upr_close'))-_safe(r.get('ceded_upr_open')),36:oi,37:ci,38:ci-oi,40:_safe(r.get('recoverable_ibnr_close_current')),41:_safe(r.get('recoverable_ibnr_close_prior')),42:ci-oi,44:_safe(r.get('recoverable_case_close_current')),45:_safe(r.get('recoverable_case_close_prior')),46:cc,55:oi,56:_safe(r.get('recoverable_ibnr_close_current')),57:_safe(r.get('recoverable_ibnr_close_prior')),58:_safe(r.get('recoverable_ibnr_close_current'))-_safe(r.get('recoverable_ibnr_open_current')),59:_safe(r.get('recoverable_ibnr_close_prior'))-_safe(r.get('recoverable_ibnr_open_prior')),62:oc,63:_safe(r.get('recoverable_case_close_current')),64:_safe(r.get('recoverable_case_close_prior')),65:_safe(r.get('recoverable_case_close_current'))-_safe(r.get('recoverable_case_open_current')),66:_safe(r.get('recoverable_case_close_prior'))-_safe(r.get('recoverable_case_open_prior')),79:0.0,81:0.0,82:0.0}
+    vals={7:_safe(r.get('ceded_premium_ytd')),12:_safe(r.get('ceded_premium_ytd')),14:_safe(r.get('recovered_paid_current_ytd')),15:_safe(r.get('recovered_paid_prior_ytd')),16:_safe(r.get('recovered_paid_current_ytd'))+_safe(r.get('recovered_paid_prior_ytd')),18:_safe(r.get('reass_commission_ytd')),20:_safe(r.get('ceded_upr_open')),21:_safe(r.get('ceded_upr_close')),22:_safe(r.get('ceded_upr_close'))-_safe(r.get('ceded_upr_open')),28:_safe(r.get('rec100_open')),29:_safe(r.get('rec100_close')),30:_safe(r.get('rec100_close'))-_safe(r.get('rec100_open')),32:_safe(r.get('dac_open')),33:_safe(r.get('dac_close')),34:_safe(r.get('dac_variation')),36:oi,37:ci,38:ci-oi,40:_safe(r.get('recoverable_ibnr_close_current')),41:_safe(r.get('recoverable_ibnr_close_prior')),42:ci-oi,44:_safe(r.get('recoverable_case_close_current')),45:_safe(r.get('recoverable_case_close_prior')),46:cc,55:oi,56:_safe(r.get('recoverable_ibnr_close_current')),57:_safe(r.get('recoverable_ibnr_close_prior')),58:_safe(r.get('recoverable_ibnr_close_current'))-_safe(r.get('recoverable_ibnr_open_current')),59:_safe(r.get('recoverable_ibnr_close_prior'))-_safe(r.get('recoverable_ibnr_open_prior')),62:oc,63:_safe(r.get('recoverable_case_close_current')),64:_safe(r.get('recoverable_case_close_prior')),65:_safe(r.get('recoverable_case_close_current'))-_safe(r.get('recoverable_case_open_current')),66:_safe(r.get('recoverable_case_close_prior'))-_safe(r.get('recoverable_case_open_prior')),79:0.0,81:_safe(r.get('rec100_open')),82:_safe(r.get('rec100_close'))}
     return vals.get(row,0.0)
 
 
@@ -237,7 +239,7 @@ def _gross_metrics(r):
     paid_pr=max(0.0,_safe(r.get('paid_prior_ytd'))-_safe(r.get('recourse_prior_ytd')))
     prov_cur=(_safe(r.get('case_close_current'))+_safe(r.get('ibnr_close_current')))-(_safe(r.get('case_open_current'))+_safe(r.get('ibnr_open_current')))
     prov_pr=(_safe(r.get('case_close_prior'))+_safe(r.get('ibnr_close_prior')))-(_safe(r.get('case_open_prior'))+_safe(r.get('ibnr_open_prior')))
-    return {'written':_safe(r.get('gwp_ytd')),'var_upr':_safe(r.get('upr_open'))-_safe(r.get('upr_close')),'earned':_safe(r.get('earned_premium_ytd')),'paid_cur':paid_cur,'prov_cur':prov_cur,'inc_cur':_safe(r.get('incurred_current_ytd')),'paid_pr':paid_pr,'prov_pr':prov_pr,'inc_pr':_safe(r.get('incurred_prior_ytd')),'inc':_safe(r.get('incurred_current_ytd'))+_safe(r.get('incurred_prior_ytd')),'comm':_safe(r.get('commission_ytd'))+_safe(r.get('dac_variation')),'comm_base':_safe(r.get('commission_ytd')),'dac':_safe(r.get('dac_variation'))}
+    return {'written':_safe(r.get('revenue')),'var_upr':_safe(r.get('upr_open'))-_safe(r.get('upr_close')),'earned':_safe(r.get('earned_premium_ytd')),'paid_cur':paid_cur,'prov_cur':prov_cur,'inc_cur':_safe(r.get('incurred_current_ytd')),'paid_pr':paid_pr,'prov_pr':prov_pr,'inc_pr':_safe(r.get('incurred_prior_ytd')),'inc':_safe(r.get('incurred_current_ytd'))+_safe(r.get('incurred_prior_ytd')),'comm':_safe(r.get('commission_ytd'))+_safe(r.get('dac_variation')),'comm_base':_safe(r.get('commission_ytd')),'dac':_safe(r.get('dac_variation'))}
 
 
 def _reass_metrics(r):
@@ -383,3 +385,44 @@ def export_projection(path, inputs: dict, direct, reass, summary, diagnostics, a
     ws=wb.create_sheet('CPC SAZ'); _populate_cpc(ws,direct,reass)
     wb.save(path); return path
 
+
+def export_optimized_forecast(path, result, inputs=None):
+    """Export the evaluated optimization result, including both accounting bases.
+
+    These are auditable snapshots. Recalculation is performed by the Python
+    optimizer because spreadsheet formulas cannot reproduce the QP solution.
+    """
+    inputs = inputs or {}
+    wb = Workbook()
+    wb.remove(wb.active)
+    sheets = [
+        ("Direct Local", result.direct, "direct"),
+        ("Reass Local", result.reass, "reass"),
+        ("CPC SAZ Local", (result.direct, result.reass), "cpc"),
+        ("Direct", result.direct_ifrs, "direct"),
+        ("Reass", result.reass_ifrs, "reass"),
+        ("CPC SAZ", (result.direct_ifrs, result.reass_ifrs), "cpc"),
+    ]
+    for title, data, kind in sheets:
+        ws = wb.create_sheet(title)
+        if kind == "cpc":
+            _populate_cpc(ws, data[0], data[1])
+        else:
+            _populate_local(ws, data, kind)
+        ws["A2"] = "Valeurs calculées par le moteur de projection Python; instantané à auditer."
+        if title in ("Direct", "Reass"):
+            ws["A1"] = f"Projection {title} — IFRS"
+        elif title == "CPC SAZ":
+            ws["A1"] = "CONSOLIDATION IFRS"
+    for title, data in [
+        ("Taux appliqués", result.applied_rates),
+        ("Contrôles", result.diagnostics),
+        ("Historique primes", inputs.get("history_premiums")),
+        ("Cibles", inputs.get("annual_targets")),
+        ("Verrous", inputs.get("locks")),
+    ]:
+        if data is not None:
+            ws = wb.create_sheet(title)
+            _write_df(ws, pd.DataFrame(data))
+    wb.save(path)
+    return path

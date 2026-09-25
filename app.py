@@ -861,4 +861,7 @@ def build_app():
     return demo
 
 if __name__ == "__main__":
-    app=build_app(); port=int(os.environ.get("PORT","7860")); app.launch(server_name="0.0.0.0",server_port=port,show_error=True,theme=THEME,css=CSS)
+    from optimized_app import build_app as build_optimized_app
+    app=build_optimized_app()
+    port=int(os.environ.get("PORT","7860"))
+    app.launch(server_name="0.0.0.0",server_port=port,show_error=True,theme=THEME,css=CSS)

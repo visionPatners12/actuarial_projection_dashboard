@@ -1,6 +1,7 @@
 from __future__ import annotations
 from collections import Counter
 from datetime import datetime
+import re
 from pathlib import Path
 from typing import Tuple, List
 import pandas as pd
@@ -53,7 +54,11 @@ def _infer_year(ws, starts: List[int]) -> int:
     for c in starts:
         for j in range(c, min(ws.max_column,c+11)+1):
             v=ws.cell(4,j).value
-            if isinstance(v, datetime): years.append(v.year)
+            if isinstance(v, datetime):
+                years.append(v.year)
+            elif isinstance(v, str):
+                match=re.search(r"\b(20\d{2})\b",v)
+                if match: years.append(int(match.group(1)))
     return Counter(years).most_common(1)[0][0] if years else datetime.today().year
 
 
