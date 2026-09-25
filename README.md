@@ -1,21 +1,27 @@
-# Projection technique assurance — V4.1
+# Projection technique assurance — V4.2
 
-Application Gradio en français, prête pour Render.
+Application Gradio en français pour la projection Direct / Réassurance / CPC, Local et IFRS.
 
-## Parcours
-1. Historique des primes (mois en lignes, branches en colonnes)
-2. Ancrages Direct Local (départ et/ou arrivée)
-3. Passage IFRS : uniquement IBNR, DAC (%) et REC Réassurance IFRS (%)
-4. Hypothèses Réassurance : cession primes, récupération sinistres, REC Réassurance / primes cédées, commission
-5. Cibles CPC Local / IFRS
-6. Pilotage interactif des courbes
-7. Export Excel Direct Local / Reass Local / CPC SAZ Local + IFRS
+## Démarrage
 
-## Règle REC Réassurance
-La REC Réassurance est indépendante de la REC Direct.
-
-REC Réassurance = Primes cédées × Taux REC Réassurance.
+```bash
+pip install -r requirements.txt
+python app.py
+```
 
 ## Render
-Build Command: `pip install --upgrade pip && pip install -r requirements.txt`
-Start Command: `python app.py`
+
+- Build Command : `pip install --upgrade pip && pip install -r requirements.txt`
+- Start Command : `python app.py`
+
+## Première page
+
+La première page contient maintenant un bouton **« Télécharger le fichier d’hypothèses à remplir »**.
+Le fichier couvre :
+- historique ;
+- ancrages Direct départ / arrivée ;
+- hypothèses Réassurance par taux ;
+- paramètres IFRS (IBNR, DAC, REC Réassurance) ;
+- cibles CPC Local / IFRS.
+
+Aucun import de document n’est requis dans l’application : le fichier rempli peut être renvoyé séparément dans ChatGPT.

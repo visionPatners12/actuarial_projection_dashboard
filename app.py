@@ -562,6 +562,8 @@ def _maj_annees(annee_hist,annee_proj):
 # -----------------------------------------------------------------------------
 # Application
 # -----------------------------------------------------------------------------
+FICHIER_HYPOTHESES = Path(__file__).with_name("hypotheses_forecast_assurance_a_remplir.xlsx")
+
 def build_app():
     with gr.Blocks(title="Projection technique assurance") as demo:
         gr.HTML('<div id="entete"><h1>Projection technique assurance</h1><p>Historique → ancrages Direct → hypothèses Réassurance → cibles CPC → pilotage interactif → résultats Local / IFRS.</p></div>')
@@ -571,7 +573,26 @@ def build_app():
         s_state=gr.State(pd.DataFrame()); si_state=gr.State(pd.DataFrame()); apd_state=gr.State(pd.DataFrame()); apr_state=gr.State(pd.DataFrame()); hist_state=gr.State(pd.DataFrame())
 
         with gr.Tab("1 · Historique"):
-            gr.Markdown("### Historique des primes\nCollez les primes mensuelles directement depuis Excel. **Mois en lignes, branches en colonnes**, toujours dans le même ordre.")
+            gr.Markdown("### Commencer ici")
+            with gr.Row():
+                with gr.Column(scale=3):
+                    gr.Markdown(
+                        "**1. Téléchargez le fichier d’hypothèses**, remplissez les données dont vous disposez, puis renvoyez-le-moi dans ChatGPT. "
+                        "Le fichier regroupe l’historique, les ancrages Direct, les taux de Réassurance, les paramètres IFRS et les cibles CPC. "
+                        "Vous pouvez aussi saisir les données directement dans l’application si vous préférez."
+                    )
+                with gr.Column(scale=1):
+                    gr.DownloadButton(
+                        "Télécharger le fichier d’hypothèses à remplir",
+                        value=str(FICHIER_HYPOTHESES),
+                        variant="primary",
+                        elem_classes="bouton-principal",
+                    )
+            gr.Markdown(
+                "### Historique des primes\n"
+                "Collez les primes mensuelles directement depuis Excel. **Mois en lignes, branches en colonnes**, toujours dans le même ordre : "
+                "**Auto, Santé, Accident corpo, Incendie, BDM / Construction, RC, RD, Transport**."
+            )
             with gr.Row():
                 annee_hist=gr.Number(value=2026,precision=0,label="Année historique",minimum=2000,maximum=2100)
                 annee_proj=gr.Number(value=2027,precision=0,label="Année à projeter",minimum=2000,maximum=2100)
