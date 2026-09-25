@@ -316,8 +316,8 @@ def _populate_direct_formula(ws,direct,hyp_map,anchor_map):
             ws.cell(169,c,f'={_hformula(hyp_map,p,b,"Part IBNR Ant. / provisions","Hyp Direct")}')
             ws.cell(162,c,f'=MAX(0,{col}164+{col}166+{col}170-MAX(0,{col}14-{col}47))')
             ws.cell(163,c,f'=MAX(0,{col}165+{col}167+{col}171-MAX(0,{col}15-{col}48))')
-            ws.cell(160,c,f'=MAX(0,{col}14-{col}47)+{col}162-{col}164-{col}166')
-            ws.cell(161,c,f'=MAX(0,{col}15-{col}48)+{col}163-{col}165-{col}167')
+            ws.cell(160,c,f'=MAX(0,{col}14-{col}47)+{col}45+{col}41-{col}166-{col}164')
+            ws.cell(161,c,f'=MAX(0,{col}15-{col}48)+{col}46+{col}42-{col}167-{col}165')
             ws.cell(41,c,f'={col}162*{col}168'); ws.cell(42,c,f'={col}163*{col}169')
             ws.cell(45,c,f'={col}162-{col}41'); ws.cell(46,c,f'={col}163-{col}42')
             ws.cell(36,c,f'={col}164+{col}165'); ws.cell(37,c,f'={col}41+{col}42'); ws.cell(38,c,f'={col}37-{col}36')
@@ -510,67 +510,80 @@ def _populate_cpc_formula(ws,direct):
 
 
 
-def _write_ifrs_passage_sheet(ws, ifrs_params=None):
+def _write_ifrs_passage_sheet(ws, ifrs_params=None, ratio_targets_ifrs=None):
     p=pd.DataFrame(ifrs_params).copy() if ifrs_params is not None else pd.DataFrame()
     pmap={str(x.get('Branche')):x for _,x in p.iterrows()} if len(p) else {}
-    fields=[
-        ('ibnr_current_start','IBNR exercice — Départ','amount'),
-        ('ibnr_prior_start','IBNR antérieurs — Départ','amount'),
-        ('dac_rate_start','DAC Direct — Départ (% REC 100%)','pct'),
-        ('reass_rec_rate_start','REC Réassurance IFRS — Départ (% primes cédées)','pct'),
-        ('ibnr_current_end','IBNR exercice — Arrivée','amount'),
-        ('ibnr_prior_end','IBNR antérieurs — Arrivée','amount'),
-        ('dac_rate_end','DAC Direct — Arrivée (% REC 100%)','pct'),
-        ('reass_rec_rate_end','REC Réassurance IFRS — Arrivée (% primes cédées)','pct'),
-    ]
-    ws.sheet_view.showGridLines=False; ws.freeze_panes='B5'; ws.column_dimensions['A'].width=48
-    ws['A1']='PASSAGE IFRS'; ws['A1'].font=Font(bold=True,size=14,color=WHITE); ws['A1'].fill=PatternFill('solid',fgColor=DARK); ws.merge_cells('A1:I1')
-    ws['A2']='Saisies IFRS uniquement : IBNR en montant, DAC en %, REC Réassurance en % des primes cédées. Toutes les autres lignes pointent vers le Local.'
+    rt=pd.DataFrame(ratio_targets_ifrs).copy() if ratio_targets_ifrs is not None else pd.DataFrame()
+    ws.sheet_view.showGridLines=False; ws.freeze_panes='B5'; ws.column_dimensions['A'].width=42
+    ws['A1']='PASSAGE IFRS — AUTOMATIQUE'; ws['A1'].font=Font(bold=True,size=14,color=WHITE); ws['A1'].fill=PatternFill('solid',fgColor=DARK); ws.merge_cells('A1:I1')
+    ws['A2']='Aucune saisie IFRS complémentaire : IBNR estimé depuis le Local ; DAC et REC Réassurance IFRS calculés depuis le Local. Les cibles S/P IFRS peuvent recalibrer l’IBNR.'
     ws['A2'].font=Font(italic=True,color='64748B'); ws.merge_cells('A2:I2')
     ws['A4']='Paramètre'
     for i,b in enumerate(BRANCHES,2): ws.cell(4,i,b)
     for c in range(1,10): ws.cell(4,c).fill=PatternFill('solid',fgColor=LIGHT); ws.cell(4,c).font=Font(bold=True,color='17365D'); ws.cell(4,c).alignment=Alignment(horizontal='center',wrap_text=True)
+    ws['A5']='Coefficient IBNR IFRS / Local'
     cellmap={b:{} for b in BRANCHES}
-    for rr,(field,label,kind) in enumerate(fields,5):
-        ws.cell(rr,1,label); ws.cell(rr,1).font=Font(bold=True if rr in [5,9] else False)
-        for i,b in enumerate(BRANCHES,2):
-            row=pmap.get(b,pd.Series(dtype=object)); v=row.get(field) if len(row) else None
-            if v is not None and not pd.isna(v): ws.cell(rr,i,float(v)/100.0 if kind=='pct' else float(v))
-            ws.cell(rr,i).font=Font(color='0000FF',bold=True); ws.cell(rr,i).number_format='0.0%' if kind=='pct' else '#,##0;[Red](#,##0);-'; ws.column_dimensions[get_column_letter(i)].width=17
-            cellmap[b][field]=ws.cell(rr,i).coordinate
-    ws['A14']='Règle'; ws['B14']='Direct IFRS : seules les lignes IBNR et DAC diffèrent. Réass IFRS : REC 100% calculée sur les primes cédées ; DAC Réassurance dérivée du taux de commission.'; ws.merge_cells('B14:I14'); ws['B14'].font=Font(italic=True,color='64748B')
-    return cellmap
+    for i,b in enumerate(BRANCHES,2):
+        row=pmap.get(b,pd.Series(dtype=object)); v=float(row.get('ibnr_factor',1.0)) if len(row) else 1.0
+        ws.cell(5,i,v); ws.cell(5,i).number_format='0.0%'; ws.cell(5,i).font=Font(color='000000',bold=True); ws.column_dimensions[get_column_letter(i)].width=17
+        cellmap[b]['ibnr_factor']=ws.cell(5,i).coordinate
+    ws['A7']='Règles de calcul'; ws['B7']='IBNR IFRS = IBNR Local × coefficient, sauf recalage nécessaire pour atteindre une cible S/P IFRS. DAC Direct = REC 100% × taux de commission Direct. REC Réassurance IFRS = REC Réassurance Local / 72%. DAC Réassurance = REC 100% × taux de commission de réassurance.'; ws.merge_cells('B7:I8'); ws['B7'].alignment=Alignment(wrap_text=True,vertical='top'); ws['B7'].font=Font(italic=True,color='64748B')
+
+    target_map={}
+    if not rt.empty:
+        ws['A10']='CIBLES S/P IFRS UTILISÉES'; ws['A10'].font=Font(bold=True,color=WHITE); ws['A10'].fill=PatternFill('solid',fgColor=DARK); ws.merge_cells('A10:I10')
+        row=11
+        for per in sorted(rt['period'].astype(str).unique()):
+            ws.cell(row,1,per); ws.cell(row,1).font=Font(bold=True,color='17365D')
+            row+=1
+            ws.cell(row,1,'S/P exercice')
+            ws.cell(row+1,1,'S/P global')
+            for bi,b in enumerate(BRANCHES,2):
+                m=rt[(rt['period'].astype(str)==per)&(rt['branch'].astype(str)==b)]
+                ex=None if m.empty or pd.isna(m.iloc[-1].get('sp_exercice')) else float(m.iloc[-1].get('sp_exercice'))/100.0
+                gl=None if m.empty or pd.isna(m.iloc[-1].get('sp_global')) else float(m.iloc[-1].get('sp_global'))/100.0
+                if ex is not None: ws.cell(row,bi,ex)
+                if gl is not None: ws.cell(row+1,bi,gl)
+                ws.cell(row,bi).number_format='0.0%'; ws.cell(row+1,bi).number_format='0.0%'
+                target_map[(per,b,'sp_exercice')]=ws.cell(row,bi).coordinate
+                target_map[(per,b,'sp_global')]=ws.cell(row+1,bi).coordinate
+            row+=3
+    return cellmap,target_map
 
 
-def _make_ifrs_direct(wb, periods, cells):
+def _make_ifrs_direct(wb, periods, cells, target_map=None):
+    target_map=target_map or {}
     src=wb['Direct Local']; ws=wb.copy_worksheet(src); ws.title='Direct'
-    ws['A1']='Projection Direct — IFRS'; ws['A2']='Toutes les lignes pointent vers Direct Local, sauf IBNR et DAC pilotés via Passage IFRS.'
-    last_i=len(periods)-1
+    ws['A1']='Projection Direct — IFRS'; ws['A2']='Toutes les lignes pointent vers Direct Local. IBNR, DAC et ratios IFRS sont recalculés automatiquement.'
     for i,p in enumerate(periods):
-        start=_direct_start(i); frac=i/last_i if last_i>0 else 1.0
-        final_start=_direct_start(last_i)
+        start=_direct_start(i); per=str(pd.Period(p,freq='M'))
         for bi,b in enumerate(BRANCHES):
-            c=start+bi; col=get_column_letter(c); ref=f"'Direct Local'!{col}"; final_col=get_column_letter(final_start+bi)
+            c=start+bi; col=get_column_letter(c); ref=f"'Direct Local'!{col}"; cm=cells[b]; cf=f"'Passage IFRS'!{cm['ibnr_factor']}"
             for row in [7,8,9,10,11,12,14,15,16,18,20,21,22,24,25,26,32,33,34,45,46,47,48,49,51,52,53,54,55,64,65,66,67,68,69,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,93,109,110,166,167]:
                 ws.cell(row,c,f'={ref}{row}')
-            cm=cells[b]
-            s_cur=f"'Passage IFRS'!{cm['ibnr_current_start']}"; e_cur=f"'Passage IFRS'!{cm['ibnr_current_end']}"; s_pr=f"'Passage IFRS'!{cm['ibnr_prior_start']}"; e_pr=f"'Passage IFRS'!{cm['ibnr_prior_end']}"
-            ds=f"'Passage IFRS'!{cm['dac_rate_start']}"; de=f"'Passage IFRS'!{cm['dac_rate_end']}"
-            # Ouvertures IFRS fixes dans l'exercice.
-            ws.cell(164,c,f'=IF({s_cur}="",\'Direct Local\'!{col}164,{s_cur})')
-            ws.cell(165,c,f'=IF({s_pr}="",\'Direct Local\'!{col}165,{s_pr})')
-            # Fermetures IBNR : forme locale conservée, recalée progressivement vers l'ancrage de fin.
-            ws.cell(41,c,f'=IF({e_cur}="",\'Direct Local\'!{col}41,IFERROR(\'Direct Local\'!{col}41*(1+{frac}*({e_cur}/\'Direct Local\'!{final_col}41-1)),{e_cur}))')
-            ws.cell(42,c,f'=IF({e_pr}="",\'Direct Local\'!{col}42,IFERROR(\'Direct Local\'!{col}42*(1+{frac}*({e_pr}/\'Direct Local\'!{final_col}42-1)),{e_pr}))')
+            # Ouvertures IFRS dérivées automatiquement du Local.
+            ws.cell(164,c,f"=MAX(0,'Direct Local'!{col}164*{cf})")
+            ws.cell(165,c,f"=MAX(0,'Direct Local'!{col}165*{cf})")
+            earned=f'({col}7+{col}20-{col}21)'
+            t_ex=target_map.get((per,b,'sp_exercice')); t_gl=target_map.get((per,b,'sp_global'))
+            # Clôture IBNR exercice : facteur Local ou résolution de la cible S/P IFRS.
+            if t_ex:
+                ws.cell(41,c,f"=IF('Passage IFRS'!{t_ex}=\"\",MAX(0,'Direct Local'!{col}41*{cf}),MAX(0,{earned}*'Passage IFRS'!{t_ex}-MAX(0,{col}14-{col}47)-{col}45+{col}164+{col}166))")
+            else:
+                ws.cell(41,c,f"=MAX(0,'Direct Local'!{col}41*{cf})")
+            ws.cell(160,c,f'=MAX(0,{col}14-{col}47)+{col}45+{col}41-{col}166-{col}164')
+            if t_gl:
+                ws.cell(42,c,f"=IF('Passage IFRS'!{t_gl}=\"\",MAX(0,'Direct Local'!{col}42*{cf}),MAX(0,{earned}*'Passage IFRS'!{t_gl}-{col}160-MAX(0,{col}15-{col}48)-{col}46+{col}165+{col}167))")
+            else:
+                ws.cell(42,c,f"=MAX(0,'Direct Local'!{col}42*{cf})")
+            ws.cell(161,c,f'=MAX(0,{col}15-{col}48)+{col}46+{col}42-{col}167-{col}165')
             ws.cell(36,c,f'={col}164+{col}165'); ws.cell(37,c,f'={col}41+{col}42'); ws.cell(38,c,f'={col}37-{col}36')
-            ws.cell(57,c,f'={col}37'); ws.cell(58,c,f'={col}36'); ws.cell(59,c,f'={col}41'); ws.cell(60,c,f'={col}42'); ws.cell(61,c,f'={col}41-{col}164'); ws.cell(62,c,f'={col}42-{col}165')
-            # DAC Direct basé sur REC 100% (REC prorata) comme dans pd.xlsx.
-            rate=f'=IF({de}="",IF({ds}="",0,{ds}),{ds}+{frac}*({de}-{ds}))'
-            ws.cell(28,c,f'=IF({ds}="",0,{col}24*{ds})')
-            ws.cell(29,c,f'=IF(AND({ds}="",{de}=""),0,{col}25*({rate[1:]}))')
+            ws.cell(43,c,f'={col}38'); ws.cell(57,c,f'={col}37'); ws.cell(58,c,f'={col}36'); ws.cell(59,c,f'={col}41'); ws.cell(60,c,f'={col}42'); ws.cell(61,c,f'={col}41-{col}164'); ws.cell(62,c,f'={col}42-{col}165')
+            # DAC Direct automatique depuis le Local : REC 100% × taux de commission.
+            rate=f"IFERROR('Direct Local'!{col}18/'Direct Local'!{col}7,0)"
+            ws.cell(28,c,f"='Direct Local'!{col}24*{rate}")
+            ws.cell(29,c,f"='Direct Local'!{col}25*{rate}")
             ws.cell(30,c,f'={col}28-{col}29')
-            ws.cell(160,c,f"=MAX(0,'Direct Local'!{col}14-'Direct Local'!{col}47)+'Direct Local'!{col}45+{col}41-'Direct Local'!{col}166-{col}164")
-            ws.cell(161,c,f"=MAX(0,'Direct Local'!{col}15-'Direct Local'!{col}48)+'Direct Local'!{col}46+{col}42-'Direct Local'!{col}167-{col}165")
         for row in list(DIRECT_LABELS.keys()):
             if row<131: _set_amount_totals(ws,start,row)
     return ws
@@ -578,22 +591,22 @@ def _make_ifrs_direct(wb, periods, cells):
 
 def _make_ifrs_reass(wb, periods, cells):
     src=wb['Reass Local']; ws=wb.copy_worksheet(src); ws.title='Reass'
-    ws['A1']='Projection Réassurance — IFRS'; ws['A2']='REC CIMA locale conservée ; REC 100% IFRS recalculée sur les primes cédées. DAC Réassurance dérivée de la commission.'
-    last_i=len(periods)-1
+    ws['A1']='Projection Réassurance — IFRS'; ws['A2']='REC 100% et DAC calculés automatiquement depuis Reass Local.'
     for i,p in enumerate(periods):
-        start=_reass_start(i); frac=i/last_i if last_i>0 else 1.0
+        start=_reass_start(i)
         for bi,b in enumerate(BRANCHES):
-            c=start+bi; col=get_column_letter(c); ref=f"'Reass Local'!{col}"; cm=cells[b]
-            for row in [7,8,9,10,11,12,14,15,16,18,20,21,22,24,25,26,36,37,38,40,41,42,44,45,46,48,49,50,51,52,54,55,56,57,58,59,61,62,63,64,65,66,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82]: ws.cell(row,c,f'={ref}{row}')
-            rs=f"'Passage IFRS'!{cm['reass_rec_rate_start']}"; re=f"'Passage IFRS'!{cm['reass_rec_rate_end']}"
-            rate=f'=IF({re}="",IF({rs}="",0,{rs}),{rs}+{frac}*({re}-{rs}))'
-            # Opening: derive a ceded-premium reference from Local REC/rate when available, otherwise current ceded premium.
-            ws.cell(28,c,f'=IF({rs}="",IFERROR(\'Reass Local\'!{col}20/72%,0),IFERROR(\'Reass Local\'!{col}20/IF(\'Reass Local\'!{col}7=0,1,\'Reass Local\'!{col}21/\'Reass Local\'!{col}7)*{rs},\'Reass Local\'!{col}7*{rs}))')
-            ws.cell(29,c,f'=IF(AND({rs}="",{re}=""),{col}28,{col}7*({rate[1:]}))')
+            c=start+bi; col=get_column_letter(c); ref=f"'Reass Local'!{col}"
+            for row in [7,8,9,10,11,12,14,15,16,18,20,21,22,24,25,26,36,37,38,40,41,42,44,45,46,48,49,50,51,52,54,55,56,57,58,59,61,62,63,64,65,66,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82]:
+                ws.cell(row,c,f'={ref}{row}')
+            ws.cell(28,c,f"=IFERROR('Reass Local'!{col}20/72%,0)")
+            ws.cell(29,c,f"=IFERROR('Reass Local'!{col}21/72%,0)")
             ws.cell(30,c,f'={col}29-{col}28')
-            ws.cell(32,c,f'=IFERROR({col}18/{col}7*{col}28,0)'); ws.cell(33,c,f'=IFERROR({col}18/{col}7*{col}29,0)'); ws.cell(34,c,f'={col}32-{col}33')
+            ws.cell(32,c,f'=IFERROR({col}18/{col}7*{col}28,0)')
+            ws.cell(33,c,f'=IFERROR({col}18/{col}7*{col}29,0)')
+            ws.cell(34,c,f'={col}32-{col}33')
         for row in [r for r in REASS_LABELS if r<87]: _set_amount_totals(ws,start,row)
     return ws
+
 
 def _copy_cpc_as_ifrs(wb):
     src=wb['CPC SAZ Local']; ws=wb.copy_worksheet(src); ws.title='CPC SAZ'
@@ -605,7 +618,7 @@ def _copy_cpc_as_ifrs(wb):
                 cell.value=v.replace("'Direct Local'","'Direct'").replace("'Reass Local'","'Reass'")
     return ws
 
-def export_projection(path, inputs: dict, direct, reass, summary, diagnostics, applied_direct=None, applied_reass=None, ifrs_params=None):
+def export_projection(path, inputs: dict, direct, reass, summary, diagnostics, applied_direct=None, applied_reass=None, ifrs_params=None, ratio_targets_ifrs=None):
     direct=pd.DataFrame(direct).copy(); reass=pd.DataFrame(reass).copy()
     wb=Workbook(); wb.remove(wb.active)
     # Force Excel / LibreOffice to recalculate every formula on open.
@@ -617,8 +630,8 @@ def export_projection(path, inputs: dict, direct, reass, summary, diagnostics, a
     ws=wb.create_sheet('Direct Local'); _populate_direct_formula(ws,direct,hdm,anchors)
     ws=wb.create_sheet('Reass Local'); _populate_reass_formula(ws,direct,reass,hrm)
     ws=wb.create_sheet('CPC SAZ Local'); periods=_populate_cpc_formula(ws,direct)
-    ws=wb.create_sheet('Passage IFRS'); ifrs_cells=_write_ifrs_passage_sheet(ws,ifrs_params)
-    _make_ifrs_direct(wb,periods,ifrs_cells)
+    ws=wb.create_sheet('Passage IFRS'); ifrs_cells,ifrs_targets=_write_ifrs_passage_sheet(ws,ifrs_params,ratio_targets_ifrs)
+    _make_ifrs_direct(wb,periods,ifrs_cells,ifrs_targets)
     _make_ifrs_reass(wb,periods,ifrs_cells)
     _copy_cpc_as_ifrs(wb)
     wb.save(path)
