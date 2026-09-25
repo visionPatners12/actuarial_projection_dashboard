@@ -237,18 +237,18 @@ def _gross_metrics(r):
     paid_pr=max(0.0,_safe(r.get('paid_prior_ytd'))-_safe(r.get('recourse_prior_ytd')))
     prov_cur=(_safe(r.get('case_close_current'))+_safe(r.get('ibnr_close_current')))-(_safe(r.get('case_open_current'))+_safe(r.get('ibnr_open_current')))
     prov_pr=(_safe(r.get('case_close_prior'))+_safe(r.get('ibnr_close_prior')))-(_safe(r.get('case_open_prior'))+_safe(r.get('ibnr_open_prior')))
-    return {'written':_safe(r.get('gwp_ytd')),'var_upr':_safe(r.get('upr_open'))-_safe(r.get('upr_close')),'earned':_safe(r.get('earned_premium_ytd')),'paid_cur':paid_cur,'prov_cur':prov_cur,'inc_cur':_safe(r.get('incurred_current_ytd')),'paid_pr':paid_pr,'prov_pr':prov_pr,'inc_pr':_safe(r.get('incurred_prior_ytd')),'inc':_safe(r.get('incurred_current_ytd'))+_safe(r.get('incurred_prior_ytd')),'comm':_safe(r.get('commission_ytd'))}
+    return {'written':_safe(r.get('gwp_ytd')),'var_upr':_safe(r.get('upr_open'))-_safe(r.get('upr_close')),'earned':_safe(r.get('earned_premium_ytd')),'paid_cur':paid_cur,'prov_cur':prov_cur,'inc_cur':_safe(r.get('incurred_current_ytd')),'paid_pr':paid_pr,'prov_pr':prov_pr,'inc_pr':_safe(r.get('incurred_prior_ytd')),'inc':_safe(r.get('incurred_current_ytd'))+_safe(r.get('incurred_prior_ytd')),'comm':_safe(r.get('commission_ytd'))+_safe(r.get('dac_variation')),'comm_base':_safe(r.get('commission_ytd')),'dac':_safe(r.get('dac_variation'))}
 
 
 def _reass_metrics(r):
     if r is None: return {k:0.0 for k in ['written','var_upr','earned','paid_cur','prov_cur','inc_cur','paid_pr','prov_pr','inc_pr','inc','comm']}
     prov_cur=(_safe(r.get('recoverable_case_close_current'))+_safe(r.get('recoverable_ibnr_close_current')))-(_safe(r.get('recoverable_case_open_current'))+_safe(r.get('recoverable_ibnr_open_current')))
     prov_pr=(_safe(r.get('recoverable_case_close_prior'))+_safe(r.get('recoverable_ibnr_close_prior')))-(_safe(r.get('recoverable_case_open_prior'))+_safe(r.get('recoverable_ibnr_open_prior')))
-    return {'written':_safe(r.get('ceded_premium_ytd')),'var_upr':_safe(r.get('ceded_upr_close'))-_safe(r.get('ceded_upr_open')),'earned':_safe(r.get('ceded_earned_premium_ytd')),'paid_cur':_safe(r.get('recovered_paid_current_ytd')),'prov_cur':prov_cur,'inc_cur':_safe(r.get('recovered_incurred_current_ytd')),'paid_pr':_safe(r.get('recovered_paid_prior_ytd')),'prov_pr':prov_pr,'inc_pr':_safe(r.get('recovered_incurred_prior_ytd')),'inc':_safe(r.get('recovered_incurred_current_ytd'))+_safe(r.get('recovered_incurred_prior_ytd')),'comm':_safe(r.get('reass_commission_ytd'))}
+    return {'written':_safe(r.get('ceded_premium_ytd')),'var_upr':_safe(r.get('ceded_upr_close'))-_safe(r.get('ceded_upr_open')),'earned':_safe(r.get('ceded_earned_premium_ytd')),'paid_cur':_safe(r.get('recovered_paid_current_ytd')),'prov_cur':prov_cur,'inc_cur':_safe(r.get('recovered_incurred_current_ytd')),'paid_pr':_safe(r.get('recovered_paid_prior_ytd')),'prov_pr':prov_pr,'inc_pr':_safe(r.get('recovered_incurred_prior_ytd')),'inc':_safe(r.get('recovered_incurred_current_ytd'))+_safe(r.get('recovered_incurred_prior_ytd')),'comm':_safe(r.get('reass_commission_ytd'))-_safe(r.get('dac_variation')),'comm_base':_safe(r.get('reass_commission_ytd')),'dac':_safe(r.get('dac_variation'))}
 
 
 def _sum_metrics(rows,members,fn):
-    keys=['written','var_upr','earned','paid_cur','prov_cur','inc_cur','paid_pr','prov_pr','inc_pr','inc','comm']
+    keys=['written','var_upr','earned','paid_cur','prov_cur','inc_cur','paid_pr','prov_pr','inc_pr','inc','comm','comm_base','dac']
     out={k:0.0 for k in keys}
     for b in members:
         m=fn(rows.get(b))
@@ -262,7 +262,7 @@ def _cpc_values(g,r):
     v[5]=g['written']; v[6]=g['var_upr']; v[7]=g['earned']
     v[9]=-g['paid_cur']; v[10]=-g['prov_cur']; v[11]=-g['inc_cur']
     v[12]=-g['paid_pr']; v[13]=-g['prov_pr']; v[14]=-g['inc_pr']; v[15]=-g['inc']
-    v[17]=-g['comm']; v[18]=0.0; v[19]=v[17]
+    v[17]=-g.get('comm_base',g['comm']); v[18]=-g.get('dac',0.0); v[19]=v[17]+v[18]
     for rr in range(21,42): v[rr]=0.0
     v[43]=v[7]+v[15]+v[19]+v[41]
     v[46]=g['inc_cur']/g['earned'] if abs(g['earned'])>1e-9 else 0.0
@@ -272,13 +272,13 @@ def _cpc_values(g,r):
     v[53]=-r['written']; v[54]=r['var_upr']; v[55]=-r['earned']
     v[57]=r['paid_cur']; v[58]=r['prov_cur']; v[59]=r['inc_cur']
     v[60]=r['paid_pr']; v[61]=r['prov_pr']; v[62]=r['inc_pr']; v[63]=r['inc']
-    v[65]=r['comm']; v[66]=0.0; v[67]=v[65]; v[69]=v[55]+v[63]+v[67]
+    v[65]=r.get('comm_base',r['comm']); v[66]=-r.get('dac',0.0); v[67]=v[65]+v[66]; v[69]=v[55]+v[63]+v[67]
     v[72]=r['written']/g['written'] if abs(g['written'])>1e-9 else 0.0
     v[73]=r['inc']/g['inc'] if abs(g['inc'])>1e-9 else 0.0
     v[76]=v[5]+v[53]; v[77]=v[6]+v[54]; v[78]=v[7]+v[55]
     v[80]=v[9]+v[57]; v[81]=v[10]+v[58]; v[82]=v[11]+v[59]
     v[83]=v[12]+v[60]; v[84]=v[13]+v[61]; v[85]=v[14]+v[62]; v[86]=v[15]+v[63]
-    v[88]=v[17]+v[65]; v[89]=0.0; v[90]=v[88]
+    v[88]=v[17]+v[65]; v[89]=v[18]+v[66]; v[90]=v[88]+v[89]
     for rr in range(92,113): v[rr]=0.0
     v[114]=v[78]+v[86]+v[90]+v[112]
     v[117]=(-v[82]/v[78]) if abs(v[78])>1e-9 else 0.0

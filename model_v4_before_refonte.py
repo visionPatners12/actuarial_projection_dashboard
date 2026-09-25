@@ -52,7 +52,6 @@ DIRECT_METRICS = {
 REASS_METRICS = {
     "Taux cession primes": {"kind": "rate", "default": 25.0, "field": "cession_rate"},
     "Taux récupération sinistres": {"kind": "rate", "default": 25.0, "field": "recovery_rate"},
-    "Taux REC réassurance / primes cédées": {"kind": "rate", "default": 25.0, "field": "rec_cession_rate"},
     "Taux commission réassurance": {"kind": "rate", "default": 15.0, "field": "reass_commission_rate"},
 }
 
@@ -324,11 +323,6 @@ def _reass_rate_samples(hd: pd.DataFrame, hr: pd.DataFrame, branch: str, metric:
     if hr.empty: return []
     r=hr[(hr["branch"]==branch)&(hr["period"].dt.month==month)]
     out=[]
-    if metric=="Taux REC réassurance / primes cédées":
-        for _,x in r.iterrows():
-            cp=_num(x.get("ceded_premium_ytd")); rec=_num(x.get("ceded_upr_close"))
-            if cp>1e-9: out.append(100*rec/cp)
-        return out
     if metric=="Taux commission réassurance":
         for _,x in r.iterrows():
             cp=_num(x.get("ceded_premium_ytd"))
@@ -753,9 +747,11 @@ def _project_reass(
 
             cession=applied["Taux cession primes"][3]/100.0
             recovery=applied["Taux récupération sinistres"][3]/100.0
-            rec_cession=applied["Taux REC réassurance / primes cédées"][3]/100.0
-            # La REC de réassurance est indépendante de la REC Direct.
-            # Elle dépend uniquement des primes cédées et du taux REC Réassurance.
+            # When the imported Reass opening is missing (e.g. Direct/Reass calendars
+            # do not match), synthesise it once from the gross annual opening and the
+            # selected cession/recovery rates. It then remains fixed for the year.
+            if abs(annual_open["ceded_upr_open"])<1e-9 and _num(d.get("upr_open"))>0:
+                annual_open["ceded_upr_open"]=_num(d.get("upr_open"))*cession
             gross_case_open_cur=_num(d.get("case_open_current")); gross_case_open_pr=_num(d.get("case_open_prior"))
             gross_ibnr_open_cur=_num(d.get("ibnr_open_current")); gross_ibnr_open_pr=_num(d.get("ibnr_open_prior"))
             if abs(annual_open["recoverable_case_open_current"])+abs(annual_open["recoverable_ibnr_open_current"])<1e-9 and gross_case_open_cur+gross_ibnr_open_cur>0:
@@ -764,18 +760,11 @@ def _project_reass(
                 annual_open["recoverable_case_open_prior"]=gross_case_open_pr*recovery; annual_open["recoverable_ibnr_open_prior"]=gross_ibnr_open_pr*recovery
             ceded=_num(d.get("gwp_ytd"))*cession
             gross_inc=_num(d.get("incurred_current_ytd"))+_num(d.get("incurred_prior_ytd"))
-            # Si aucune ouverture Réassurance n'est fournie, on l'estime une fois
-            # à partir d'une prime cédée de référence, jamais à partir de la REC Direct.
-            if abs(annual_open["ceded_upr_open"])<1e-9:
-                ref_ceded=_num(state.get("ceded_premium_ytd"))
-                if ref_ceded<=1e-9:
-                    ref_ceded=ceded
-                annual_open["ceded_upr_open"]=max(0.0,ref_ceded*rec_cession)
 
-            vals={"period":p,"branch":branch,"cession_rate":cession,"rec_cession_rate":rec_cession,"claim_recovery_current":recovery,"claim_recovery_prior":recovery,"recovery_rate":recovery}
+            vals={"period":p,"branch":branch,"cession_rate":cession,"claim_recovery_current":recovery,"claim_recovery_prior":recovery,"recovery_rate":recovery}
             vals["ceded_premium_ytd"]=ceded
             vals["ceded_upr_open"]=annual_open["ceded_upr_open"]
-            vals["ceded_upr_close"]=max(0.0,ceded*rec_cession)
+            vals["ceded_upr_close"]=max(0.0,_num(d.get("upr_close"))*cession)
             vals["ceded_earned_premium_ytd"]=vals["ceded_premium_ytd"]+vals["ceded_upr_open"]-vals["ceded_upr_close"]
             if vals["ceded_earned_premium_ytd"]+1e-6<prev_ceded_earned:
                 vals["ceded_upr_close"]=max(0.0,vals["ceded_premium_ytd"]+vals["ceded_upr_open"]-prev_ceded_earned)
@@ -830,13 +819,13 @@ def _summary(direct: pd.DataFrame,reass: pd.DataFrame) -> pd.DataFrame:
     for p,dg in direct.groupby("period"):
         rg=reass[reass["period"]==p]
         gross_written=dg["gwp_increment"].sum(); gross_earned=dg["earned_premium_increment"].sum()
-        gross_inc=dg["incurred_current_increment"].sum()+dg["incurred_prior_increment"].sum(); gross_comm=dg["commission_increment"].sum()+(dg["dac_increment"].sum() if "dac_increment" in dg.columns else 0.0)
+        gross_inc=dg["incurred_current_increment"].sum()+dg["incurred_prior_increment"].sum(); gross_comm=dg["commission_increment"].sum()
         ceded_written=rg["ceded_premium_increment"].sum(); ceded_earned=rg["ceded_earned_premium_increment"].sum()
-        rec_inc=rg["recovered_incurred_current_increment"].sum()+rg["recovered_incurred_prior_increment"].sum(); reass_comm=rg["reass_commission_increment"].sum()-(rg["dac_increment"].sum() if "dac_increment" in rg.columns else 0.0)
+        rec_inc=rg["recovered_incurred_current_increment"].sum()+rg["recovered_incurred_prior_increment"].sum(); reass_comm=rg["reass_commission_increment"].sum()
         net_earned=gross_earned-ceded_earned; net_inc=gross_inc-rec_inc; net_comm=gross_comm-reass_comm
         tech=net_earned-net_inc-net_comm
-        gey=dg["earned_premium_ytd"].sum(); giy=(dg["incurred_current_ytd"]+dg["incurred_prior_ytd"]).sum(); gicy=dg["incurred_current_ytd"].sum(); gcy=dg["commission_ytd"].sum()+(dg["dac_variation"].sum() if "dac_variation" in dg.columns else 0.0); gwy=dg["gwp_ytd"].sum()
-        cey=rg["ceded_earned_premium_ytd"].sum(); cwy=rg["ceded_premium_ytd"].sum(); riy=(rg["recovered_incurred_current_ytd"]+rg["recovered_incurred_prior_ytd"]).sum(); rcy=rg["reass_commission_ytd"].sum()-(rg["dac_variation"].sum() if "dac_variation" in rg.columns else 0.0)
+        gey=dg["earned_premium_ytd"].sum(); giy=(dg["incurred_current_ytd"]+dg["incurred_prior_ytd"]).sum(); gicy=dg["incurred_current_ytd"].sum(); gcy=dg["commission_ytd"].sum(); gwy=dg["gwp_ytd"].sum()
+        cey=rg["ceded_earned_premium_ytd"].sum(); cwy=rg["ceded_premium_ytd"].sum(); riy=(rg["recovered_incurred_current_ytd"]+rg["recovered_incurred_prior_ytd"]).sum(); rcy=rg["reass_commission_ytd"].sum()
         ney=gey-cey; niy=giy-riy; ncy=gcy-rcy
         rows.append({
             "period":p,"gross_written_premium":gross_written,"gross_earned_premium":gross_earned,"gross_incurred_claims":gross_inc,"gross_commission":gross_comm,
@@ -915,7 +904,7 @@ def make_legacy_reass_block(reass: pd.DataFrame) -> pd.DataFrame:
             "REC Ouverture":r.get("ceded_upr_open",0),"REC Clôture":r.get("ceded_upr_close",0),"Variation de REC":r.get("ceded_upr_variation",0),"Primes acquises cédées":r.get("ceded_earned_premium_ytd",0),
             "SAP Ouverture Per.":r.get("recoverable_case_open_current",0),"SAP Clôture Per.":r.get("recoverable_case_close_current",0),"SAP Ouverture Ant.":r.get("recoverable_case_open_prior",0),"SAP Clôture Ant.":r.get("recoverable_case_close_prior",0),
             "IBNR Ouverture Per.":r.get("recoverable_ibnr_open_current",0),"IBNR Clôture Per.":r.get("recoverable_ibnr_close_current",0),"IBNR Ouverture Ant.":r.get("recoverable_ibnr_open_prior",0),"IBNR Clôture Ant.":r.get("recoverable_ibnr_close_prior",0),
-            "Taux cession primes":r.get("cession_rate",0),"Taux REC réassurance / primes cédées":r.get("rec_cession_rate",0),"Taux récupération sinistres":r.get("recovery_rate",0),"Taux commission réassurance":r.get("reass_commission_rate",0),
+            "Taux cession primes":r.get("cession_rate",0),"Taux récupération sinistres":r.get("recovery_rate",0),"Taux commission réassurance":r.get("reass_commission_rate",0),
         }
         for line,v in vals.items(): rows.append({"period":r.get("period"),"branch":r.get("branch"),"line":line,"value":v})
     return pd.DataFrame(rows)
