@@ -1,6 +1,0 @@
-gradio>=6.5
-pandas>=2.2
-numpy>=2.0
-scipy>=1.12
-plotly>=5.20
-openpyxl>=3.1
