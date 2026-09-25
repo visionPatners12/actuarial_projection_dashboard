@@ -495,20 +495,8 @@ def _year_adjustments_for_direct(
     return out
 
 
-def _ratio_target_row(ratio_targets: Optional[pd.DataFrame], period, branch: str):
-    if ratio_targets is None or len(ratio_targets)==0:
-        return None
-    d=pd.DataFrame(ratio_targets).copy()
-    if not {"period","branch"}.issubset(d.columns):
-        return None
-    key=str(pd.Period(period,freq="M"))
-    m=d[(d["period"].astype(str)==key)&(d["branch"].astype(str)==str(branch))]
-    return None if m.empty else m.iloc[-1]
-
-
 def _project_direct(
-    sd: pd.DataFrame, hyp: pd.DataFrame, cibles: pd.DataFrame, start_period: str, n_periods: int,
-    ratio_targets: Optional[pd.DataFrame]=None
+    sd: pd.DataFrame, hyp: pd.DataFrame, cibles: pd.DataFrame, start_period: str, n_periods: int
 ) -> Tuple[pd.DataFrame,pd.DataFrame,List[dict]]:
     periods=month_range(start_period,n_periods); start_p=pd.Period(start_period,freq="M")
     rows=[]; applied_rows=[]; diagnostics=[]
@@ -613,18 +601,6 @@ def _project_direct(
                 diagnostics.append({"branch":branch,"period":str(pd.Period(p,freq='M')),"severity":"Correction cohérence","message":"REC clôture plafonnée afin de garantir une prime acquise cumulée non décroissante."})
             vals["earned_premium_ytd"]=max(0.0,earned); prev_earned=vals["earned_premium_ytd"]
             vals["upr_variation"]=vals["upr_close"]-vals["upr_open"]
-
-            # Optional monthly CPC ratio targets. Values are entered in percentage points
-            # (e.g. 55 means 55%). They override the claim progression for the selected
-            # month/branch while the reserve identity remains authoritative.
-            rt=_ratio_target_row(ratio_targets,p,branch)
-            if rt is not None and vals["earned_premium_ytd"]>1e-9:
-                sp_cur=_opt_num(rt.get("sp_exercice")); sp_glob=_opt_num(rt.get("sp_global"))
-                if sp_cur is not None:
-                    vals["incurred_current_ytd"]=vals["earned_premium_ytd"]*(sp_cur/100.0)
-                if sp_glob is not None:
-                    total_target=vals["earned_premium_ytd"]*(sp_glob/100.0)
-                    vals["incurred_prior_ytd"]=total_target-vals["incurred_current_ytd"]
 
             # Reserve identity: Charge = paid - recours + closing reserve - opening reserve.
             open_cur=vals["case_open_current"]+vals["ibnr_open_current"]
@@ -846,7 +822,6 @@ def run_projection(
     cibles_direct: pd.DataFrame, cibles_reass: pd.DataFrame,
     start_period: str, n_periods: int,
     history_direct: Optional[pd.DataFrame]=None, history_reass: Optional[pd.DataFrame]=None,
-    ratio_targets_local: Optional[pd.DataFrame]=None,
 ):
     n=int(n_periods)
     if n<1 or n>120: raise ValueError("Le nombre de périodes doit être compris entre 1 et 120.")
@@ -854,7 +829,7 @@ def run_projection(
     expected_hd=build_hyp_direct(history_direct,start_period,n); expected_hr=build_hyp_reass(history_direct,history_reass,start_period,n)
     hd=normalize_hyp(hyp_direct,expected_hd); hr=normalize_hyp(hyp_reass,expected_hr)
     cd=normalize_cibles(cibles_direct,CIBLES_DIRECT_COLUMNS,start_period,n); cr=normalize_cibles(cibles_reass,CIBLES_REASS_COLUMNS,start_period,n)
-    direct,applied_d,diag_d=_project_direct(sd,hd,cd,start_period,n,ratio_targets=ratio_targets_local)
+    direct,applied_d,diag_d=_project_direct(sd,hd,cd,start_period,n)
     reass,applied_r,diag_r=_project_reass(direct,sr,hr,cr,start_period,n)
     summary=_summary(direct,reass)
     diagnostics=list(diag_d)+list(diag_r)

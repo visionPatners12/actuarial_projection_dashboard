@@ -2,7 +2,7 @@ import tempfile
 import pandas as pd
 from openpyxl import load_workbook
 from model import *
-from exporter import export_projection
+from formula_exporter import export_projection
 
 
 def test_n(n):
@@ -16,7 +16,7 @@ def test_n(n):
     d,r,s,diag,apd,apr,*_=run_projection(sd,sr,h,rh,cd,cr,start,n,hd,hr)
     out=tempfile.mktemp(suffix='.xlsx')
     export_projection(out,{'cibles_direct':cd,'cibles_reass':cr},d,r,s,diag,apd,apr)
-    wb=load_workbook(out,data_only=True)
+    wb=load_workbook(out,data_only=False)
     assert wb.sheetnames==['Hyp Direct','Hyp Reass','Cibles','Direct Local','Reass Local','CPC SAZ']
     # Detect month blocks by Automobile header.
     for sheet in ['Direct Local','Reass Local']:
@@ -30,9 +30,20 @@ def test_n(n):
     if n>=2:
         dstarts=[c for c in range(1,wd.max_column+1) if wd.cell(6,c).value=='Automobile']
         rstarts=[c for c in range(1,wr.max_column+1) if wr.cell(6,c).value=='Automobile']
-        # If second period is February (start Dec -> Jan, Feb), it must show %.
-        assert wd.cell(134,dstarts[1]).value is not None
-        assert wr.cell(90,rstarts[1]).value is not None
+        # If second period is February (start Dec -> Jan, Feb), it must show % formulas.
+        assert str(wd.cell(134,dstarts[1]).value).startswith('=')
+        assert str(wr.cell(90,rstarts[1]).value).startswith('=')
+        assert 'Hyp Direct' in str(wd.cell(7,dstarts[1]).value)
+        assert 'Direct Local' in str(wr.cell(7,rstarts[1]).value) and 'Hyp Reass' in str(wr.cell(7,rstarts[1]).value)
+    wc=wb['CPC SAZ']
+    cstarts=[c for c in range(1,wc.max_column+1) if wc.cell(2,c).value=='CONSOLIDATION ']
+    assert 'Direct Local' in str(wc.cell(5,cstarts[0]).value)
+    assert 'Reass Local' in str(wc.cell(53,cstarts[0]).value)
+    # La feuille Cibles doit être entièrement en français.
+    wt=wb['Cibles']
+    visible=' '.join(str(wt.cell(r,c).value or '') for r in range(1,min(wt.max_row,250)+1) for c in range(1,min(wt.max_column,20)+1))
+    assert 'Cibles optionnelles' in visible and 'Réassurance' in visible and 'Année' in visible and 'Branche' in visible
+    assert 'Optional Targets' not in visible and 'Reinsurance' not in visible
     return out
 
 if __name__=='__main__':

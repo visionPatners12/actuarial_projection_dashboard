@@ -125,3 +125,15 @@ Ils vérifient notamment :
 - identité de charge ;
 - rollover annuel ;
 - nombre exact de blocs exportés dans Direct Local / Reass Local / CPC SAZ.
+
+
+## Passage IFRS — V3
+
+Le dashboard conserve le workflow Local puis ajoute **un seul onglet Passage IFRS**.
+
+- Direct IFRS : toutes les lignes reprennent Direct Local, sauf l’IBNR ajusté par branche.
+- Reass IFRS : toutes les lignes reprennent Reass Local, sauf la REC ajustée par branche.
+- CPC SAZ IFRS : calculé depuis Direct IFRS + Reass IFRS.
+- L’export Excel contient : Hyp Direct, Hyp Reass, Cibles, Direct Local, Reass Local, CPC SAZ Local, Passage IFRS, Direct, Reass, CPC SAZ.
+
+Les deux seuls inputs IFRS visibles sont **Coefficient IBNR IFRS / Local** et **Taux variation REC IFRS / prime cédée**.
