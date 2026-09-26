@@ -18,7 +18,7 @@ def base(**kw):
         rec_reass_local_config={"mode":"Fixe","fixed":0.0},
         rec_reass_ifrs_config={"mode":"Fixe","fixed":0.0},
         direct_commission_config={"mode":"Fixe","fixed":14.0},
-        reass_commission_config={"mode":"Fixe","fixed":17.0},
+        reass_commission_config={"mode":"Fixe","fixed":50.0},
         direct_dac_config={"mode":"Fixe","fixed":0.0},
         reass_dac_config={"mode":"Fixe","fixed":0.0},
     )
@@ -29,7 +29,9 @@ def base(**kw):
 def test_fixed_commission_formulas():
     t=base()
     assert np.allclose(t["Commission Direct"],t["Prime brute"]*.14)
-    assert np.allclose(t["Commission Réassurance"],t["Prime réassurance"]*.17)
+    assert np.allclose(t["Commission Réassurance"],t["Commission Direct"]*.50)
+    expected_effective=np.divide(t["Commission Réassurance"],t["Prime réassurance"],out=np.zeros(len(t)),where=np.abs(t["Prime réassurance"])>1e-12)*100
+    assert np.allclose(t["Taux commission Réassurance effectif (%)"],expected_effective)
     expected=(t["Commission Direct"]-t["Commission Réassurance"])/t["Prime acquise nette Local"]*100
     assert np.allclose(t["Taux commission CPC Local (%)"],expected)
 
@@ -37,12 +39,13 @@ def test_fixed_commission_formulas():
 def test_linear_commission_start_and_end():
     t=base(
         direct_commission_config={"mode":"Linéaire","start":10.0,"end":16.0,"margin_down":2,"margin_up":2},
-        reass_commission_config={"mode":"Linéaire","start":15.0,"end":20.0,"margin_down":2,"margin_up":2},
+        reass_commission_config={"mode":"Linéaire","start":40.0,"end":55.0,"margin_down":2,"margin_up":2},
     )
     assert abs(t["Taux commission Direct (%)"].iloc[0]-10)<1e-9
     assert abs(t["Taux commission Direct (%)"].iloc[-1]-16)<1e-9
-    assert abs(t["Taux commission Réassurance (%)"].iloc[0]-15)<1e-9
-    assert abs(t["Taux commission Réassurance (%)"].iloc[-1]-20)<1e-9
+    assert abs(t["Taux récupération commission Réassurance (%)"].iloc[0]-40)<1e-9
+    assert abs(t["Taux récupération commission Réassurance (%)"].iloc[-1]-55)<1e-9
+    assert np.allclose(t["Commission Réassurance"],t["Commission Direct"]*t["Taux récupération commission Réassurance (%)"]/100)
 
 
 def test_monthly_commission_override_with_margin():
@@ -50,6 +53,15 @@ def test_monthly_commission_override_with_margin():
     t=base(direct_commission_config={"mode":"Linéaire","start":10.0,"end":12.0,"manual":manual,"margin_down":1.0,"margin_up":1.0})
     baseline=np.linspace(10,12,12)[5]
     assert abs(t["Taux commission Direct (%)"].iloc[5]-(baseline+1.0))<1e-9
+
+
+def test_monthly_reass_commission_recovery_override():
+    manual=[np.nan]*12; manual[4]=62.0
+    t=base(reass_commission_config={"mode":"Linéaire","start":40.0,"end":50.0,"manual":manual,"margin_down":3.0,"margin_up":3.0})
+    baseline=np.linspace(40,50,12)[4]
+    expected=min(baseline+3.0,62.0)
+    assert abs(t["Taux récupération commission Réassurance (%)"].iloc[4]-expected)<1e-9
+    assert abs(t["Commission Réassurance"].iloc[4]-t["Commission Direct"].iloc[4]*expected/100)<1e-6
 
 
 def test_direct_dac_uses_rec_prorata_and_fixed_opening():
@@ -112,7 +124,7 @@ def test_pd_january_auto_commission_and_direct_dac_formula():
         rec_open_direct_cima72=cima_open,
         rec_open_reass_ifrs100=reass100_open,
         direct_commission_config={"mode":"Fixe","fixed":14.0},
-        reass_commission_config={"mode":"Fixe","fixed":17.0},
+        reass_commission_config={"mode":"Fixe","fixed":4.689217061534405},
         direct_dac_config={"mode":"Fixe","fixed":17.0},
         reass_dac_config={"mode":"Fixe","fixed":17.0},
         dac_open_direct_ifrs=368663495.09199816,
@@ -125,3 +137,18 @@ def test_pd_january_auto_commission_and_direct_dac_formula():
     assert abs(t["DAC clôture Réassurance IFRS"].iloc[0]-6129780.82636408)<2
     # Exact January Auto CPC IFRS net commission rate from pd.xlsx.
     assert abs(t["Taux commission CPC IFRS (%)"].iloc[0]-11.556302235663972)<1e-9
+
+def test_reass_commission_moves_with_direct_not_directly_with_ceded_premium():
+    low=base(
+        direct_commission_config={"mode":"Fixe","fixed":10.0},
+        reass_commission_config={"mode":"Fixe","fixed":40.0},
+    )
+    high=base(
+        direct_commission_config={"mode":"Fixe","fixed":20.0},
+        reass_commission_config={"mode":"Fixe","fixed":40.0},
+    )
+    # Same premium/reinsurance trajectory; doubling Direct commission doubles Reass commission.
+    assert np.allclose(low["Prime réassurance"],high["Prime réassurance"])
+    assert np.allclose(high["Commission Direct"],low["Commission Direct"]*2.0)
+    assert np.allclose(high["Commission Réassurance"],low["Commission Réassurance"]*2.0)
+    assert np.allclose(high["Commission Réassurance"],high["Commission Direct"]*.40)

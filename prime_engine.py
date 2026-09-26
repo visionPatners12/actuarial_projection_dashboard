@@ -310,17 +310,24 @@ def project_branch(
     local_net_earned = dearn-rearn
     ifrs_net_earned = direct_ifrs_earned-riearn
 
-    # Commissions: same accounting relationship as pd.xlsx.
-    # Direct commission = gross premium YTD × commission rate.
-    # Reass commission = ceded premium YTD × commission rate.
+    # Commissions. Le Direct reste piloté par son taux de commission sur prime brute.
+    # La Réassurance dépend désormais du Direct :
+    # Commission Réassurance = Commission Direct × taux de récupération de commission.
+    # Le taux de commission Réassurance / prime cédée devient un indicateur dérivé.
     direct_commission_config = dict(direct_commission_config or {"mode":"Fixe", "fixed":0.0})
     reass_commission_config = dict(reass_commission_config or {"mode":"Fixe", "fixed":0.0})
     if "mode" not in direct_commission_config: direct_commission_config["mode"] = "Fixe"
     if "mode" not in reass_commission_config: reass_commission_config["mode"] = "Fixe"
     dc_rate, dc_lo, dc_hi, dcdiag = rate_curve(**direct_commission_config)
-    rc_rate, rc_lo, rc_hi, rcdiag = rate_curve(**reass_commission_config)
+    recovery_rate, rc_lo, rc_hi, rcdiag = rate_curve(**reass_commission_config)
+    if np.any(recovery_rate < 0):
+        rcdiag.append("Taux de récupération de commission Réassurance négatif : borné à 0%")
+        recovery_rate = np.maximum(recovery_rate, 0.0)
     direct_commission = gross * (dc_rate / 100.0)
-    reass_commission = ceded * (rc_rate / 100.0)
+    reass_commission = direct_commission * (recovery_rate / 100.0)
+    reass_effective_rate = np.divide(
+        reass_commission, ceded, out=np.zeros(12), where=np.abs(ceded) > 1e-12
+    ) * 100.0
 
     # IFRS DAC follows pd.xlsx: DAC = REC 100% × DAC rate; Var DAC = DAC Ouv - DAC Clo.
     # The opening DAC is kept fixed for the year, consistent with the annual-opening rule.
@@ -381,7 +388,8 @@ def project_branch(
         "Prime acquise nette IFRS": ifrs_net_earned,
         "Taux commission Direct (%)": dc_rate,
         "Commission Direct": direct_commission,
-        "Taux commission Réassurance (%)": rc_rate,
+        "Taux récupération commission Réassurance (%)": recovery_rate,
+        "Taux commission Réassurance effectif (%)": reass_effective_rate,
         "Commission Réassurance": reass_commission,
         "Taux DAC Direct IFRS (%)": dd_rate,
         "DAC ouverture Direct IFRS": direct_dac_open,

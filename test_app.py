@@ -41,7 +41,7 @@ def test_ui_projection_outputs_all_branches_and_months():
         app.default_rate_settings('rec'),app.blank_month_matrix(),app.blank_month_matrix(),
         'Local','Automobile'
     )
-    assert len(outs)==34
+    assert len(outs)==38
     for idx in range(3,16):
         df=outs[idx]
         assert list(df.columns)==['Mois']+app.BRANCHES
@@ -74,3 +74,44 @@ def test_point_override_reaches_month_and_preserves_landing():
 def test_stress_5000():
     r=stress_random(seed=20260926, scenarios=5000)
     assert r.ok.all(), r[~r.ok].head().to_dict('records')
+
+
+def test_compact_branch_editor_only_applies_changed_cells():
+    h3,h2,h1=_hist(8),_hist(9),_hist(10)
+    common=[
+        h3,h2,h1,_anchors(),app.blank_month_matrix(),
+        app.default_rate_settings('cession'),app.blank_month_matrix(),app.blank_month_matrix(),
+        app.default_rate_settings('rec'),app.blank_month_matrix(),app.blank_month_matrix(),
+        app.default_rate_settings('rec'),app.blank_month_matrix(),app.blank_month_matrix(),
+        app.default_rate_settings('rec'),app.blank_month_matrix(),app.blank_month_matrix(),
+    ]
+    outs=app.run_projection(*common,'Local','Automobile')
+    reference=outs[36].copy()
+    edited=reference.copy()
+    edited.loc[5,'Prime brute']=float(reference.loc[5,'Prime brute'])+25.0
+    g,c,rd,rl,ri=app.apply_branch_table(
+        edited,reference,'Automobile','Local',
+        app.blank_month_matrix(),app.blank_month_matrix(),app.blank_month_matrix(),
+        app.blank_month_matrix(),app.blank_month_matrix(),
+    )
+    assert np.isfinite(g.loc[5,'Automobile'])
+    assert np.isnan(g.loc[4,'Automobile'])
+    assert np.isnan(c['Automobile']).all()
+    assert np.isnan(rd['Automobile']).all()
+    assert np.isnan(rl['Automobile']).all()
+    assert np.isnan(ri['Automobile']).all()
+
+
+def test_compact_branch_editor_routes_reass_rec_to_selected_view():
+    ref=pd.DataFrame({
+        'Mois':app.MONTHS,
+        'Prime brute':[100.0]*12,
+        'Taux cession (%)':[20.0]*12,
+        'Taux REC Direct (%)':[10.0]*12,
+        'Taux REC Réass (%)':[8.0]*12,
+    })
+    edited=ref.copy(); edited.loc[2,'Taux REC Réass (%)']=12.0
+    blank=lambda: app.blank_month_matrix()
+    _,_,_,rl,ri=app.apply_branch_table(edited,ref,'Automobile','IFRS',blank(),blank(),blank(),blank(),blank())
+    assert np.isnan(rl.loc[2,'Automobile'])
+    assert ri.loc[2,'Automobile']==12.0
