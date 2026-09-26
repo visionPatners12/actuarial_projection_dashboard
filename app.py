@@ -1,867 +1,824 @@
 from __future__ import annotations
 
 import os
-import tempfile
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
+import gradio as gr
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-import gradio as gr
 from openpyxl import load_workbook
 
-from model import (
-    BRANCHES, DIRECT_START_COLUMNS, REASS_START_COLUMNS, HYP_COLUMNS,
-    CIBLES_DIRECT_COLUMNS, CIBLES_REASS_COLUMNS, DIRECT_METRICS, REASS_METRICS,
-    empty_direct_start, empty_reass_start, empty_cibles_direct, empty_cibles_reass,
-    build_hyp_direct, build_hyp_reass, run_projection, _summary,
-)
-from formula_exporter import export_projection
-from exporter import (
-    DIRECT_LABELS, REASS_LABELS, CPC_LABELS, CORPORATE_BRANCHES, CPC_GROUPS,
-    _direct_value, _reass_value, _gross_metrics, _reass_metrics, _sum_metrics, _cpc_values,
-)
+from prime_engine import BRANCHES, MONTHS, project_branch
 
-# -----------------------------------------------------------------------------
-# Référentiel UI
-# -----------------------------------------------------------------------------
-BRANCHES_UI = [
-    "Automobile", "Santé", "Accident corporel", "Incendie",
-    "BDM - Construction", "RC - RC Déc", "RD", "Transport",
-]
-UI_TO_INTERNAL = dict(zip(BRANCHES_UI, BRANCHES))
-INTERNAL_TO_UI = dict(zip(BRANCHES, BRANCHES_UI))
-MOIS = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
+BASE_DIR = Path(__file__).resolve().parent
+TEMPLATE_PATH = BASE_DIR / "hypotheses_primes_commissions_v1.xlsx"
 
-# Les libellés ci-dessous reprennent exactement les lignes de pd.xlsx.
-# La colonne "Section" permet de distinguer les libellés répétés comme
-# "Ouverture", "Clôture Per." et "Clôture Ant.".
-DIRECT_BLOCK = [
-    ("Production", "Primes Emises", "gwp_ytd"),
-    ("PAP / PANE", "PAP Ouverture", "pap_open"),
-    ("PAP / PANE", "PAP Clôture", "pap_close"),
-    ("PAP / PANE", "PANE Ouverture", "pane_open"),
-    ("PAP / PANE", "PANE Clôture", "pane_close"),
-    ("Sinistres", "Sinistres payés Per.", "paid_current_ytd"),
-    ("Sinistres", "Sinistres payés Ant.", "paid_prior_ytd"),
-    ("Commissions", "Commisions", "commission_ytd"),
-    ("REC CIMA 72%", "REC Ouverture", "upr_open"),
-    ("REC CIMA 72%", "REC Clôture", "upr_close"),
-    ("IBNR CIMA", "IBNR Ouverture", "ibnr_open_prior"),
-    ("IBNR CIMA", "IBNR Clôture", "ibnr_close_current"),
-    ("Recours", "Recours Per.", "recourse_current_ytd"),
-    ("Recours", "Recours Per.Anté", "recourse_prior_ytd"),
-    ("SAP hors chargement", "Ouverture", "case_open_prior"),
-    ("SAP hors chargement", "Clôture Per.", "case_close_current"),
-    ("SAP hors chargement", "Clôture Ant.", "case_close_prior"),
-]
-
-REASS_BLOCK = [
-    ("Production", "Primes Emises", "ceded_premium_ytd"),
-    ("PAP / PANE", "PAP Ouverture", None),
-    ("PAP / PANE", "PAP Clôture", None),
-    ("PAP / PANE", "PANE Ouverture", None),
-    ("PAP / PANE", "PANE Clôture", None),
-    ("Sinistres", "Sinistres payés Per.", "recovered_paid_current_ytd"),
-    ("Sinistres", "Sinistres payés Ant.", "recovered_paid_prior_ytd"),
-    ("Commissions", "Commisions", "reass_commission_ytd"),
-    ("REC CIMA 72%", "REC Ouverture", "ceded_upr_open"),
-    ("REC CIMA 72%", "REC Clôture", "ceded_upr_close"),
-    ("REC 100%", "REC Ouverture 100%", None),
-    ("REC 100%", "REC Clôture 100%", None),
-    ("DAC", "DAC Ouv", None),
-    ("DAC", "DAC Clo", None),
-    ("IBNR CIMA", "IBNR Ouverture", "recoverable_ibnr_open_prior"),
-    ("IBNR CIMA", "IBNR Clôture", "recoverable_ibnr_close_current"),
-    ("IBNR BE", "IBNR BE Per.", None),
-    ("IBNR BE", "IBNR BE Ant.", None),
-    ("SAP hors chargement", "Ouverture", "recoverable_case_open_prior"),
-    ("SAP hors chargement", "Clôture Per.", "recoverable_case_close_current"),
-    ("SAP hors chargement", "Clôture Ant.", "recoverable_case_close_prior"),
-]
-
-DIRECT_VIEW = {
-    "Primes émises": "gwp_ytd", "Chiffre d’affaires": "revenue",
-    "Primes acquises": "earned_premium_ytd", "Commissions": "commission_ytd",
-    "Sinistres payés exercice": "paid_current_ytd", "Sinistres payés antérieurs": "paid_prior_ytd",
-    "Recours exercice": "recourse_current_ytd", "Recours antérieurs": "recourse_prior_ytd",
-    "Charge sinistres exercice": "incurred_current_ytd", "Charge sinistres antérieurs": "incurred_prior_ytd",
-    "REC clôture": "upr_close", "SAP clôture exercice": "case_close_current",
-    "SAP clôture antérieurs": "case_close_prior", "IBNR clôture exercice": "ibnr_close_current",
-    "IBNR clôture antérieurs": "ibnr_close_prior", "S/P exercice": "sp_exercice",
-    "S/P global": "sp_global", "Taux de commission / primes": "commission_rate_written",
-}
-REASS_VIEW = {
-    "Primes cédées": "ceded_premium_ytd", "Primes acquises cédées": "ceded_earned_premium_ytd",
-    "Commission de réassurance": "reass_commission_ytd",
-    "Sinistres récupérés exercice": "recovered_incurred_current_ytd",
-    "Sinistres récupérés antérieurs": "recovered_incurred_prior_ytd",
-    "REC cédée clôture": "ceded_upr_close",
-    "SAP récupérable clôture exercice": "recoverable_case_close_current",
-    "SAP récupérable clôture antérieurs": "recoverable_case_close_prior",
-    "IBNR récupérable clôture exercice": "recoverable_ibnr_close_current",
-    "IBNR récupérable clôture antérieurs": "recoverable_ibnr_close_prior",
-    "Taux de cession des primes": "cession_rate", "Taux de récupération des sinistres": "recovery_rate",
-    "Taux REC Réassurance / primes cédées": "rec_cession_rate",
-    "Taux de commission de réassurance": "reass_commission_rate",
-}
-DIRECT_DRIVER = {
-    "Primes émises": "Primes Emises", "Sinistres payés exercice": "Sinistres payés Per.",
-    "Sinistres payés antérieurs": "Sinistres payés Ant.", "Recours exercice": "Recours Per.",
-    "Recours antérieurs": "Recours Ant.", "Charge sinistres exercice": "Charge sinistres Per.",
-    "Charge sinistres antérieurs": "Charge sinistres Ant.", "Commissions": "Taux commission / primes",
-    "Taux de commission / primes": "Taux commission / primes", "REC clôture": "Taux REC clôture / primes",
-    "IBNR clôture exercice": "Part IBNR Per. / provisions", "IBNR clôture antérieurs": "Part IBNR Ant. / provisions",
-}
-REASS_DRIVER = {
-    "Primes cédées": "Taux cession primes", "Taux de cession des primes": "Taux cession primes",
-    "Sinistres récupérés exercice": "Taux récupération sinistres",
-    "Sinistres récupérés antérieurs": "Taux récupération sinistres",
-    "Taux de récupération des sinistres": "Taux récupération sinistres",
-    "REC cédée clôture": "Taux REC réassurance / primes cédées",
-    "Taux REC Réassurance / primes cédées": "Taux REC réassurance / primes cédées",
-    "Commission de réassurance": "Taux commission réassurance",
-    "Taux de commission de réassurance": "Taux commission réassurance",
-}
-
-THEME = gr.themes.Soft(primary_hue="blue", neutral_hue="slate", radius_size="lg")
+THEME = gr.themes.Soft(primary_hue="emerald", neutral_hue="slate", radius_size="lg")
 CSS = """
-.gradio-container{max-width:1550px!important;margin:0 auto;background:#F7F9FC}
-#entete{background:#fff;border:1px solid #E7ECF2;border-radius:20px;padding:22px 26px;margin-bottom:14px}
-#entete h1{margin:0 0 6px;color:#17365D;font-size:25px}#entete p{margin:0;color:#66788A}
-.carte{background:#fff!important;border:1px solid #E7ECF2!important;border-radius:16px!important;padding:6px!important;box-shadow:none!important}
-.note{font-size:13px;color:#66788A}.bouton-principal button{font-weight:700!important;border-radius:11px!important}
-.pd-wrap{overflow:auto;border:1px solid #E4EAF1;border-radius:14px;background:#fff}.pd-head{padding:11px 14px;background:#F3F6F9;border-bottom:1px solid #E4EAF1;color:#17365D;font-weight:700}
-.pd-table{width:100%;min-width:980px;border-collapse:collapse;font-size:12px}.pd-table th{position:sticky;top:0;background:#17365D;color:#fff;padding:7px;white-space:nowrap;text-align:right}.pd-table th:first-child{text-align:left;position:sticky;left:0;z-index:3}.pd-table td{padding:6px 8px;border-right:1px solid #E8EDF3;border-bottom:1px solid #EDF1F5;text-align:right;white-space:nowrap;background:#fff}.pd-table td:first-child{position:sticky;left:0;text-align:left;font-weight:600;color:#243B53}.pd-table tr.total td{background:#DCEEF8;font-weight:700}.pd-table tr.claim td{background:#FCEBDD}.pd-table tr.reserve td{background:#FFF7D6}.pd-table tr.section td{background:#EAF2F8;font-weight:700}.pd-table tr.result td{background:#E3F2D2;font-weight:700}.pd-table tr.ratio td{font-style:italic}.neg{color:#B8322A}
+.gradio-container{max-width:1700px!important;margin:0 auto;background:#F5F7FA!important}
+#hero{background:linear-gradient(135deg,#0B5D50,#17365D);border-radius:22px;padding:24px 28px;margin-bottom:14px;color:#fff}
+#hero h1{font-size:27px;margin:0 0 6px;color:#fff} #hero p{margin:0;color:#DDEDEA}
+.card{background:#fff!important;border:1px solid #E1E7EE!important;border-radius:18px!important;padding:8px!important;box-shadow:0 2px 12px rgba(24,50,70,.04)!important}
+.section-title h3{color:#17365D!important;margin-bottom:4px!important}.muted{font-size:13px;color:#66788A}
+.kpi{background:#fff;border:1px solid #E1E7EE;border-radius:14px;padding:11px 13px}.kpi b{font-size:18px;color:#17365D}
+button.primary{font-weight:700!important}
+.matrix table{font-size:12px!important}.matrix th{white-space:nowrap!important}.matrix td{white-space:nowrap!important}
+.rate-settings table{font-size:12px!important}
+.compact input{font-size:13px!important}
 footer{display:none!important}
 """
 
-# -----------------------------------------------------------------------------
-# Grilles d'entrée
-# -----------------------------------------------------------------------------
-def grille_mensuelle(annee: int, valeur=None) -> pd.DataFrame:
-    d = {"Mois": [f"{m} {int(annee)}" for m in MOIS]}
-    for b in BRANCHES_UI: d[b] = [valeur] * 12
+BRANCH_COLS = BRANCHES
+MONTH_GRID_COLS = ["Mois"] + BRANCHES
+RATE_SETTING_COLS = ["Branche", "Mode", "Départ (%)", "Atterrissage (%)", "Marge baisse (pts)", "Marge hausse (pts)"]
+ANCHOR_COLS = [
+    "Branche",
+    "Départ Direct (facultatif)", "Atterrissage Direct",
+    "Départ Réassurance (facultatif)", "Atterrissage Réassurance",
+    "REC ouverture Direct CIMA 72%",
+    "REC ouverture Réass Local CIMA",
+    "REC ouverture Réass IFRS 100%",
+]
+
+COMMISSION_ANCHOR_COLS = [
+    "Branche",
+    "Commission Direct départ", "Commission Direct atterrissage",
+    "Commission Réass départ", "Commission Réass atterrissage",
+    "DAC Ouv Direct IFRS", "DAC Clo Direct IFRS",
+    "REC Ouv prorata Direct IFRS", "REC Clo prorata Direct IFRS",
+    "DAC Ouv Réass IFRS", "DAC Clo Réass IFRS",
+    "REC Ouv 100% Réass IFRS", "REC Clo 100% Réass IFRS",
+]
+
+
+def blank_month_matrix(value=np.nan) -> pd.DataFrame:
+    d = {"Mois": MONTHS}
+    for b in BRANCHES:
+        d[b] = [value] * 12
     return pd.DataFrame(d)
 
-def grille_bloc(kind: str) -> pd.DataFrame:
-    lignes = DIRECT_BLOCK if kind == "direct" else REASS_BLOCK
-    d = {"Section": [x[0] for x in lignes], "Ligne": [x[1] for x in lignes]}
-    for b in BRANCHES_UI: d[b] = [None] * len(lignes)
+
+def blank_history() -> pd.DataFrame:
+    return blank_month_matrix(np.nan)
+
+
+def blank_anchors() -> pd.DataFrame:
+    d = {c: [] for c in ANCHOR_COLS}
+    for b in BRANCHES:
+        d["Branche"].append(b)
+        for c in ANCHOR_COLS[1:]:
+            d[c].append(np.nan)
     return pd.DataFrame(d)
 
-def _vide(v) -> bool:
-    try: return v is None or pd.isna(v) or str(v).strip() == ""
-    except Exception: return v is None
 
-def _num(v, default=0.0):
-    if _vide(v): return float(default)
+def blank_commission_anchors() -> pd.DataFrame:
+    d = {c: [] for c in COMMISSION_ANCHOR_COLS}
+    for b in BRANCHES:
+        d["Branche"].append(b)
+        for c in COMMISSION_ANCHOR_COLS[1:]:
+            d[c].append(np.nan)
+    return pd.DataFrame(d)
+
+
+def default_rate_settings(kind: str) -> pd.DataFrame:
+    rows = []
+    default_mode = "Fixe" if kind in {"commission", "dac"} else "Linéaire"
+    for b in BRANCHES:
+        rows.append([b, default_mode, np.nan, np.nan, 2.0, 2.0])
+    return pd.DataFrame(rows, columns=RATE_SETTING_COLS)
+
+
+def _num(v, default=np.nan):
     try:
-        x=float(str(v).replace(" ","").replace(",","."))
-        return x if np.isfinite(x) else float(default)
-    except Exception: return float(default)
+        if v is None or (isinstance(v, float) and np.isnan(v)) or str(v).strip() == "":
+            return default
+        x = float(str(v).replace(" ", "").replace(",", "."))
+        return x if np.isfinite(x) else default
+    except Exception:
+        return default
 
-def _grille_a_bloc(df, kind: str) -> pd.DataFrame:
-    d=pd.DataFrame(df).copy()
-    lignes = DIRECT_BLOCK if kind == "direct" else REASS_BLOCK
-    cols = DIRECT_START_COLUMNS if kind == "direct" else REASS_START_COLUMNS
-    rows=[]
-    for bui,b in zip(BRANCHES_UI,BRANCHES):
-        rec={c:0.0 for c in cols if c!="branch"}; rec["branch"]=b
-        for section,label,field in lignes:
-            if field is None:
-                continue
-            if "Ligne" not in d.columns:
-                m=pd.DataFrame()
-            else:
-                mask=d["Ligne"].astype(str).str.strip()==label.strip()
-                if "Section" in d.columns:
-                    mask &= d["Section"].astype(str).str.strip()==section.strip()
-                m=d[mask]
-            rec[field]=_num(m.iloc[-1].get(bui)) if not m.empty and bui in m.columns else 0.0
-        if kind == "direct":
-            # Dans pd.xlsx, les ouvertures de l'exercice courant sont nulles.
-            rec["case_open_current"]=0.0
-            rec["ibnr_open_current"]=0.0
-            rec["ibnr_close_prior"]=0.0
-        else:
-            rec["recoverable_case_open_current"]=0.0
-            rec["recoverable_ibnr_open_current"]=0.0
-            rec["recoverable_ibnr_close_prior"]=0.0
-        rows.append(rec)
-    return pd.DataFrame(rows,columns=cols)
 
-def _bloc_non_vide(df) -> bool:
-    d=pd.DataFrame(df).copy()
-    if d.empty: return False
-    for c in d.columns:
-        if c in ("Section","Ligne"): continue
-        for v in d[c]:
-            if not _vide(v) and abs(_num(v))>1e-12: return True
-    return False
+def _matrix_col(df, branch: str) -> np.ndarray:
+    d = pd.DataFrame(df).copy()
+    if branch not in d.columns:
+        return np.full(12, np.nan)
+    vals = [_num(v) for v in d[branch].tolist()[:12]]
+    if len(vals) < 12:
+        vals += [np.nan] * (12 - len(vals))
+    return np.asarray(vals, dtype=float)
 
-def _historique_a_long(df, annee: int) -> pd.DataFrame:
-    d=pd.DataFrame(df).copy(); rows=[]
-    for mi in range(1,13):
-        if mi-1>=len(d): break
-        r=d.iloc[mi-1]
-        for bui,b in zip(BRANCHES_UI,BRANCHES):
-            v=r.get(bui)
-            if _vide(v): continue
-            rows.append({"period":pd.Timestamp(int(annee),mi,1)+pd.offsets.MonthEnd(0),"branch":b,"gwp_ytd":_num(v)})
-    return pd.DataFrame(rows)
 
-def _historiques_a_long(hist_n3, hist_n2, hist_n1, annee_n1: int) -> pd.DataFrame:
-    frames=[]
-    for df,year in [(hist_n3,int(annee_n1)-2),(hist_n2,int(annee_n1)-1),(hist_n1,int(annee_n1))]:
-        x=_historique_a_long(df,year)
-        if not x.empty: frames.append(x)
-    return pd.concat(frames,ignore_index=True) if frames else pd.DataFrame(columns=["period","branch","gwp_ytd"])
+def _anchor_row(df, branch: str) -> pd.Series:
+    d = pd.DataFrame(df).copy()
+    if "Branche" in d.columns:
+        m = d[d["Branche"].astype(str).str.strip() == branch]
+        if not m.empty:
+            return m.iloc[0]
+    return pd.Series(dtype=object)
 
-def _ratio_long(df_ex, df_glob, annee: int) -> pd.DataFrame:
-    e=pd.DataFrame(df_ex).copy(); g=pd.DataFrame(df_glob).copy(); rows=[]
-    for mi in range(1,13):
-        for bui,b in zip(BRANCHES_UI,BRANCHES):
-            a=e.iloc[mi-1].get(bui) if mi-1<len(e) else None
-            z=g.iloc[mi-1].get(bui) if mi-1<len(g) else None
-            if _vide(a) and _vide(z): continue
-            rows.append({"period":f"{int(annee)}-{mi:02d}","branch":b,
-                         "sp_exercice":None if _vide(a) else _num(a),
-                         "sp_global":None if _vide(z) else _num(z)})
-    return pd.DataFrame(rows)
 
-def _history_decembre(history, branch):
-    d=pd.DataFrame(history)
-    if d.empty: return 0.0
-    m=d[(d["branch"]==branch)&(pd.to_datetime(d["period"]).dt.month==12)]
-    return 0.0 if m.empty else _num(m.iloc[-1].get("gwp_ytd"))
+def _setting_row(df, branch: str) -> pd.Series:
+    d = pd.DataFrame(df).copy()
+    if "Branche" in d.columns:
+        m = d[d["Branche"].astype(str).str.strip() == branch]
+        if not m.empty:
+            return m.iloc[0]
+    return pd.Series(dtype=object)
 
-def _incurred_from_block_row(r):
-    cur=max(0.0,_num(r.get("paid_current_ytd"))-_num(r.get("recourse_current_ytd")))+_num(r.get("case_close_current"))+_num(r.get("ibnr_close_current"))-_num(r.get("case_open_current"))-_num(r.get("ibnr_open_current"))
-    prv=max(0.0,_num(r.get("paid_prior_ytd"))-_num(r.get("recourse_prior_ytd")))+_num(r.get("case_close_prior"))+_num(r.get("ibnr_close_prior"))-_num(r.get("case_open_prior"))-_num(r.get("ibnr_open_prior"))
-    return cur,prv
 
-def _completer_depart(dep, arr, history):
-    dep=pd.DataFrame(dep).copy(); arr=pd.DataFrame(arr).copy()
-    if _bloc_non_vide(pd.DataFrame([{**{"Ligne":"x"}}])): pass
-    # Si aucun départ saisi, reconstruire un ancrage minimal depuis décembre historique et les ouvertures du bloc d'arrivée.
-    for i,b in enumerate(BRANCHES):
-        if abs(_num(dep.loc[i,"gwp_ytd"]))<1e-9:
-            dep.loc[i,"gwp_ytd"]=_history_decembre(history,b)
-        if not arr.empty:
-            # Les ouvertures de l'exercice projeté correspondent aux clôtures du 31/12 précédent.
-            if abs(_num(dep.loc[i,"upr_close"]))<1e-9: dep.loc[i,"upr_close"]=_num(arr.loc[i,"upr_open"])
-            if abs(_num(dep.loc[i,"case_close_prior"]))<1e-9: dep.loc[i,"case_close_prior"]=_num(arr.loc[i,"case_open_prior"])
-            if abs(_num(dep.loc[i,"ibnr_close_prior"]))<1e-9: dep.loc[i,"ibnr_close_prior"]=_num(arr.loc[i,"ibnr_open_prior"])
-            if abs(_num(dep.loc[i,"pap_close"]))<1e-9: dep.loc[i,"pap_close"]=_num(arr.loc[i,"pap_open"])
-            if abs(_num(dep.loc[i,"pane_close"]))<1e-9: dep.loc[i,"pane_close"]=_num(arr.loc[i,"pane_open"])
-    return dep
-
-def _cibles_depuis_bloc_fin(direct_end, reass_end, annee):
-    cd=empty_cibles_direct(f"{int(annee)-1}-12",12); cr=empty_cibles_reass(f"{int(annee)-1}-12",12)
-    de=pd.DataFrame(direct_end); re=pd.DataFrame(reass_end)
-    if not de.empty:
-        for _,r in de.iterrows():
-            b=r["branch"]; idx=cd.index[(cd["year"]==int(annee))&(cd["branch"]==b)]
-            if len(idx):
-                i=idx[0]; cur,prv=_incurred_from_block_row(r)
-                vals={"gwp_end":r.get("gwp_ytd"),"incurred_current_end":cur,"incurred_prior_end":prv,
-                      "paid_current_end":r.get("paid_current_ytd"),"paid_prior_end":r.get("paid_prior_ytd"),
-                      "recourse_current_end":r.get("recourse_current_ytd"),"recourse_prior_end":r.get("recourse_prior_ytd"),
-                      "commission_end":r.get("commission_ytd"),"upr_close_end":r.get("upr_close")}
-                for k,v in vals.items():
-                    if abs(_num(v))>1e-12: cd.at[i,k]=_num(v)
-    if not re.empty:
-        for _,r in re.iterrows():
-            b=r["branch"]; idx=cr.index[(cr["year"]==int(annee))&(cr["branch"]==b)]
-            if len(idx):
-                i=idx[0]
-                inc=max(0.0,_num(r.get("recovered_paid_current_ytd")))+max(0.0,_num(r.get("recovered_paid_prior_ytd")))
-                vals={"ceded_premium_end":r.get("ceded_premium_ytd"),"recovered_incurred_end":inc,"reass_commission_end":r.get("reass_commission_ytd")}
-                for k,v in vals.items():
-                    if abs(_num(v))>1e-12: cr.at[i,k]=_num(v)
-    return cd,cr
-
-# Coefficients IBNR IFRS / Local observés dans pd.xlsx.
-# Ils servent de point de départ automatique. Les cibles S/P IFRS, lorsqu'elles
-# sont renseignées, recalibrent ensuite l'IBNR de clôture nécessaire.
-IBNR_IFRS_FACTORS = {
-    "Automobile": 0.60,
-    "Santé": 0.40,
-    "Accident corporel": 1.00,
-    "Incendie": 1.00,
-    "BDM - Construction": 1.00,
-    "RC - RC Déc": 0.70,
-    "RD": 1.00,
-    "Transport": 0.30,
-}
-
-def grille_coefficients_ifrs():
-    return pd.DataFrame({
-        "Branche": BRANCHES_UI,
-        "Coefficient IBNR IFRS / Local": [IBNR_IFRS_FACTORS[b] for b in BRANCHES],
-        "Méthode": ["Coefficient pd.xlsx + recalage S/P IFRS"] * len(BRANCHES),
-    })
-
-def _ifrs_params_auto():
-    return pd.DataFrame([
-        {"Branche": b, "ibnr_factor": IBNR_IFRS_FACTORS.get(b, 1.0)} for b in BRANCHES
-    ])
-
-def _hyp_reass_from_grids(base_hyp, annee, cession, recovery, rec_upr, commission):
-    h=pd.DataFrame(base_hyp).copy()
-    grids={
-        "Taux cession primes":pd.DataFrame(cession),
-        "Taux récupération sinistres":pd.DataFrame(recovery),
-        "Taux REC réassurance / primes cédées":pd.DataFrame(rec_upr),
-        "Taux commission réassurance":pd.DataFrame(commission),
+def _rate_config(settings, historical, manual, branch: str, implied_start=None, implied_end=None) -> Dict:
+    r = _setting_row(settings, branch)
+    mode = str(r.get("Mode", "Linéaire") or "Linéaire")
+    start = _num(r.get("Départ (%)"))
+    end = _num(r.get("Atterrissage (%)"))
+    if implied_start is not None and not np.isfinite(start):
+        start = float(implied_start)
+    if implied_end is not None and not np.isfinite(end):
+        end = float(implied_end)
+    fixed = end
+    return {
+        "mode": mode,
+        "fixed": fixed,
+        "start": start,
+        "end": end,
+        "historical": _matrix_col(historical, branch),
+        "manual": _matrix_col(manual, branch),
+        "margin_down": max(0.0, _num(r.get("Marge baisse (pts)"), 0.0)),
+        "margin_up": max(0.0, _num(r.get("Marge hausse (pts)"), 0.0)),
     }
-    for metric,g in grids.items():
-        for mi in range(1,13):
-            per=f"{int(annee)}-{mi:02d}"
-            for bui,b in zip(BRANCHES_UI,BRANCHES):
-                if mi-1>=len(g) or bui not in g.columns: continue
-                v=g.iloc[mi-1].get(bui)
-                if _vide(v): continue
-                mask=(h['period'].astype(str)==per)&(h['branch']==b)&(h['metric']==metric)
-                h.loc[mask,'base_pct']=_num(v); h.loc[mask,'adjustment_pts']=0.0; h.loc[mask,'source']='Saisie utilisateur'
-    return h
 
-def _reass_start_from_direct(direct_start, hyp_reass, annee):
-    sr=empty_reass_start(BRANCHES); ds=pd.DataFrame(direct_start); h=pd.DataFrame(hyp_reass)
-    per=f"{int(annee)}-01"
-    for i,b in enumerate(BRANCHES):
-        dr=ds[ds['branch']==b].iloc[-1] if not ds[ds['branch']==b].empty else pd.Series(dtype=float)
-        def rate(metric,default):
-            m=h[(h['period'].astype(str)==per)&(h['branch']==b)&(h['metric']==metric)]
-            if m.empty: return default
-            return max(0.0,min(1.0,(_num(m.iloc[-1].get('base_pct'))+_num(m.iloc[-1].get('adjustment_pts')))/100.0))
-        cess=rate('Taux cession primes',.25); rec=rate('Taux récupération sinistres',.25); uprr=rate('Taux REC réassurance / primes cédées',.25); comm=rate('Taux commission réassurance',.15)
-        ceded=max(0.0,_num(dr.get('gwp_ytd'))*cess)
-        sr.loc[i,'ceded_premium_ytd']=ceded; sr.loc[i,'reass_commission_ytd']=ceded*comm
-        sr.loc[i,'ceded_upr_open']=ceded*uprr; sr.loc[i,'ceded_upr_close']=ceded*uprr
-        case=max(0.0,_num(dr.get('case_close_current'))+_num(dr.get('case_close_prior')))
-        ibnr=max(0.0,_num(dr.get('ibnr_close_current'))+_num(dr.get('ibnr_close_prior')))
-        sr.loc[i,'recoverable_case_open_prior']=case*rec; sr.loc[i,'recoverable_case_close_prior']=case*rec
-        sr.loc[i,'recoverable_ibnr_open_prior']=ibnr*rec; sr.loc[i,'recoverable_ibnr_close_prior']=ibnr*rec
-    return sr
 
-# -----------------------------------------------------------------------------
-# IFRS
-# -----------------------------------------------------------------------------
-def _apply_ifrs(direct, reass, ratio_targets_ifrs=None):
-    """Construit l'IFRS automatiquement depuis le Local.
+def _month_matrix_from_results(results: Dict[str, pd.DataFrame], column: str) -> pd.DataFrame:
+    out = {"Mois": MONTHS}
+    for b in BRANCHES:
+        t = results[b]
+        out[b] = t[column].tolist() if column in t.columns else [np.nan] * 12
+    return pd.DataFrame(out)
 
-    - IBNR: Local × coefficient IFRS/Local par branche ; si une cible S/P IFRS
-      est renseignée, la clôture IBNR est recalée au minimum nécessaire.
-    - DAC Direct: calculé automatiquement à partir de la REC 100 % (REC/72 %)
-      et du taux de commission local.
-    - REC Réassurance IFRS: REC locale portée à 100 % (REC/72 %).
-    - DAC Réassurance: REC 100 % × taux de commission de réassurance.
-    """
-    d=pd.DataFrame(direct).copy(); r=pd.DataFrame(reass).copy(); diags=[]
-    if d.empty: return d,r,pd.DataFrame(diags)
-    rt=pd.DataFrame(ratio_targets_ifrs).copy() if ratio_targets_ifrs is not None else pd.DataFrame()
 
-    for b,g in d.groupby('branch'):
-        factor=float(IBNR_IFRS_FACTORS.get(b,1.0))
-        ids=list(g.sort_values('period').index)
-        for idx in ids:
-            x=d.loc[idx]
-            # Ouvertures et clôtures IFRS estimées depuis le Local.
-            open_cur=max(0.0,_num(x.get('ibnr_open_current'))*factor)
-            open_pr=max(0.0,_num(x.get('ibnr_open_prior'))*factor)
-            d.at[idx,'ibnr_open_current']=open_cur; d.at[idx,'ibnr_open_prior']=open_pr
-            d.at[idx,'ibnr_close_current']=max(0.0,_num(x.get('ibnr_close_current'))*factor)
-            d.at[idx,'ibnr_close_prior']=max(0.0,_num(x.get('ibnr_close_prior'))*factor)
+def _fmt_currency(v):
+    if v is None or not np.isfinite(_num(v)):
+        return "—"
+    x = _num(v, 0.0)
+    ax = abs(x)
+    if ax >= 1e9:
+        return f"{x/1e9:,.2f} Md".replace(",", " ")
+    if ax >= 1e6:
+        return f"{x/1e6:,.1f} M".replace(",", " ")
+    return f"{x:,.0f}".replace(",", " ")
 
-            earned=_num(x.get('earned_premium_ytd'))
-            period=str(pd.Period(x.get('period'),freq='M'))
-            m=rt[(rt.get('period',pd.Series(dtype=str)).astype(str)==period)&(rt.get('branch',pd.Series(dtype=str)).astype(str)==b)] if not rt.empty else pd.DataFrame()
-            if not m.empty and earned>1e-9:
-                tr=m.iloc[-1]
-                spc=None if _vide(tr.get('sp_exercice')) else _num(tr.get('sp_exercice'))
-                spg=None if _vide(tr.get('sp_global')) else _num(tr.get('sp_global'))
-                paidc=max(0.0,_num(x.get('paid_current_ytd'))-_num(x.get('recourse_current_ytd')))
-                paidp=max(0.0,_num(x.get('paid_prior_ytd'))-_num(x.get('recourse_prior_ytd')))
-                if spc is not None:
-                    req=earned*spc/100.0-paidc-_num(x.get('case_close_current'))+open_cur+_num(x.get('case_open_current'))
-                    if req<0:
-                        diags.append({'branch':b,'period':period,'severity':'Cible IFRS non atteignable','message':'Le S/P exercice demanderait un IBNR IFRS négatif.'})
-                    d.at[idx,'ibnr_close_current']=max(0.0,req)
-                cur=paidc+_num(x.get('case_close_current'))+_num(d.at[idx,'ibnr_close_current'])-_num(x.get('case_open_current'))-open_cur
-                if spg is not None:
-                    req=(earned*spg/100.0-cur)-paidp-_num(x.get('case_close_prior'))+open_pr+_num(x.get('case_open_prior'))
-                    if req<0:
-                        diags.append({'branch':b,'period':period,'severity':'Cible IFRS non atteignable','message':'Le S/P global demanderait un IBNR antérieurs IFRS négatif.'})
-                    d.at[idx,'ibnr_close_prior']=max(0.0,req)
 
-            paidc=max(0.0,_num(x.get('paid_current_ytd'))-_num(x.get('recourse_current_ytd')))
-            paidp=max(0.0,_num(x.get('paid_prior_ytd'))-_num(x.get('recourse_prior_ytd')))
-            d.at[idx,'incurred_current_ytd']=paidc+_num(x.get('case_close_current'))+_num(d.at[idx,'ibnr_close_current'])-_num(x.get('case_open_current'))-_num(d.at[idx,'ibnr_open_current'])
-            d.at[idx,'incurred_prior_ytd']=paidp+_num(x.get('case_close_prior'))+_num(d.at[idx,'ibnr_close_prior'])-_num(x.get('case_open_prior'))-_num(d.at[idx,'ibnr_open_prior'])
-            d.at[idx,'sp_exercice']=_num(d.at[idx,'incurred_current_ytd'])/earned if earned else np.nan
-            d.at[idx,'sp_global']=(_num(d.at[idx,'incurred_current_ytd'])+_num(d.at[idx,'incurred_prior_ytd']))/earned if earned else np.nan
-            d.at[idx,'ibnr_ifrs_factor']=factor
+def _summary_html(results: Dict[str, pd.DataFrame], view: str) -> str:
+    gross = sum(float(results[b]["Prime brute"].iloc[-1]) for b in BRANCHES)
+    ceded = sum(float(results[b]["Prime réassurance"].iloc[-1]) for b in BRANCHES)
+    net = gross - ceded
+    earned_col = "Prime acquise nette IFRS" if view == "IFRS" else "Prime acquise nette Local"
+    earned = sum(float(results[b][earned_col].iloc[-1]) for b in BRANCHES)
+    rate = 100 * ceded / gross if abs(gross) > 1e-12 else 0.0
+    return f"""
+    <div style='display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:10px'>
+      <div class='kpi'><span>Prime brute</span><br><b>{_fmt_currency(gross)}</b></div>
+      <div class='kpi'><span>Prime réassurance</span><br><b>{_fmt_currency(ceded)}</b></div>
+      <div class='kpi'><span>Prime nette</span><br><b>{_fmt_currency(net)}</b></div>
+      <div class='kpi'><span>Taux de cession</span><br><b>{rate:.1f}%</b></div>
+      <div class='kpi'><span>Prime acquise nette {view}</span><br><b>{_fmt_currency(earned)}</b></div>
+    </div>"""
 
-            # DAC calculé depuis le Local : REC 100 % × taux de commission local.
-            commission_rate=_num(x.get('commission_ytd'))/_num(x.get('gwp_ytd')) if abs(_num(x.get('gwp_ytd')))>1e-9 else 0.0
-            rec100_open=max(0.0,_num(x.get('upr_open'))/0.72)
-            rec100_close=max(0.0,_num(x.get('upr_close'))/0.72)
-            d.at[idx,'dac_rate']=commission_rate
-            d.at[idx,'dac_open']=rec100_open*commission_rate
-            d.at[idx,'dac_close']=rec100_close*commission_rate
-            d.at[idx,'dac_variation']=d.at[idx,'dac_open']-d.at[idx,'dac_close']
 
-    # Réassurance IFRS calculée directement depuis Reass Local.
-    for b,g in r.groupby('branch'):
-        ids=list(g.sort_values('period').index)
-        open100=None
-        for idx in ids:
-            x=r.loc[idx]
-            if open100 is None:
-                open100=max(0.0,_num(x.get('ceded_upr_open'))/0.72)
-            close100=max(0.0,_num(x.get('ceded_upr_close'))/0.72)
-            r.at[idx,'ceded_upr_open']=open100
-            r.at[idx,'ceded_upr_close']=close100
-            r.at[idx,'ceded_upr_variation']=close100-open100
-            r.at[idx,'ceded_earned_premium_ytd']=_num(x.get('ceded_premium_ytd'))+open100-close100
-            r.at[idx,'rec_cession_rate']=close100/_num(x.get('ceded_premium_ytd')) if abs(_num(x.get('ceded_premium_ytd')))>1e-9 else 0.0
-            cr=_num(x.get('reass_commission_rate'))
-            r.at[idx,'dac_open']=open100*cr
-            r.at[idx,'dac_close']=close100*cr
-            r.at[idx,'dac_variation']=r.at[idx,'dac_open']-r.at[idx,'dac_close']
+def _ratio_pct(num, den):
+    n = _num(num, np.nan)
+    d = _num(den, np.nan)
+    if not np.isfinite(n) or not np.isfinite(d) or abs(d) <= 1e-12:
+        return np.nan
+    return 100.0 * n / d
 
-    # Recalcul des incréments modifiés.
-    for frame,fields in [(d,['incurred_current_ytd','incurred_prior_ytd','dac_variation']),(r,['ceded_earned_premium_ytd','dac_variation'])]:
-        for b,g in frame.groupby('branch'):
-            prev=None
-            for ix in list(g.sort_values('period').index):
-                same=prev is not None and pd.Timestamp(frame.at[prev,'period']).year==pd.Timestamp(frame.at[ix,'period']).year
-                for fld in fields:
-                    key=fld.replace('_ytd','')+'_increment' if fld.endswith('_ytd') else 'dac_increment'
-                    frame.at[ix,key]=_num(frame.at[ix,fld])-(_num(frame.at[prev,fld]) if same else 0.0)
-                prev=ix
-    return d,r,pd.DataFrame(diags)
 
-# -----------------------------------------------------------------------------
-# Affichages type pd
-# -----------------------------------------------------------------------------
-def _fmt_money(v):
-    try:
-        x=float(v); cls=' class="neg"' if x<0 else ''; return f'<span{cls}>{x:,.0f}</span>'.replace(',', ' ')
-    except Exception: return "—"
+def _commission_summary_html(results: Dict[str, pd.DataFrame], view: str) -> str:
+    dcomm = sum(float(results[b]["Commission Direct"].iloc[-1]) for b in BRANCHES)
+    rcomm = sum(float(results[b]["Commission Réassurance"].iloc[-1]) for b in BRANCHES)
+    if view == "IFRS":
+        net_comm = sum(float(results[b]["Commission nette CPC IFRS"].iloc[-1]) for b in BRANCHES)
+        net_earned = sum(float(results[b]["Prime acquise nette IFRS"].iloc[-1]) for b in BRANCHES)
+        var_dac = sum(float(results[b]["Variation DAC Direct IFRS"].iloc[-1]) for b in BRANCHES)
+    else:
+        net_comm = sum(float(results[b]["Commission nette CPC Local"].iloc[-1]) for b in BRANCHES)
+        net_earned = sum(float(results[b]["Prime acquise nette Local"].iloc[-1]) for b in BRANCHES)
+        var_dac = 0.0
+    cpc_rate = 100.0 * net_comm / net_earned if abs(net_earned) > 1e-12 else np.nan
+    rate_txt = "—" if not np.isfinite(cpc_rate) else f"{cpc_rate:.2f}%"
+    return f"""
+    <div style='display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:10px'>
+      <div class='kpi'><span>Commission Direct</span><br><b>{_fmt_currency(dcomm)}</b></div>
+      <div class='kpi'><span>Commission Réassurance</span><br><b>{_fmt_currency(rcomm)}</b></div>
+      <div class='kpi'><span>Variation DAC Direct</span><br><b>{_fmt_currency(var_dac) if view=='IFRS' else '—'}</b></div>
+      <div class='kpi'><span>Commission nette CPC</span><br><b>{_fmt_currency(net_comm)}</b></div>
+      <div class='kpi'><span>Taux commission CPC · {view}</span><br><b>{rate_txt}</b></div>
+    </div>"""
 
-def _fmt_pct(v):
-    try:
-        x=float(v); cls=' class="neg"' if x<0 else ''; return f'<span{cls}>{x*100:.1f}%</span>'
-    except Exception: return "—"
 
-def _table_html(df,title,kind,row_numbers):
-    d=pd.DataFrame(df); h=[f'<div class="pd-wrap"><div class="pd-head">{title}</div><table class="pd-table"><thead><tr>']
-    for c in d.columns: h.append(f'<th>{c}</th>')
-    h.append('</tr></thead><tbody>')
-    for i,(_,r) in enumerate(d.iterrows()):
-        rr=row_numbers[i] if i<len(row_numbers) else 0; cls=''
-        if kind=='direct':
-            if rr in {12,16,18,22,38,43,49,61,62,68,69}: cls='total'
-            elif rr in {14,15,47,48}: cls='claim'
-            elif rr in {36,37,41,42,45,46}: cls='reserve'
-            elif rr in {51,57,64,71,75,82,93}: cls='section'
-        elif kind=='reass':
-            if rr in {12,16,18,22,38,42,46,58,59,65,66}: cls='total'
-            elif rr in {14,15}: cls='claim'
-            elif rr in {36,37,40,41,44,45}: cls='reserve'
-        else:
-            if rr in {43,69,114,146,148}: cls='result'
-            elif rr in {46,47,48,49,50,72,73,117,118,119,120,121}: cls='ratio'
-            elif rr in {7,11,14,15,19,41,55,59,62,63,67,78,82,85,86,90}: cls='total'
-        h.append(f'<tr class="{cls}">')
-        for j,c in enumerate(d.columns):
-            v=r[c]; h.append(f'<td>{v if j==0 else (_fmt_pct(v) if kind=="cpc" and rr in {46,47,48,49,50,72,73,117,118,119,120,121} else _fmt_money(v))}</td>')
-        h.append('</tr>')
-    h.append('</tbody></table></div>'); return ''.join(h)
+def run_projection(
+    hist_n3, hist_n2, hist_n1, anchors,
+    gross_manual,
+    cession_settings, cession_hist, cession_manual,
+    rec_direct_settings, rec_direct_hist, rec_direct_manual,
+    rec_reass_local_settings, rec_reass_local_hist, rec_reass_local_manual,
+    rec_reass_ifrs_settings, rec_reass_ifrs_hist, rec_reass_ifrs_manual,
+    view, selected_branch,
+    commission_anchors=None,
+    direct_commission_settings=None, direct_commission_manual=None,
+    reass_commission_settings=None, reass_commission_manual=None,
+    direct_dac_settings=None, direct_dac_manual=None,
+    reass_dac_settings=None, reass_dac_manual=None,
+):
+    histories = [pd.DataFrame(hist_n3), pd.DataFrame(hist_n2), pd.DataFrame(hist_n1)]
+    results: Dict[str, pd.DataFrame] = {}
+    diags: List[str] = []
+    empty_rates = blank_month_matrix()
+    if commission_anchors is None:
+        commission_anchors = blank_commission_anchors()
+    if direct_commission_settings is None: direct_commission_settings = default_rate_settings("commission")
+    if reass_commission_settings is None: reass_commission_settings = default_rate_settings("commission")
+    if direct_dac_settings is None: direct_dac_settings = default_rate_settings("dac")
+    if reass_dac_settings is None: reass_dac_settings = default_rate_settings("dac")
+    if direct_commission_manual is None: direct_commission_manual = blank_month_matrix()
+    if reass_commission_manual is None: reass_commission_manual = blank_month_matrix()
+    if direct_dac_manual is None: direct_dac_manual = blank_month_matrix()
+    if reass_dac_manual is None: reass_dac_manual = blank_month_matrix()
 
-def _period_slice(df, index):
-    d=pd.DataFrame(df).copy()
-    if d.empty: return None,{}
-    d['period']=pd.to_datetime(d['period']); ps=sorted(d['period'].drop_duplicates()); idx=max(0,min(len(ps)-1,int(index)-1)); p=ps[idx]
-    return p,{r['branch']:r for _,r in d[d['period']==p].iterrows()}
+    for b in BRANCHES:
+        h = []
+        for hd in histories:
+            a = _matrix_col(hd, b)
+            if np.isfinite(a).sum() >= 2:
+                h.append(a)
+        ar = _anchor_row(anchors, b)
+        car = _anchor_row(commission_anchors, b)
+        gross_landing = _num(ar.get("Atterrissage Direct"), np.nan)
+        reass_landing = _num(ar.get("Atterrissage Réassurance"), np.nan)
+        if not np.isfinite(gross_landing):
+            gross_landing = np.nan
+            for hh in reversed(h):
+                if np.isfinite(hh[-1]):
+                    gross_landing = hh[-1]
+                    break
+            if not np.isfinite(gross_landing):
+                gross_landing = 0.0
+        gross_departure = _num(ar.get("Départ Direct (facultatif)"), np.nan)
+        reass_departure = _num(ar.get("Départ Réassurance (facultatif)"), np.nan)
+        if not np.isfinite(gross_departure):
+            gross_departure = None
+        if not np.isfinite(reass_departure):
+            reass_departure = None
 
-def _local_preview(df,index,kind):
-    p,rows=_period_slice(df,index)
-    if p is None: return '<div class="pd-wrap"><div class="pd-head">Aucune projection</div></div>'
-    labels=DIRECT_LABELS if kind=='direct' else REASS_LABELS; fn=_direct_value if kind=='direct' else _reass_value
-    chosen=([7,8,9,10,11,12,14,15,16,18,20,21,22,36,37,38,41,42,45,46,47,48,49,58,59,60,61,62,65,66,67,68,69] if kind=='direct' else [7,8,9,10,11,12,14,15,16,18,20,21,22,36,37,38,40,41,42,44,45,46,55,56,57,58,59,62,63,64,65,66])
-    out=[]
-    for rr in chosen:
-        vals=[fn(rows.get(b),rr) for b in BRANCHES]; corp=sum(vals[BRANCHES.index(b)] for b in CORPORATE_BRANCHES); glob=sum(vals)
-        out.append([labels.get(rr,str(rr))]+vals+[corp,glob])
-    return _table_html(pd.DataFrame(out,columns=['Ligne']+BRANCHES_UI+['Corporate','Global']),f"{('Direct' if kind=='direct' else 'Réassurance')} · {MOIS[p.month-1]} {p.year}",kind,chosen)
+        anchors_map = {}
+        manual_g = _matrix_col(gross_manual, b)
+        for i, v in enumerate(manual_g):
+            if np.isfinite(v):
+                anchors_map[i] = float(v)
 
-def _cpc_preview(direct,reass,index):
-    p,drows=_period_slice(direct,index); _,rrows=_period_slice(reass,index)
-    if p is None: return '<div class="pd-wrap"><div class="pd-head">Aucune projection</div></div>'
-    rows=[5,6,7,9,10,11,12,13,14,15,17,19,43,46,47,48,50,53,54,55,57,58,59,60,61,62,63,65,67,69,72,73,76,77,78,80,81,82,83,84,85,86,88,90,114,117,118,119,121]
-    groups=[('CONSOLIDATION',BRANCHES)]+list(CPC_GROUPS.items()); vals={}
-    for n,m in groups: vals[n]=_cpc_values(_sum_metrics(drows,m,_gross_metrics),_sum_metrics(rrows,m,_reass_metrics))
-    frame=pd.DataFrame([[CPC_LABELS.get(rr,str(rr))]+[vals[n].get(rr,0) for n,_ in groups] for rr in rows],columns=['Ligne']+[n for n,_ in groups])
-    return _table_html(frame,f"CPC SAZ · {MOIS[p.month-1]} {p.year}",'cpc',rows)
+        implied = 100 * reass_landing / gross_landing if np.isfinite(reass_landing) and gross_landing else 0.0
+        cconf = _rate_config(cession_settings, cession_hist, cession_manual, b, implied_end=implied)
+        rdconf = _rate_config(rec_direct_settings, rec_direct_hist, rec_direct_manual, b)
+        rlconf = _rate_config(rec_reass_local_settings, rec_reass_local_hist, rec_reass_local_manual, b)
+        riconf = _rate_config(rec_reass_ifrs_settings, rec_reass_ifrs_hist, rec_reass_ifrs_manual, b)
 
-# -----------------------------------------------------------------------------
-# Hypothèses / pilotage
-# -----------------------------------------------------------------------------
-def _build_hypotheses(history, annee_projection):
-    start=f"{int(annee_projection)-1}-12"; hd=build_hyp_direct(history,start,12); hr=build_hyp_reass(history,pd.DataFrame(),start,12)
-    return hd,hr
+        dcomm_start = _ratio_pct(car.get("Commission Direct départ"), gross_departure)
+        dcomm_end = _ratio_pct(car.get("Commission Direct atterrissage"), gross_landing)
+        rcomm_start = _ratio_pct(car.get("Commission Réass départ"), reass_departure)
+        rcomm_end = _ratio_pct(car.get("Commission Réass atterrissage"), reass_landing)
+        ddac_start = _ratio_pct(car.get("DAC Ouv Direct IFRS"), car.get("REC Ouv prorata Direct IFRS"))
+        ddac_end = _ratio_pct(car.get("DAC Clo Direct IFRS"), car.get("REC Clo prorata Direct IFRS"))
+        rdac_start = _ratio_pct(car.get("DAC Ouv Réass IFRS"), car.get("REC Ouv 100% Réass IFRS"))
+        rdac_end = _ratio_pct(car.get("DAC Clo Réass IFRS"), car.get("REC Clo 100% Réass IFRS"))
+        # Reass DAC in pd is commission-rate driven; use the commission rate as fallback.
+        if not np.isfinite(rdac_start): rdac_start = rcomm_start
+        if not np.isfinite(rdac_end): rdac_end = rcomm_end
 
-def _ajustement_grid(hyp, metric, annee):
-    h=pd.DataFrame(hyp).copy(); d=grille_mensuelle(annee,0.0)
-    if h.empty or not metric: return d
-    for mi in range(1,13):
-        per=f"{int(annee)}-{mi:02d}"
-        for bui,b in zip(BRANCHES_UI,BRANCHES):
-            m=h[(h['period'].astype(str)==per)&(h['branch']==b)&(h['metric']==metric)]
-            if not m.empty: d.at[mi-1,bui]=_num(m.iloc[-1].get('adjustment_pts'))
+        dcconf = _rate_config(direct_commission_settings, empty_rates, direct_commission_manual, b,
+                              implied_start=dcomm_start if np.isfinite(dcomm_start) else None,
+                              implied_end=dcomm_end if np.isfinite(dcomm_end) else None)
+        rcconf = _rate_config(reass_commission_settings, empty_rates, reass_commission_manual, b,
+                              implied_start=rcomm_start if np.isfinite(rcomm_start) else None,
+                              implied_end=rcomm_end if np.isfinite(rcomm_end) else None)
+        ddconf = _rate_config(direct_dac_settings, empty_rates, direct_dac_manual, b,
+                              implied_start=ddac_start if np.isfinite(ddac_start) else None,
+                              implied_end=ddac_end if np.isfinite(ddac_end) else None)
+        rdcconf = _rate_config(reass_dac_settings, empty_rates, reass_dac_manual, b,
+                               implied_start=rdac_start if np.isfinite(rdac_start) else None,
+                               implied_end=rdac_end if np.isfinite(rdac_end) else None)
+
+        res = project_branch(
+            histories_gross=h,
+            gross_landing=float(gross_landing),
+            reass_landing=None if not np.isfinite(reass_landing) else float(reass_landing),
+            gross_departure=gross_departure,
+            gross_manual_anchors=anchors_map,
+            cession_config=cconf,
+            rec_direct_config=rdconf,
+            rec_reass_local_config=rlconf,
+            rec_reass_ifrs_config=riconf,
+            rec_open_direct_cima72=_num(ar.get("REC ouverture Direct CIMA 72%"), 0.0),
+            rec_open_reass_cima72=_num(ar.get("REC ouverture Réass Local CIMA"), 0.0),
+            rec_open_reass_ifrs100=_num(ar.get("REC ouverture Réass IFRS 100%"), 0.0),
+            direct_commission_config=dcconf,
+            reass_commission_config=rcconf,
+            direct_dac_config=ddconf,
+            reass_dac_config=rdcconf,
+            dac_open_direct_ifrs=_num(car.get("DAC Ouv Direct IFRS"), np.nan),
+            dac_open_reass_ifrs=_num(car.get("DAC Ouv Réass IFRS"), np.nan),
+        )
+        results[b] = res.table
+        for x in res.diagnostics["Diagnostic"].tolist():
+            if x != "Aucune incohérence détectée":
+                diags.append(f"{b} — {x}")
+
+    gross = _month_matrix_from_results(results, "Prime brute")
+    cession = _month_matrix_from_results(results, "Taux cession (%)")
+    ceded = _month_matrix_from_results(results, "Prime réassurance")
+    net = _month_matrix_from_results(results, "Prime nette")
+
+    if view == "IFRS":
+        direct_var = _month_matrix_from_results(results, "Variation REC Direct prorata")
+        direct_close = _month_matrix_from_results(results, "REC clôture Direct prorata")
+        direct_earned = _month_matrix_from_results(results, "Prime acquise Direct IFRS")
+        reass_rate = _month_matrix_from_results(results, "Taux variation REC Réass IFRS (%)")
+        reass_var = _month_matrix_from_results(results, "Variation REC Réass IFRS 100%")
+        reass_close = _month_matrix_from_results(results, "REC clôture Réass IFRS 100%")
+        reass_earned = _month_matrix_from_results(results, "Prime acquise Réass IFRS")
+        net_earned = _month_matrix_from_results(results, "Prime acquise nette IFRS")
+        cpc_comm_rate = _month_matrix_from_results(results, "Taux commission CPC IFRS (%)")
+        rec_label = "REC Réassurance IFRS 100%"
+    else:
+        direct_var = _month_matrix_from_results(results, "Variation REC Direct CIMA 72%")
+        direct_close = _month_matrix_from_results(results, "REC clôture Direct CIMA 72%")
+        direct_earned = _month_matrix_from_results(results, "Prime acquise Direct Local")
+        reass_rate = _month_matrix_from_results(results, "Taux variation REC Réass Local (%)")
+        reass_var = _month_matrix_from_results(results, "Variation REC Réass Local")
+        reass_close = _month_matrix_from_results(results, "REC clôture Réass Local")
+        reass_earned = _month_matrix_from_results(results, "Prime acquise Réass Local")
+        net_earned = _month_matrix_from_results(results, "Prime acquise nette Local")
+        cpc_comm_rate = _month_matrix_from_results(results, "Taux commission CPC Local (%)")
+        rec_label = "REC Réassurance Local CIMA"
+
+    rd_rate = _month_matrix_from_results(results, "Taux variation REC Direct (%)")
+
+    landing_rows = []
+    commission_landing_rows = []
+    for bb in BRANCHES:
+        ar = _anchor_row(anchors, bb)
+        car = _anchor_row(commission_anchors, bb)
+        gd = _num(ar.get("Atterrissage Direct"), np.nan)
+        rr = _num(ar.get("Atterrissage Réassurance"), np.nan)
+        implied = 100.0 * rr / gd if np.isfinite(gd) and abs(gd) > 1e-12 and np.isfinite(rr) else np.nan
+        applied = float(results[bb]["Taux cession (%)"].iloc[-1])
+        ceded_dec = float(results[bb]["Prime réassurance"].iloc[-1])
+        gap = ceded_dec - rr if np.isfinite(rr) else np.nan
+        landing_rows.append({
+            "Branche": bb,
+            "Atterrissage Direct": gd,
+            "Atterrissage Réassurance": rr,
+            "Taux cession implicite (%)": implied,
+            "Taux Décembre appliqué (%)": applied,
+            "Écart Réassurance": gap,
+        })
+        commission_landing_rows.append({
+            "Branche": bb,
+            "Taux Direct départ (%)": _ratio_pct(car.get("Commission Direct départ"), ar.get("Départ Direct (facultatif)")),
+            "Taux Direct atterrissage (%)": _ratio_pct(car.get("Commission Direct atterrissage"), gd),
+            "Taux Réass départ (%)": _ratio_pct(car.get("Commission Réass départ"), ar.get("Départ Réassurance (facultatif)")),
+            "Taux Réass atterrissage (%)": _ratio_pct(car.get("Commission Réass atterrissage"), rr),
+            "Taux DAC Direct atterrissage (%)": _ratio_pct(car.get("DAC Clo Direct IFRS"), car.get("REC Clo prorata Direct IFRS")),
+            "Taux DAC Réass atterrissage (%)": _ratio_pct(car.get("DAC Clo Réass IFRS"), car.get("REC Clo 100% Réass IFRS")),
+            f"Taux CPC Décembre {view} (%)": float(results[bb]["Taux commission CPC IFRS (%)" if view=="IFRS" else "Taux commission CPC Local (%)"].iloc[-1]),
+        })
+    landing_summary = pd.DataFrame(landing_rows)
+    commission_landing_summary = pd.DataFrame(commission_landing_rows)
+
+    b = selected_branch if selected_branch in BRANCHES else BRANCHES[0]
+    fig = go.Figure()
+    hist_names = ["N-3", "N-2", "N-1"]
+    for name, hd in zip(hist_names, histories):
+        vals = _matrix_col(hd, b)
+        if np.isfinite(vals).sum() >= 2:
+            fig.add_trace(go.Scatter(x=MONTHS, y=vals, mode="lines+markers", name=name, line=dict(width=1.6)))
+    t = results[b]
+    fig.add_trace(go.Scatter(x=MONTHS, y=t["Prime brute"], mode="lines+markers", name="N · Prime brute", line=dict(width=4)))
+    fig.add_trace(go.Scatter(x=MONTHS, y=t["Prime réassurance"], mode="lines+markers", name="N · Réassurance", line=dict(width=2.5)))
+    fig.add_trace(go.Scatter(x=MONTHS, y=t["Prime nette"], mode="lines+markers", name="N · Nette", line=dict(width=2.5)))
+    fig.update_layout(
+        title=f"{b} · historique et projection des primes",
+        height=430, margin=dict(l=20,r=20,t=60,b=30),
+        legend=dict(orientation="h", y=-0.18), hovermode="x unified",
+        yaxis_title="FCFA cumulés", xaxis_title=None, paper_bgcolor="white", plot_bgcolor="white",
+    )
+
+    commission_fig = go.Figure()
+    commission_fig.add_trace(go.Scatter(x=MONTHS, y=t["Taux commission Direct (%)"], mode="lines+markers", name="Commission Direct", line=dict(width=3)))
+    commission_fig.add_trace(go.Scatter(x=MONTHS, y=t["Taux commission Réassurance (%)"], mode="lines+markers", name="Commission Réass", line=dict(width=3)))
+    commission_fig.add_trace(go.Scatter(x=MONTHS, y=t["Taux commission CPC IFRS (%)" if view=="IFRS" else "Taux commission CPC Local (%)"], mode="lines+markers", name=f"Taux CPC net · {view}", line=dict(width=4)))
+    if view == "IFRS":
+        commission_fig.add_trace(go.Scatter(x=MONTHS, y=t["Taux DAC Direct IFRS (%)"], mode="lines+markers", name="DAC Direct", line=dict(width=2)))
+        commission_fig.add_trace(go.Scatter(x=MONTHS, y=t["Taux DAC Réassurance IFRS (%)"], mode="lines+markers", name="DAC Réass", line=dict(width=2)))
+    commission_fig.update_layout(
+        title=f"{b} · commissions, DAC et taux CPC",
+        height=420, margin=dict(l=20,r=20,t=60,b=30),
+        legend=dict(orientation="h", y=-0.2), hovermode="x unified",
+        yaxis_title="%", xaxis_title=None, paper_bgcolor="white", plot_bgcolor="white",
+    )
+
+    dcomm_rate = _month_matrix_from_results(results, "Taux commission Direct (%)")
+    dcomm = _month_matrix_from_results(results, "Commission Direct")
+    rcomm_rate = _month_matrix_from_results(results, "Taux commission Réassurance (%)")
+    rcomm = _month_matrix_from_results(results, "Commission Réassurance")
+    ddac_rate = _month_matrix_from_results(results, "Taux DAC Direct IFRS (%)")
+    ddac_open = _month_matrix_from_results(results, "DAC ouverture Direct IFRS")
+    ddac_close = _month_matrix_from_results(results, "DAC clôture Direct IFRS")
+    ddac_var = _month_matrix_from_results(results, "Variation DAC Direct IFRS")
+    rdac_rate = _month_matrix_from_results(results, "Taux DAC Réassurance IFRS (%)")
+    rdac_open = _month_matrix_from_results(results, "DAC ouverture Réassurance IFRS")
+    rdac_close = _month_matrix_from_results(results, "DAC clôture Réassurance IFRS")
+    rdac_var = _month_matrix_from_results(results, "Variation DAC Réassurance IFRS")
+
+    diag_df = pd.DataFrame({"Diagnostic": diags[:250] if diags else ["Aucune incohérence détectée"]})
+    return (
+        _summary_html(results, view), landing_summary, fig,
+        gross, cession, ceded, net,
+        rd_rate, direct_var, direct_close, direct_earned,
+        reass_rate, reass_var, reass_close, reass_earned, net_earned,
+        _commission_summary_html(results, view), commission_landing_summary, commission_fig,
+        dcomm_rate, dcomm, rcomm_rate, rcomm, cpc_comm_rate,
+        ddac_rate, ddac_open, ddac_close, ddac_var,
+        rdac_rate, rdac_open, rdac_close, rdac_var,
+        diag_df,
+        f"Vue {view} · Direct : {'REC prorata issue de la REC CIMA 72% / 72%' if view=='IFRS' else 'REC CIMA 72%'} · Réassurance : {rec_label}",
+    )
+
+
+def apply_point_override(matrix, branch, month, value):
+    d = pd.DataFrame(matrix).copy()
+    if d.empty or branch not in d.columns or month not in MONTHS:
+        return d
+    idx = MONTHS.index(month)
+    d.loc[idx, branch] = np.nan if not np.isfinite(_num(value)) else float(_num(value))
     return d
 
-def _appliquer_grille_ajustement(hyp, metric, grid, annee):
-    h=pd.DataFrame(hyp).copy(); g=pd.DataFrame(grid)
-    if h.empty or not metric: return h
-    for mi in range(1,13):
-        per=f"{int(annee)}-{mi:02d}"
-        for bui,b in zip(BRANCHES_UI,BRANCHES):
-            val=_num(g.iloc[mi-1].get(bui)) if mi-1<len(g) else 0.0
-            mask=(h['period'].astype(str)==per)&(h['branch']==b)&(h['metric']==metric)
-            h.loc[mask,'adjustment_pts']=val
-    return h
 
-def _courbe(direct,reass,direct_ifrs,reass_ifrs,history,applied_d,applied_r,referentiel,flux,ligne,branche_ui,annee):
-    fig=go.Figure(); b=UI_TO_INTERNAL.get(branche_ui,BRANCHES[0]); df=pd.DataFrame(direct_ifrs if referentiel=='IFRS' and flux=='Direct' else reass_ifrs if referentiel=='IFRS' else direct if flux=='Direct' else reass).copy()
-    view=DIRECT_VIEW if flux=='Direct' else REASS_VIEW; field=view.get(ligne)
-    if not df.empty and field in df.columns:
-        m=df[df['branch']==b].copy(); m['period']=pd.to_datetime(m['period']); m=m.sort_values('period')
-        y=m[field].astype(float)
-        if field in {'sp_exercice','sp_global','commission_rate_written','cession_rate','recovery_rate','rec_cession_rate','reass_commission_rate'}: y=y*100
-        fig.add_trace(go.Scatter(x=MOIS[:len(m)],y=y,mode='lines+markers',name=f'{annee} projeté'))
-    if flux=='Direct' and ligne=='Primes émises':
-        hist=pd.DataFrame(history)
-        if not hist.empty:
-            hm=hist[hist['branch']==b].copy(); hm['period']=pd.to_datetime(hm['period']); hm=hm.sort_values('period')
-            for yr,gy in hm.groupby(hm['period'].dt.year):
-                gy=gy.sort_values('period')
-                fig.add_trace(go.Scatter(x=[MOIS[m-1] for m in gy['period'].dt.month],y=gy['gwp_ytd'],mode='lines+markers',name=f'{int(yr)} historique',line=dict(dash='dot')))
-    driver=(DIRECT_DRIVER if flux=='Direct' else REASS_DRIVER).get(ligne)
-    app=pd.DataFrame(applied_d if flux=='Direct' else applied_r)
-    if driver and not app.empty:
-        a=app[(app['branch']==b)&(app['metric']==driver)].copy()
-        if not a.empty:
-            fig.add_trace(go.Bar(x=MOIS[:len(a)],y=a['applied_pct'],name='% appliqué',opacity=.22,yaxis='y2'))
-            fig.update_layout(yaxis2=dict(overlaying='y',side='right',title='%'))
-    fig.update_layout(template='plotly_white',height=440,hovermode='x unified',legend=dict(orientation='h',y=1.08),margin=dict(l=25,r=25,t=45,b=25),title=f'{ligne} · {branche_ui} · {referentiel}')
-    return fig
+def clear_point_override(matrix, branch, month):
+    return apply_point_override(matrix, branch, month, np.nan)
 
-# -----------------------------------------------------------------------------
-# Calcul central
-# -----------------------------------------------------------------------------
-def _calculer(hist_n3, hist_n2, hist_n1, annee_historique, annee_projection,
-              dl_dep, dl_fin, rl_dep, rl_fin,
-              taux_cession, taux_recup, taux_rec_reass, taux_comm_reass,
-              sp_loc_ex, sp_loc_glob, sp_ifrs_ex, sp_ifrs_glob, hyp_d, hyp_r):
-    hist=_historiques_a_long(hist_n3,hist_n2,hist_n1,int(annee_historique)); an=int(annee_projection); start=f'{an-1}-12'
-    if not any(_bloc_non_vide(x) for x in [dl_dep,dl_fin]):
-        raise ValueError("Renseignez au minimum un bloc Direct Local : départ ou arrivée.")
-    dl_dep_i=_grille_a_bloc(dl_dep,'direct'); dl_fin_i=_grille_a_bloc(dl_fin,'direct')
-    rl_dep_i=_grille_a_bloc(rl_dep,'reass'); rl_fin_i=_grille_a_bloc(rl_fin,'reass')
-    dl_dep_i=_completer_depart(dl_dep_i,dl_fin_i,hist)
-    if pd.DataFrame(hyp_d).empty:
-        hyp_d=build_hyp_direct(hist,start,12)
-    base_hr=pd.DataFrame(hyp_r).copy() if not pd.DataFrame(hyp_r).empty else build_hyp_reass(hist,pd.DataFrame(),start,12)
-    hyp_r=_hyp_reass_from_grids(base_hr,an,taux_cession,taux_recup,taux_rec_reass,taux_comm_reass)
-    sr=rl_dep_i if _bloc_non_vide(rl_dep) else _reass_start_from_direct(dl_dep_i,hyp_r,an)
-    cd,cr=_cibles_depuis_bloc_fin(
-        dl_fin_i if _bloc_non_vide(dl_fin) else pd.DataFrame(),
-        rl_fin_i if _bloc_non_vide(rl_fin) else pd.DataFrame(),an)
-    ratios_local=_ratio_long(sp_loc_ex,sp_loc_glob,an)
-    d,r,s,diag,apd,apr,hd,hr,cd,cr=run_projection(dl_dep_i,sr,pd.DataFrame(hyp_d),pd.DataFrame(hyp_r),cd,cr,start,12,hist,pd.DataFrame(),ratio_targets_local=ratios_local)
-    params=_ifrs_params_auto()
-    ratios_ifrs=_ratio_long(sp_ifrs_ex,sp_ifrs_glob,an)
-    di,ri,diag_i=_apply_ifrs(d,r,ratios_ifrs)
-    si=_summary(di,ri)
-    all_diag=pd.concat([pd.DataFrame(diag),pd.DataFrame(diag_i)],ignore_index=True) if len(diag_i) else pd.DataFrame(diag)
-    out=Path(tempfile.gettempdir())/'projection_technique_v4_5.xlsx'
-    export_projection(out,{"cibles_direct":cd,"cibles_reass":cr},d,r,s,all_diag,apd,apr,ifrs_params=params,ratio_targets_ifrs=ratios_ifrs)
-    return d,r,di,ri,s,si,all_diag,apd,apr,hd,hr,params,str(out),hist
 
-def _recalculer(*args):
+def _sheet_matrix(ws, marker: str, percent: bool = False) -> pd.DataFrame:
+    # Find exact marker in column A, header is next row, 12 months below.
+    row = None
+    for r in range(1, ws.max_row + 1):
+        if str(ws.cell(r, 1).value or "").strip() == marker:
+            row = r
+            break
+    if row is None:
+        return blank_month_matrix()
+    hdr = row + 1
+    out = {"Mois": MONTHS}
+    for j, b in enumerate(BRANCHES, start=2):
+        vals = []
+        for i in range(12):
+            v = ws.cell(hdr + 1 + i, j).value
+            if percent and v is not None:
+                try:
+                    v = float(v) * 100.0
+                except Exception:
+                    txt = str(v).strip()
+                    if txt.endswith("%"):
+                        try: v = float(txt[:-1].replace(",","."))
+                        except Exception: pass
+            vals.append(v)
+        out[b] = vals
+    return pd.DataFrame(out)
+
+
+def _find_block_value(ws, block_title: str, line_label: str, branch: str, occurrence: int = 1):
+    title_row = None
+    for r in range(1, ws.max_row + 1):
+        if str(ws.cell(r,1).value or "").strip() == block_title:
+            title_row = r
+            break
+    if title_row is None:
+        return np.nan
+    # block ends at next all-caps title in col A or 120 rows later.
+    header_row = title_row + 1
+    headers = [str(ws.cell(header_row, c).value or "").strip() for c in range(1, 12)]
     try:
-        vals=_calculer(*args)
-        d,r,di,ri,s,si,diag,apd,apr,hd,hr,params,out,hist=vals
-        msg=f"Projection recalculée sur 12 mois. {len(diag)} contrôle(s) à examiner."
-        return msg,d,r,di,ri,s,si,diag,apd,apr,hd,hr,params,out,hist,_local_preview(d,1,'direct'),_local_preview(r,1,'reass'),_cpc_preview(d,r,1),s,si
-    except Exception as e:
-        vide=pd.DataFrame(); html='<div class="pd-wrap"><div class="pd-head">Aucune projection</div></div>'
-        return f"Erreur : {e}",vide,vide,vide,vide,vide,vide,pd.DataFrame([{"Contrôle":str(e)}]),vide,vide,pd.DataFrame(),pd.DataFrame(),pd.DataFrame(),None,pd.DataFrame(),html,html,html,vide,vide
-
-def _changer_bloc(d,r,di,ri,index,referentiel):
-    if referentiel=='IFRS': return _local_preview(di,index,'direct'),_local_preview(ri,index,'reass'),_cpc_preview(di,ri,index)
-    return _local_preview(d,index,'direct'),_local_preview(r,index,'reass'),_cpc_preview(d,r,index)
-
-def _charger_pilotage(flux,ligne,hyp_d,hyp_r,annee):
-    metric=(DIRECT_DRIVER if flux=='Direct' else REASS_DRIVER).get(ligne)
-    note=(f"Pilotage actif : {metric}. Saisissez des ajustements en points de pourcentage." if metric else "Cette ligne est calculée. Visualisez-la ici ; son pilotage se fait via ses lignes sources ou les cibles CPC.")
-    return _ajustement_grid(hyp_d if flux=='Direct' else hyp_r,metric,int(annee)),note
-
-def _appliquer_grille(flux,ligne,grid,hyp_d,hyp_r,annee):
-    metric=(DIRECT_DRIVER if flux=='Direct' else REASS_DRIVER).get(ligne)
-    if not metric: return hyp_d,hyp_r,"Ligne calculée : aucun ajustement direct appliqué."
-    if flux=='Direct': hyp_d=_appliquer_grille_ajustement(hyp_d,metric,grid,int(annee))
-    else: hyp_r=_appliquer_grille_ajustement(hyp_r,metric,grid,int(annee))
-    return hyp_d,hyp_r,"Ajustements enregistrés. Recalculez le modèle."
-
-def _appliquer_point(flux,ligne,branche_ui,mois,delta,hyp_d,hyp_r,annee):
-    metric=(DIRECT_DRIVER if flux=='Direct' else REASS_DRIVER).get(ligne)
-    if not metric: return hyp_d,hyp_r,_ajustement_grid(hyp_d if flux=='Direct' else hyp_r,None,int(annee)),"Cette ligne est calculée et ne possède pas de point de pilotage direct."
-    h=pd.DataFrame(hyp_d if flux=='Direct' else hyp_r).copy(); b=UI_TO_INTERNAL[branche_ui]; mi=MOIS.index(mois)+1; per=f"{int(annee)}-{mi:02d}"
-    mask=(h['period'].astype(str)==per)&(h['branch']==b)&(h['metric']==metric); h.loc[mask,'adjustment_pts']=_num(delta)
-    if flux=='Direct': hyp_d=h
-    else: hyp_r=h
-    return hyp_d,hyp_r,_ajustement_grid(h,metric,int(annee)),f"{mois} · {branche_ui} : ajustement fixé à {_num(delta):.2f} point(s)."
-
-def _lignes_flux(flux):
-    choices=list(DIRECT_VIEW if flux=='Direct' else REASS_VIEW)
-    return gr.update(choices=choices,value=choices[0])
-
-def _initialiser(hist_n3,hist_n2,hist_n1,annee_historique,annee_projection):
-    hist=_historiques_a_long(hist_n3,hist_n2,hist_n1,int(annee_historique)); hd,hr=_build_hypotheses(hist,int(annee_projection))
-    return hd,hr,"Historique N-3 à N-1 analysé. Les tendances mensuelles ont été transformées en hypothèses de progression."
-
-def _maj_annees(annee_hist,annee_proj):
-    ah=int(annee_hist); ap=int(annee_proj)
-    return (grille_mensuelle(ah-2),grille_mensuelle(ah-1),grille_mensuelle(ah),
-            grille_mensuelle(ap,25.0),grille_mensuelle(ap,25.0),grille_mensuelle(ap,25.0),grille_mensuelle(ap,15.0),
-            grille_mensuelle(ap),grille_mensuelle(ap),grille_mensuelle(ap),grille_mensuelle(ap))
-
-# -----------------------------------------------------------------------------
-# Application
-# -----------------------------------------------------------------------------
-FICHIER_HYPOTHESES = Path(__file__).with_name("hypotheses_forecast_assurance_a_remplir.xlsx")
+        branch_col = headers.index(branch) + 1
+    except ValueError:
+        return np.nan
+    count = 0
+    for r in range(header_row + 1, min(ws.max_row, title_row + 120) + 1):
+        a = str(ws.cell(r,1).value or "").strip()
+        b = str(ws.cell(r,2).value or "").strip()
+        if r > header_row + 1 and a and a.upper() == a and "—" in a:
+            break
+        if b == line_label:
+            count += 1
+            if count == occurrence:
+                return ws.cell(r, branch_col).value
+    return np.nan
 
 
-def _chercher_ligne(ws, texte: str) -> Optional[int]:
-    cible=str(texte).strip()
-    for row in range(1, int(ws.max_row or 500)+1):
-        if str(ws.cell(row,1).value or "").strip()==cible:
-            return row
-    return None
+def load_template(file_obj):
+    if file_obj is None:
+        raise gr.Error("Sélectionnez un fichier Excel.")
+    path = file_obj if isinstance(file_obj, str) else getattr(file_obj, "name", file_obj)
+    wb = load_workbook(path, data_only=False, read_only=False)
 
-def _lire_grille_excel(ws, titre: str, annee: int, rows: int=12) -> pd.DataFrame:
-    rr=_chercher_ligne(ws,titre)
-    if rr is None:
-        return grille_mensuelle(annee)
-    # Le titre est suivi de l'en-tête, puis des 12 mois.
-    start=rr+2
-    data={"Mois":[f"{m} {int(annee)}" for m in MOIS]}
-    for j,b in enumerate(BRANCHES_UI, start=2):
-        data[b]=[ws.cell(start+i,j).value for i in range(rows)]
-    return pd.DataFrame(data)
+    hist = wb["Historique primes"]
+    h3 = _sheet_matrix(hist, "PRIMES ÉMISES CUMULÉES — N-3")
+    h2 = _sheet_matrix(hist, "PRIMES ÉMISES CUMULÉES — N-2")
+    h1 = _sheet_matrix(hist, "PRIMES ÉMISES CUMULÉES — N-1")
 
-def _lire_bloc_excel(ws, titre: str, kind: str) -> pd.DataFrame:
-    rr=_chercher_ligne(ws,titre)
-    if rr is None:
-        return grille_bloc(kind)
-    defs=DIRECT_BLOCK if kind=="direct" else REASS_BLOCK
-    start=rr+2
-    rows=[]
-    for i,(section,label,_) in enumerate(defs):
-        row={"Section":section,"Ligne":label}
-        # Le classeur de saisie place Section/Ligne en A/B, puis les 8 branches en C:J.
-        for j,b in enumerate(BRANCHES_UI,start=3):
-            row[b]=ws.cell(start+i,j).value
-        rows.append(row)
-    return pd.DataFrame(rows)
+    taux = wb["Taux historiques"]
+    c_hist = _sheet_matrix(taux, "TAUX DE CESSION — N-1", percent=True)
+    rd_hist = _sheet_matrix(taux, "TAUX VARIATION REC DIRECT CIMA 72% — N-1", percent=True)
+    rl_hist = _sheet_matrix(taux, "TAUX VARIATION REC RÉASS LOCAL — N-1", percent=True)
+    ri_hist = _sheet_matrix(taux, "TAUX VARIATION REC RÉASS IFRS 100% — N-1", percent=True)
 
-def _lire_annee_projection(ws, default=2027):
-    for row in range(1,min(int(ws.max_row or 500),20)+1):
-        if str(ws.cell(row,1).value or "").strip()=="Année projetée N":
-            try: return int(ws.cell(row,2).value)
-            except Exception: return int(default)
-    return int(default)
+    anc_ws = wb["Ancrages globaux"]
+    rows = []
+    for b in BRANCHES:
+        # First REC occurrence is CIMA in Direct Local / Reass Local.
+        d_rec = _find_block_value(anc_ws, "DIRECT LOCAL — DÉPART (FACULTATIF)", "REC Ouverture", b, 1)
+        if not np.isfinite(_num(d_rec)): d_rec = _find_block_value(anc_ws, "DIRECT LOCAL — ATTERRISSAGE", "REC Ouverture", b, 1)
+        r_rec = _find_block_value(anc_ws, "REASS LOCAL — DÉPART (FACULTATIF)", "REC Ouverture", b, 1)
+        if not np.isfinite(_num(r_rec)): r_rec = _find_block_value(anc_ws, "REASS LOCAL — ATTERRISSAGE", "REC Ouverture", b, 1)
+        ri_rec = _find_block_value(anc_ws, "REASS IFRS — DÉPART (FACULTATIF)", "REC Ouverture 100%", b, 1)
+        if not np.isfinite(_num(ri_rec)): ri_rec = _find_block_value(anc_ws, "REASS IFRS — ATTERRISSAGE", "REC Ouverture 100%", b, 1)
+        rows.append({
+            "Branche": b,
+            "Départ Direct (facultatif)": _find_block_value(anc_ws, "DIRECT LOCAL — DÉPART (FACULTATIF)", "Primes Emises", b, 1),
+            "Atterrissage Direct": _find_block_value(anc_ws, "DIRECT LOCAL — ATTERRISSAGE", "Primes Emises", b, 1),
+            "Départ Réassurance (facultatif)": _find_block_value(anc_ws, "REASS LOCAL — DÉPART (FACULTATIF)", "Primes Emises", b, 1),
+            "Atterrissage Réassurance": _find_block_value(anc_ws, "REASS LOCAL — ATTERRISSAGE", "Primes Emises", b, 1),
+            "REC ouverture Direct CIMA 72%": d_rec,
+            "REC ouverture Réass Local CIMA": r_rec,
+            "REC ouverture Réass IFRS 100%": ri_rec,
+        })
+    anchors = pd.DataFrame(rows, columns=ANCHOR_COLS)
 
-def _charger_fichier_hypotheses(fichier):
-    if not fichier:
-        raise gr.Error("Sélectionnez d'abord un fichier d'hypothèses .xlsx.")
-    path=str(getattr(fichier,"name",fichier))
-    try:
-        xls=load_workbook(path,data_only=True,read_only=True)
-        for nom in ["Historique","Ancrages modèle","Hyp Réassurance","Cibles CPC"]:
-            if nom not in xls.sheetnames:
-                raise ValueError(f"Feuille manquante : {nom}")
-        wh=xls["Historique"]
-        an_proj=_lire_annee_projection(wh,2027)
-        an_hist=an_proj-1
-        h3=_lire_grille_excel(wh,"PRIMES ÉMISES CUMULÉES — N-3",an_hist-2)
-        h2=_lire_grille_excel(wh,"PRIMES ÉMISES CUMULÉES — N-2",an_hist-1)
-        h1=_lire_grille_excel(wh,"PRIMES ÉMISES CUMULÉES — N-1",an_hist)
+    commission_rows = []
+    for b in BRANCHES:
+        commission_rows.append({
+            "Branche": b,
+            "Commission Direct départ": _find_block_value(anc_ws, "DIRECT LOCAL — DÉPART (FACULTATIF)", "Commisions", b, 1),
+            "Commission Direct atterrissage": _find_block_value(anc_ws, "DIRECT LOCAL — ATTERRISSAGE", "Commisions", b, 1),
+            "Commission Réass départ": _find_block_value(anc_ws, "REASS LOCAL — DÉPART (FACULTATIF)", "Commisions", b, 1),
+            "Commission Réass atterrissage": _find_block_value(anc_ws, "REASS LOCAL — ATTERRISSAGE", "Commisions", b, 1),
+            "DAC Ouv Direct IFRS": _find_block_value(anc_ws, "DIRECT IFRS — DÉPART (FACULTATIF)", "DAC Ouv", b, 1),
+            "DAC Clo Direct IFRS": _find_block_value(anc_ws, "DIRECT IFRS — ATTERRISSAGE", "DAC Clo", b, 1),
+            "REC Ouv prorata Direct IFRS": _find_block_value(anc_ws, "DIRECT IFRS — DÉPART (FACULTATIF)", "REC Ouverture", b, 2),
+            "REC Clo prorata Direct IFRS": _find_block_value(anc_ws, "DIRECT IFRS — ATTERRISSAGE", "REC Clôture", b, 2),
+            "DAC Ouv Réass IFRS": _find_block_value(anc_ws, "REASS IFRS — DÉPART (FACULTATIF)", "DAC Ouv", b, 1),
+            "DAC Clo Réass IFRS": _find_block_value(anc_ws, "REASS IFRS — ATTERRISSAGE", "DAC Clo", b, 1),
+            "REC Ouv 100% Réass IFRS": _find_block_value(anc_ws, "REASS IFRS — DÉPART (FACULTATIF)", "REC Ouverture 100%", b, 1),
+            "REC Clo 100% Réass IFRS": _find_block_value(anc_ws, "REASS IFRS — ATTERRISSAGE", "REC Clôture 100%", b, 1),
+        })
+    commission_anchors = pd.DataFrame(commission_rows, columns=COMMISSION_ANCHOR_COLS)
+    return h3, h2, h1, anchors, commission_anchors, c_hist, rd_hist, rl_hist, ri_hist, "Fichier chargé avec succès."
 
-        wa=xls["Ancrages modèle"]
-        dd=_lire_bloc_excel(wa,"DIRECT LOCAL — BLOC DE DÉPART","direct")
-        df=_lire_bloc_excel(wa,"DIRECT LOCAL — BLOC D'ARRIVÉE","direct")
-        rd=_lire_bloc_excel(wa,"REASS LOCAL — BLOC DE DÉPART (OPTIONNEL)","reass")
-        rf=_lire_bloc_excel(wa,"REASS LOCAL — BLOC D'ARRIVÉE (OPTIONNEL)","reass")
-
-        wr=xls["Hyp Réassurance"]
-        tc=_lire_grille_excel(wr,"Taux de cession des primes",an_proj)
-        tr=_lire_grille_excel(wr,"Taux de récupération des sinistres",an_proj)
-        tu=_lire_grille_excel(wr,"Taux REC Réassurance / primes cédées",an_proj)
-        tm=_lire_grille_excel(wr,"Taux de commission de réassurance (optionnel)",an_proj)
-
-        wc=xls["Cibles CPC"]
-        sle=_lire_grille_excel(wc,"LOCAL — S/P exercice",an_proj)
-        slg=_lire_grille_excel(wc,"LOCAL — S/P global",an_proj)
-        sie=_lire_grille_excel(wc,"IFRS — S/P exercice",an_proj)
-        sig=_lire_grille_excel(wc,"IFRS — S/P global",an_proj)
-
-        hist=_historiques_a_long(h3,h2,h1,an_hist)
-        hd,hr=_build_hypotheses(hist,an_proj)
-        return (an_hist,an_proj,h3,h2,h1,dd,df,rd,rf,tc,tr,tu,tm,sle,slg,sie,sig,hd,hr,
-                "Fichier chargé. Les historiques, ancrages, hypothèses de réassurance et cibles CPC ont été réinjectés dans l'application.")
-    except Exception as e:
-        raise gr.Error(f"Impossible de charger le fichier : {e}")
 
 def build_app():
-    with gr.Blocks(title="Projection technique assurance") as demo:
-        gr.HTML('<div id="entete"><h1>Projection technique assurance</h1><p>Historique N-3 à N-1 → ancrages Direct / Réassurance → hypothèses Réassurance → cibles CPC → projection Local → passage IFRS automatique.</p></div>')
+    with gr.Blocks(title="Projection technique · Primes & Commissions") as demo:
+        gr.HTML("""
+        <div id='hero'>
+          <h1>Projection technique · Primes & Commissions</h1>
+          <p>Projection mensuelle Direct, Réassurance et Net · REC sur variation · Commissions & DAC · Local / IFRS</p>
+        </div>
+        """)
 
-        hyp_d_state=gr.State(pd.DataFrame()); hyp_r_state=gr.State(pd.DataFrame())
-        d_state=gr.State(pd.DataFrame()); r_state=gr.State(pd.DataFrame()); di_state=gr.State(pd.DataFrame()); ri_state=gr.State(pd.DataFrame())
-        s_state=gr.State(pd.DataFrame()); si_state=gr.State(pd.DataFrame()); apd_state=gr.State(pd.DataFrame()); apr_state=gr.State(pd.DataFrame()); hist_state=gr.State(pd.DataFrame())
+        with gr.Row():
+            with gr.Column(scale=2, elem_classes="card"):
+                gr.Markdown("### Données du modèle", elem_classes="section-title")
+                gr.Markdown("Historique de 1 à 3 ans, ancrages globaux et taux historiques.", elem_classes="muted")
+                download = gr.DownloadButton("Télécharger le fichier d’hypothèses", value=str(TEMPLATE_PATH), variant="primary")
+            with gr.Column(scale=3, elem_classes="card"):
+                upload = gr.File(label="Importer le fichier d’hypothèses complété", file_types=[".xlsx"], type="filepath")
+                with gr.Row():
+                    load_btn = gr.Button("Charger les données", variant="primary")
+                    load_status = gr.Textbox(label="État", interactive=False)
 
-        with gr.Tab("1 · Historique"):
-            gr.Markdown("### Données du modèle")
-            with gr.Row():
-                with gr.Column(scale=1):
-                    gr.DownloadButton(
-                        "Télécharger le fichier d’hypothèses",
-                        value=str(FICHIER_HYPOTHESES),
-                        variant="primary",
-                        elem_classes="bouton-principal",
-                    )
-                with gr.Column(scale=2):
-                    fichier_import=gr.File(
-                        label="Importer le fichier d’hypothèses complété",
-                        file_types=[".xlsx"],
-                        type="filepath",
-                    )
-                    charger_fichier=gr.Button("Charger les données du fichier",variant="secondary")
-                    import_status=gr.Markdown(elem_classes="note")
-            gr.Markdown(
-                "### Historique des primes\n"
-                "Les trois années servent à analyser la tendance mensuelle. **Mois en lignes, branches en colonnes** dans l’ordre : "
-                "**Automobile, Santé, Accident corporel, Incendie, BDM - Construction, RC - RC Déc, RD, Transport**."
-            )
-            with gr.Row():
-                annee_hist=gr.Number(value=2026,precision=0,label="Année N-1",minimum=2000,maximum=2100)
-                annee_proj=gr.Number(value=2027,precision=0,label="Année projetée N",minimum=2000,maximum=2100)
-                maj_annees=gr.Button("Actualiser les années")
+        with gr.Accordion("Historique et ancrages", open=False):
             with gr.Tabs():
                 with gr.Tab("N-3"):
-                    hist_n3=gr.Dataframe(value=grille_mensuelle(2024),type="pandas",interactive=True,label="Primes émises cumulées — N-3",elem_classes="carte")
+                    hist_n3 = gr.Dataframe(value=blank_history(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Primes émises cumulées N-3")
                 with gr.Tab("N-2"):
-                    hist_n2=gr.Dataframe(value=grille_mensuelle(2025),type="pandas",interactive=True,label="Primes émises cumulées — N-2",elem_classes="carte")
+                    hist_n2 = gr.Dataframe(value=blank_history(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Primes émises cumulées N-2")
                 with gr.Tab("N-1"):
-                    hist_n1=gr.Dataframe(value=grille_mensuelle(2026),type="pandas",interactive=True,label="Primes émises cumulées — N-1",elem_classes="carte")
-            init_btn=gr.Button("Analyser l'historique",variant="primary",elem_classes="bouton-principal")
-            init_status=gr.Markdown(elem_classes="note")
+                    hist_n1 = gr.Dataframe(value=blank_history(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Primes émises cumulées N-1")
+            anchors = gr.Dataframe(value=blank_anchors(), headers=ANCHOR_COLS, interactive=True, elem_classes="matrix", label="Ancrages utiles au module Primes")
+            commission_anchors = gr.State(blank_commission_anchors())
 
-        with gr.Tab("2 · Ancrages du modèle"):
-            gr.Markdown("### Direct Local\nLes lignes reprennent celles de `Direct Local` dans `pd`. Renseignez **au minimum le bloc de départ ou le bloc d'arrivée**.")
+        with gr.Row():
+            view = gr.Radio(["Local", "IFRS"], value="Local", label="Référentiel", scale=1)
+            selected_branch = gr.Dropdown(BRANCHES, value=BRANCHES[0], label="Branche visualisée", scale=2)
+            recalc = gr.Button("Recalculer", variant="primary", scale=1)
+
+        summary = gr.HTML()
+        chart = gr.Plot(label="Historique & projection")
+
+        with gr.Accordion("Pilotage interactif d’un mois", open=True):
+            gr.Markdown("Les valeurs saisies ici deviennent des overrides mensuels. Les mois suivants sont recalculés automatiquement.", elem_classes="muted")
             with gr.Row():
-                dl_dep=gr.Dataframe(value=grille_bloc('direct'),type="pandas",interactive=True,label="Bloc de départ — Direct Local")
-                dl_fin=gr.Dataframe(value=grille_bloc('direct'),type="pandas",interactive=True,label="Bloc d'arrivée — Direct Local")
-            gr.Markdown("### Reass Local — facultatif\nLes lignes reprennent celles de `Reass Local` dans `pd`. Si ces blocs restent vides, la Réassurance est reconstruite depuis les taux mensuels.")
+                point_branch = gr.Dropdown(BRANCHES, value=BRANCHES[0], label="Branche")
+                point_month = gr.Dropdown(MONTHS, value=MONTHS[0], label="Mois")
+                prime_override = gr.Number(label="Prime brute cumulée", precision=0)
+                cession_override = gr.Number(label="Taux cession (%)", precision=3)
+                rec_direct_override = gr.Number(label="Taux variation REC Direct (%)", precision=3)
+                rec_reass_override = gr.Number(label="Taux variation REC Réass (%)", precision=3)
             with gr.Row():
-                rl_dep=gr.Dataframe(value=grille_bloc('reass'),type="pandas",interactive=True,label="Bloc de départ — Reass Local (optionnel)")
-                rl_fin=gr.Dataframe(value=grille_bloc('reass'),type="pandas",interactive=True,label="Bloc d'arrivée — Reass Local (optionnel)")
-            gr.Markdown("### Passage IFRS automatique\nL’IFRS est calculé à partir du Local. L’IBNR utilise un coefficient IFRS/Local par branche, puis les **cibles S/P IFRS** peuvent recalibrer automatiquement la clôture.")
-            coef_ifrs=gr.Dataframe(value=grille_coefficients_ifrs(),type="pandas",interactive=False,label="Coefficients IBNR IFRS / Local utilisés",elem_classes="carte")
+                apply_prime = gr.Button("Appliquer prime")
+                apply_cession = gr.Button("Appliquer cession")
+                apply_rec_direct = gr.Button("Appliquer REC Direct")
+                apply_rec_reass = gr.Button("Appliquer REC Réass")
+                clear_all_point = gr.Button("Effacer ce mois")
 
-        with gr.Tab("3 · Hypothèses Réassurance"):
-            gr.Markdown("### Réassurance pilotée par taux\nLa **REC Réassurance est indépendante de la REC Direct** : elle est calculée sur les **primes cédées**.")
-            taux_cession=gr.Dataframe(value=grille_mensuelle(2027,25.0),type="pandas",interactive=True,label="Taux de cession des primes (%)")
-            taux_recup=gr.Dataframe(value=grille_mensuelle(2027,25.0),type="pandas",interactive=True,label="Taux de récupération des sinistres (%)")
-            taux_rec_reass=gr.Dataframe(value=grille_mensuelle(2027,25.0),type="pandas",interactive=True,label="Taux REC Réassurance / primes cédées (%)")
-            taux_comm_reass=gr.Dataframe(value=grille_mensuelle(2027,15.0),type="pandas",interactive=True,label="Taux de commission de réassurance (%) — optionnel")
+        with gr.Tabs():
+            with gr.Tab("Primes"):
+                gr.Markdown("### Trajectoires mensuelles · toutes les branches", elem_classes="section-title")
+                with gr.Row():
+                    gross_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime brute Direct", elem_classes="matrix")
+                    ceded_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime Réassurance", elem_classes="matrix")
+                with gr.Row():
+                    cession_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux de cession (%)", elem_classes="matrix")
+                    net_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime nette", elem_classes="matrix")
 
-        with gr.Tab("4 · Cibles CPC"):
-            gr.Markdown("### Ratios mensuels à atteindre\nSaisissez les ratios en **%**. Une cellule vide laisse le moteur suivre la trajectoire issue des hypothèses.")
-            with gr.Tabs():
-                with gr.Tab("Local"):
-                    sp_loc_ex=gr.Dataframe(value=grille_mensuelle(2027),type="pandas",interactive=True,label="S/P exercice — Local (%)")
-                    sp_loc_glob=gr.Dataframe(value=grille_mensuelle(2027),type="pandas",interactive=True,label="S/P global — Local (%)")
-                with gr.Tab("IFRS"):
-                    sp_ifrs_ex=gr.Dataframe(value=grille_mensuelle(2027),type="pandas",interactive=True,label="S/P exercice — IFRS (%)")
-                    sp_ifrs_glob=gr.Dataframe(value=grille_mensuelle(2027),type="pandas",interactive=True,label="S/P global — IFRS (%)")
+            with gr.Tab("Taux de cession"):
+                gr.Markdown("### Paramétrage du taux de cession", elem_classes="section-title")
+                gr.Markdown("Mode **Fixe**, **Linéaire** ou **Manuel**. En mode Linéaire, les marges encadrent les écarts autorisés autour de la trajectoire.", elem_classes="muted")
+                cession_landing = gr.Dataframe(interactive=False, elem_classes="matrix", label="Atterrissages et taux de cession implicite")
+                cession_settings = gr.Dataframe(value=default_rate_settings("cession"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Règles par branche")
+                with gr.Row():
+                    cession_hist = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Taux de cession N-1 (%)")
+                    cession_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides mensuels N (%)")
 
-        with gr.Tab("5 · Pilotage interactif"):
-            gr.Markdown("### Ajuster une trajectoire\nChaque point modifié agit sur le pourcentage du mois choisi ; le modèle est ensuite recalculé.")
-            with gr.Row():
-                referentiel=gr.Radio(["Local","IFRS"],value="Local",label="Référentiel")
-                flux=gr.Radio(["Direct","Réassurance"],value="Direct",label="Flux")
-                ligne=gr.Dropdown(choices=list(DIRECT_VIEW),value="Primes émises",label="Ligne")
-                branche=gr.Dropdown(choices=BRANCHES_UI,value=BRANCHES_UI[0],label="Branche")
-            courbe=gr.Plot(label="Évolution")
-            with gr.Row():
-                mois_point=gr.Dropdown(choices=MOIS,value="Février",label="Mois à ajuster")
-                ajustement_point=gr.Slider(-50,50,value=0,step=.1,label="Ajustement (points de %)")
-                point_btn=gr.Button("Appliquer et recalculer")
-            pilot_note=gr.Markdown(elem_classes="note")
-            ajust_grid=gr.Dataframe(value=grille_mensuelle(2027,0.0),type="pandas",interactive=True,label="Ajustements manuels (+/- points)")
-            appliquer_grid=gr.Button("Appliquer la grille et recalculer")
-            pilot_status=gr.Markdown(elem_classes="note")
+            with gr.Tab("REC Direct"):
+                gr.Markdown("### REC Direct · taux appliqué à la variation", elem_classes="section-title")
+                gr.Markdown("Variation REC = Prime brute × taux. REC clôture = REC ouverture fixe + variation.", elem_classes="muted")
+                rec_direct_settings = gr.Dataframe(value=default_rate_settings("rec"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Règles de taux par branche")
+                with gr.Row():
+                    rec_direct_hist = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Taux N-1 (%)")
+                    rec_direct_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides N (%)")
+                with gr.Row():
+                    rec_direct_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux appliqué (%)", elem_classes="matrix")
+                    rec_direct_var_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Variation REC", elem_classes="matrix")
+                with gr.Row():
+                    rec_direct_close_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="REC clôture", elem_classes="matrix")
+                    direct_earned_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime acquise Direct", elem_classes="matrix")
 
-        with gr.Tab("6 · Résultats"):
-            with gr.Row():
-                resultat_ref=gr.Radio(["Local","IFRS"],value="Local",label="Référentiel affiché")
-                bloc=gr.Slider(1,12,value=1,step=1,label="Mois / bloc")
-                afficher=gr.Button("Afficher")
-            with gr.Tabs():
-                with gr.Tab("Direct"): direct_html=gr.HTML('<div class="pd-wrap"><div class="pd-head">Calculez le modèle.</div></div>')
-                with gr.Tab("Réassurance"): reass_html=gr.HTML('<div class="pd-wrap"><div class="pd-head">Calculez le modèle.</div></div>')
-                with gr.Tab("CPC SAZ"): cpc_html=gr.HTML('<div class="pd-wrap"><div class="pd-head">Calculez le modèle.</div></div>')
-            with gr.Row():
-                synth_local=gr.Dataframe(interactive=False,label="Synthèse Local")
-                synth_ifrs=gr.Dataframe(interactive=False,label="Synthèse IFRS")
+            with gr.Tab("REC Réassurance"):
+                gr.Markdown("### REC Réassurance", elem_classes="section-title")
+                gr.Markdown("La REC Réassurance est calculée sur la prime cédée. Le taux IFRS 100% est distinct du taux Local.", elem_classes="muted")
+                with gr.Tabs():
+                    with gr.Tab("Local"):
+                        rec_reass_local_settings = gr.Dataframe(value=default_rate_settings("rec"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Règles REC Réass Local")
+                        with gr.Row():
+                            rec_reass_local_hist = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Taux N-1 Local (%)")
+                            rec_reass_local_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides N Local (%)")
+                    with gr.Tab("IFRS 100%"):
+                        rec_reass_ifrs_settings = gr.Dataframe(value=default_rate_settings("rec"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Règles REC Réass IFRS")
+                        with gr.Row():
+                            rec_reass_ifrs_hist = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Taux N-1 IFRS (%)")
+                            rec_reass_ifrs_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides N IFRS (%)")
+                with gr.Row():
+                    rec_reass_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux appliqué (%)", elem_classes="matrix")
+                    rec_reass_var_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Variation REC Réass", elem_classes="matrix")
+                with gr.Row():
+                    rec_reass_close_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="REC clôture Réass", elem_classes="matrix")
+                    reass_earned_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime acquise Réassurance", elem_classes="matrix")
 
-        with gr.Tab("7 · Contrôles et export"):
-            calculer=gr.Button("Recalculer tout le modèle",variant="primary",elem_classes="bouton-principal")
-            statut=gr.Markdown(elem_classes="note")
-            diagnostics=gr.Dataframe(interactive=False,label="Contrôles")
-            params_ifrs=gr.Dataframe(interactive=False,label="Coefficients IFRS appliqués")
-            export=gr.File(label="Classeur Excel final — Direct / Réassurance / CPC")
+            with gr.Tab("Prime acquise"):
+                reference_note = gr.Markdown()
+                net_earned_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime acquise nette", elem_classes="matrix")
 
-        maj_annees.click(_maj_annees,inputs=[annee_hist,annee_proj],outputs=[hist_n3,hist_n2,hist_n1,taux_cession,taux_recup,taux_rec_reass,taux_comm_reass,sp_loc_ex,sp_loc_glob,sp_ifrs_ex,sp_ifrs_glob])
-        init_btn.click(_initialiser,inputs=[hist_n3,hist_n2,hist_n1,annee_hist,annee_proj],outputs=[hyp_d_state,hyp_r_state,init_status])
-        charger_fichier.click(_charger_fichier_hypotheses,inputs=[fichier_import],outputs=[annee_hist,annee_proj,hist_n3,hist_n2,hist_n1,dl_dep,dl_fin,rl_dep,rl_fin,taux_cession,taux_recup,taux_rec_reass,taux_comm_reass,sp_loc_ex,sp_loc_glob,sp_ifrs_ex,sp_ifrs_glob,hyp_d_state,hyp_r_state,import_status])
-        flux.change(_lignes_flux,inputs=[flux],outputs=[ligne])
-        ligne.change(_charger_pilotage,inputs=[flux,ligne,hyp_d_state,hyp_r_state,annee_proj],outputs=[ajust_grid,pilot_note])
-        flux.change(_charger_pilotage,inputs=[flux,ligne,hyp_d_state,hyp_r_state,annee_proj],outputs=[ajust_grid,pilot_note])
-        point_event=point_btn.click(_appliquer_point,inputs=[flux,ligne,branche,mois_point,ajustement_point,hyp_d_state,hyp_r_state,annee_proj],outputs=[hyp_d_state,hyp_r_state,ajust_grid,pilot_status])
+            with gr.Tab("Commissions & DAC"):
+                gr.Markdown("### Commissions · Direct / Réassurance / CPC", elem_classes="section-title")
+                gr.Markdown("Les taux d'atterrissage sont calculés automatiquement depuis les blocs d'arrivée : **Commission / Prime**. Choisissez ensuite Fixe, Linéaire ou modifiez chaque mois.", elem_classes="muted")
+                commission_summary = gr.HTML()
+                commission_landing = gr.Dataframe(interactive=False, elem_classes="matrix", label="Taux implicites issus des ancrages")
+                commission_chart = gr.Plot(label="Commissions, DAC et taux CPC")
 
-        calc_inputs=[hist_n3,hist_n2,hist_n1,annee_hist,annee_proj,dl_dep,dl_fin,rl_dep,rl_fin,taux_cession,taux_recup,taux_rec_reass,taux_comm_reass,sp_loc_ex,sp_loc_glob,sp_ifrs_ex,sp_ifrs_glob,hyp_d_state,hyp_r_state]
-        calc_outputs=[statut,d_state,r_state,di_state,ri_state,s_state,si_state,diagnostics,apd_state,apr_state,hyp_d_state,hyp_r_state,params_ifrs,export,hist_state,direct_html,reass_html,cpc_html,synth_local,synth_ifrs]
-        calculer.click(_recalculer,inputs=calc_inputs,outputs=calc_outputs).then(_courbe,inputs=[d_state,r_state,di_state,ri_state,hist_state,apd_state,apr_state,referentiel,flux,ligne,branche,annee_proj],outputs=[courbe])
-        afficher.click(_changer_bloc,inputs=[d_state,r_state,di_state,ri_state,bloc,resultat_ref],outputs=[direct_html,reass_html,cpc_html])
-        for comp in [referentiel,flux,ligne,branche]:
-            comp.change(_courbe,inputs=[d_state,r_state,di_state,ri_state,hist_state,apd_state,apr_state,referentiel,flux,ligne,branche,annee_proj],outputs=[courbe])
-        point_event.then(_recalculer,inputs=calc_inputs,outputs=calc_outputs).then(_courbe,inputs=[d_state,r_state,di_state,ri_state,hist_state,apd_state,apr_state,referentiel,flux,ligne,branche,annee_proj],outputs=[courbe])
-        grid_event=appliquer_grid.click(_appliquer_grille,inputs=[flux,ligne,ajust_grid,hyp_d_state,hyp_r_state,annee_proj],outputs=[hyp_d_state,hyp_r_state,pilot_status])
-        grid_event.then(_recalculer,inputs=calc_inputs,outputs=calc_outputs).then(_courbe,inputs=[d_state,r_state,di_state,ri_state,hist_state,apd_state,apr_state,referentiel,flux,ligne,branche,annee_proj],outputs=[courbe])
+                with gr.Accordion("Pilotage des commissions", open=True):
+                    with gr.Row():
+                        direct_commission_settings = gr.Dataframe(value=default_rate_settings("commission"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Commission Direct · règles par branche")
+                        reass_commission_settings = gr.Dataframe(value=default_rate_settings("commission"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Commission Réassurance · règles par branche")
+                    with gr.Row():
+                        direct_commission_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides mensuels · taux commission Direct (%)")
+                        reass_commission_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides mensuels · taux commission Réass (%)")
+
+                    with gr.Row():
+                        commission_point_branch = gr.Dropdown(BRANCHES, value=BRANCHES[0], label="Branche")
+                        commission_point_month = gr.Dropdown(MONTHS, value=MONTHS[0], label="Mois")
+                        direct_commission_override = gr.Number(label="Taux Direct (%)", precision=3)
+                        reass_commission_override = gr.Number(label="Taux Réass (%)", precision=3)
+                    with gr.Row():
+                        apply_direct_commission = gr.Button("Appliquer taux Direct")
+                        apply_reass_commission = gr.Button("Appliquer taux Réass")
+                        clear_commission_point = gr.Button("Effacer ce mois")
+
+                gr.Markdown("### Résultats commissions · 12 mois × 8 branches", elem_classes="section-title")
+                with gr.Row():
+                    direct_commission_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux commission Direct (%)", elem_classes="matrix")
+                    reass_commission_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux commission Réassurance (%)", elem_classes="matrix")
+                with gr.Row():
+                    direct_commission_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Commission Direct", elem_classes="matrix")
+                    reass_commission_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Commission Réassurance", elem_classes="matrix")
+                cpc_commission_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux de commission CPC sur prime acquise nette (%)", elem_classes="matrix")
+
+                with gr.Accordion("DAC · IFRS uniquement", open=False):
+                    gr.Markdown("DAC = REC 100% × taux DAC. L'ouverture DAC reste fixe sur l'exercice ; la clôture suit la REC 100% projetée. Variation DAC = ouverture − clôture.", elem_classes="muted")
+                    with gr.Row():
+                        direct_dac_settings = gr.Dataframe(value=default_rate_settings("dac"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="DAC Direct · règles par branche")
+                        reass_dac_settings = gr.Dataframe(value=default_rate_settings("dac"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="DAC Réassurance · règles par branche")
+                    with gr.Row():
+                        direct_dac_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides mensuels · taux DAC Direct (%)")
+                        reass_dac_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides mensuels · taux DAC Réass (%)")
+                    with gr.Row():
+                        direct_dac_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux DAC Direct IFRS (%)", elem_classes="matrix")
+                        reass_dac_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux DAC Réass IFRS (%)", elem_classes="matrix")
+                    with gr.Row():
+                        direct_dac_open_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="DAC ouverture Direct IFRS", elem_classes="matrix")
+                        direct_dac_close_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="DAC clôture Direct IFRS", elem_classes="matrix")
+                    direct_dac_var_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Variation DAC Direct IFRS", elem_classes="matrix")
+                    with gr.Row():
+                        reass_dac_open_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="DAC ouverture Réass IFRS", elem_classes="matrix")
+                        reass_dac_close_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="DAC clôture Réass IFRS", elem_classes="matrix")
+                    reass_dac_var_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Variation DAC Réass IFRS", elem_classes="matrix")
+
+            with gr.Tab("Diagnostics"):
+                diagnostics = gr.Dataframe(headers=["Diagnostic"], interactive=False, label="Contrôles")
+
+        gross_manual = gr.State(blank_month_matrix())
+
+        load_btn.click(
+            load_template,
+            inputs=[upload],
+            outputs=[hist_n3,hist_n2,hist_n1,anchors,commission_anchors,cession_hist,rec_direct_hist,rec_reass_local_hist,rec_reass_ifrs_hist,load_status],
+        )
+
+        inputs = [
+            hist_n3,hist_n2,hist_n1,anchors,gross_manual,
+            cession_settings,cession_hist,cession_manual,
+            rec_direct_settings,rec_direct_hist,rec_direct_manual,
+            rec_reass_local_settings,rec_reass_local_hist,rec_reass_local_manual,
+            rec_reass_ifrs_settings,rec_reass_ifrs_hist,rec_reass_ifrs_manual,
+            view,selected_branch,
+            commission_anchors,
+            direct_commission_settings,direct_commission_manual,
+            reass_commission_settings,reass_commission_manual,
+            direct_dac_settings,direct_dac_manual,
+            reass_dac_settings,reass_dac_manual,
+        ]
+        outputs = [
+            summary,cession_landing,chart,gross_grid,cession_grid,ceded_grid,net_grid,
+            rec_direct_rate_grid,rec_direct_var_grid,rec_direct_close_grid,direct_earned_grid,
+            rec_reass_rate_grid,rec_reass_var_grid,rec_reass_close_grid,reass_earned_grid,net_earned_grid,
+            commission_summary,commission_landing,commission_chart,
+            direct_commission_rate_grid,direct_commission_grid,reass_commission_rate_grid,reass_commission_grid,cpc_commission_rate_grid,
+            direct_dac_rate_grid,direct_dac_open_grid,direct_dac_close_grid,direct_dac_var_grid,
+            reass_dac_rate_grid,reass_dac_open_grid,reass_dac_close_grid,reass_dac_var_grid,
+            diagnostics,reference_note,
+        ]
+        recalc.click(run_projection, inputs=inputs, outputs=outputs)
+        view.change(run_projection, inputs=inputs, outputs=outputs)
+        selected_branch.change(run_projection, inputs=inputs, outputs=outputs)
+
+        # Point overrides. We update the corresponding override matrix then recalc manually using button.
+        apply_prime.click(apply_point_override, [gross_manual, point_branch, point_month, prime_override], [gross_manual]).then(run_projection, inputs=inputs, outputs=outputs)
+        apply_cession.click(apply_point_override, [cession_manual, point_branch, point_month, cession_override], [cession_manual]).then(run_projection, inputs=inputs, outputs=outputs)
+        apply_rec_direct.click(apply_point_override, [rec_direct_manual, point_branch, point_month, rec_direct_override], [rec_direct_manual]).then(run_projection, inputs=inputs, outputs=outputs)
+
+        def apply_reass_by_view(local_m, ifrs_m, branch, month, value, view_value):
+            if view_value == "IFRS":
+                return local_m, apply_point_override(ifrs_m, branch, month, value)
+            return apply_point_override(local_m, branch, month, value), ifrs_m
+        apply_rec_reass.click(apply_reass_by_view, [rec_reass_local_manual, rec_reass_ifrs_manual, point_branch, point_month, rec_reass_override, view], [rec_reass_local_manual, rec_reass_ifrs_manual]).then(run_projection, inputs=inputs, outputs=outputs)
+
+        apply_direct_commission.click(apply_point_override, [direct_commission_manual, commission_point_branch, commission_point_month, direct_commission_override], [direct_commission_manual]).then(run_projection, inputs=inputs, outputs=outputs)
+        apply_reass_commission.click(apply_point_override, [reass_commission_manual, commission_point_branch, commission_point_month, reass_commission_override], [reass_commission_manual]).then(run_projection, inputs=inputs, outputs=outputs)
+
+        def clear_comm_point(dc, rc, branch, month):
+            return clear_point_override(dc,branch,month), clear_point_override(rc,branch,month)
+        clear_commission_point.click(clear_comm_point, [direct_commission_manual,reass_commission_manual,commission_point_branch,commission_point_month], [direct_commission_manual,reass_commission_manual]).then(run_projection, inputs=inputs, outputs=outputs)
+
+        def clear_point(g, c, rd, rl, ri, branch, month):
+            return (
+                clear_point_override(g,branch,month), clear_point_override(c,branch,month), clear_point_override(rd,branch,month),
+                clear_point_override(rl,branch,month), clear_point_override(ri,branch,month),
+            )
+        clear_all_point.click(clear_point, [gross_manual,cession_manual,rec_direct_manual,rec_reass_local_manual,rec_reass_ifrs_manual,point_branch,point_month], [gross_manual,cession_manual,rec_direct_manual,rec_reass_local_manual,rec_reass_ifrs_manual]).then(run_projection, inputs=inputs, outputs=outputs)
+
+        demo.load(run_projection, inputs=inputs, outputs=outputs)
     return demo
 
+
 if __name__ == "__main__":
-    from optimized_app import build_app as build_optimized_app
-    app=build_optimized_app()
-    port=int(os.environ.get("PORT","7860"))
-    app.launch(server_name="0.0.0.0",server_port=port,show_error=True,theme=THEME,css=CSS)
+    app = build_app()
+    app.launch(server_name="0.0.0.0", server_port=int(os.environ.get("PORT", "7860")), show_error=True, theme=THEME, css=CSS)

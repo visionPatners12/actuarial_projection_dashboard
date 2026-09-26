@@ -1,13 +1,33 @@
-# Projection technique assurance
+# Projection technique assurance — Primes & Commissions
 
-Application Gradio de projection mensuelle pour huit branches. Le parcours principal
-utilise optimized_forecast.py et projette les 1 à 12 mois restant dans une année.
-Les anciens modules restent présents pour la lecture des classeurs historiques.
+Application Gradio de projection mensuelle par branche, avec trajectoires de primes et commissions, ainsi qu'un moteur optimisé pour les projections annuelles sur les huit branches.
 
-## Démarrage
+## Modules disponibles
 
-    pip install -r requirements.txt
-    python app.py
+### Primes
+- historique de 1 à 3 ans ;
+- projection Direct vers un atterrissage ;
+- cession / prime Réassurance / prime nette ;
+- taux fixes, linéaires avec marges ou overrides mensuels ;
+- REC pilotée par variation ;
+- REC CIMA 72 % et passage prorata IFRS ;
+- primes acquises Direct / Réassurance / Net.
+
+### Commissions & DAC
+- taux de commission Direct calculé depuis `Commission / Prime brute` du bloc d'atterrissage ;
+- taux de commission Réassurance calculé depuis `Commission / Prime cédée` ;
+- mode Fixe, Linéaire Départ → Atterrissage avec marges, ou ajustements mois par mois ;
+- DAC IFRS calculé sur les REC 100 % / prorata ;
+- `Variation DAC = DAC ouverture - DAC clôture` ;
+- taux de commission CPC net calculé sur la prime acquise nette, selon la structure de `pd.xlsx`.
+
+## Déploiement Render
+Build command:
+
+```bash
+pip install --upgrade pip && pip install -r requirements.txt
+python app.py
+```
 
 CVXPY/OSQP résout les programmes quadratiques en production. Si CVXPY n'est pas
 installé dans un environnement de développement, le même problème est résolu
