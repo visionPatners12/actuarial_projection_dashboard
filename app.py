@@ -15,29 +15,33 @@ from claims_engine import (
     SP_SETTING_COLS, blank_sp_settings, blank_portfolio_manual,
     build_portfolio_target, optimize_sp_matrix, calculate_claims_and_result, portfolio_metrics,
 )
+from expense_engine import (
+    FG_COMPONENTS, PF_REVENUES, PF_CHARGES, RATE_COLS as FG_RATE_COLS,
+    blank_component_table, blank_rate_settings as blank_fg_rate_settings,
+    project_expenses, portfolio_expense_metrics,
+)
 
 BASE_DIR = Path(__file__).resolve().parent
-TEMPLATE_PATH = BASE_DIR / "hypotheses_primes_commissions_v1.xlsx"
+TEMPLATE_PATH = BASE_DIR / "hypotheses_projection_v5.xlsx"
 
 THEME = gr.themes.Soft(primary_hue="emerald", neutral_hue="slate", radius_size="lg")
 CSS = """
-.gradio-container{max-width:1700px!important;margin:0 auto;background:#F5F7FA!important}
-#hero{background:linear-gradient(135deg,#0B5D50,#17365D);border-radius:22px;padding:24px 28px;margin-bottom:14px;color:#fff}
-#hero h1{font-size:27px;margin:0 0 6px;color:#fff} #hero p{margin:0;color:#DDEDEA}
-.card{background:#fff!important;border:1px solid #E1E7EE!important;border-radius:18px!important;padding:8px!important;box-shadow:0 2px 12px rgba(24,50,70,.04)!important}
-.section-title h3{color:#17365D!important;margin-bottom:4px!important}.muted{font-size:13px;color:#66788A}
-.kpi{background:#fff;border:1px solid #E1E7EE;border-radius:14px;padding:11px 13px}.kpi b{font-size:18px;color:#17365D}
-button.primary{font-weight:700!important}
-.matrix table{font-size:12px!important}.matrix th{white-space:nowrap!important}.matrix td{white-space:nowrap!important}
-.rate-settings table{font-size:12px!important}
-.compact input{font-size:13px!important}
-.prime-editor table{font-size:13px!important}.prime-editor td,.prime-editor th{padding:8px 10px!important}
-.prime-editor{border:1px solid #D9E3EA!important;border-radius:16px!important;overflow:hidden!important}
-.prime-result table{font-size:12px!important}
-.sp-editor table{font-size:13px!important}.sp-editor{border:1px solid #D9E3EA!important;border-radius:16px!important;overflow:hidden!important}
-.sp-kpi{background:#fff;border:1px solid #DCE6ED;border-radius:14px;padding:12px 14px}
-#prime-workspace{background:#fff;border:1px solid #E1E7EE;border-radius:20px;padding:14px 16px;box-shadow:0 4px 18px rgba(24,50,70,.05)}
-#prime-toolbar{background:#EEF7F4;border:1px solid #D5EBE4;border-radius:16px;padding:8px 12px}
+:root{--navy:#17365D;--green:#0C7A63;--green-soft:#EEF7F4;--bg:#F5F7FA;--line:#DCE4EA;--text:#233545;--muted:#66788A}
+.gradio-container{max-width:1680px!important;margin:0 auto;background:var(--bg)!important;color:var(--text)}
+#hero{background:#fff;border:1px solid var(--line);border-left:5px solid var(--green);border-radius:16px;padding:18px 22px;margin:12px 0 10px;box-shadow:0 2px 10px rgba(23,54,93,.035)}
+#hero h1{font-size:25px;margin:0 0 4px;color:var(--navy);font-weight:750}#hero p{margin:0;color:var(--muted);font-size:13px}
+#prime-toolbar{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px 10px;position:sticky;top:6px;z-index:30;box-shadow:0 4px 16px rgba(23,54,93,.06)}
+#persistent-kpis{position:sticky;top:82px;z-index:25;background:rgba(245,247,250,.96);backdrop-filter:blur(8px);padding:7px 0 9px}
+.kpi,.sp-kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:68px;box-shadow:0 1px 4px rgba(23,54,93,.025)}
+.kpi span,.sp-kpi span{font-size:11px;color:var(--muted);font-weight:650;text-transform:uppercase;letter-spacing:.025em}.kpi b,.sp-kpi b{font-size:18px;color:var(--navy);font-weight:750}
+.card{background:#fff!important;border:1px solid var(--line)!important;border-radius:14px!important;padding:10px!important;box-shadow:none!important}
+.section-title h3{color:var(--navy)!important;margin:0 0 3px!important;font-size:18px!important}.muted{font-size:12.5px;color:var(--muted);margin-top:0!important}.flow-note{font-size:12px;color:#5B6F82;margin:4px 0 8px}
+.workspace{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 14px;box-shadow:0 2px 10px rgba(23,54,93,.035)}
+.context-legend{font-size:11px;color:var(--muted);padding:2px 4px 8px}.context-legend .badge{display:inline-block;padding:3px 7px;border-radius:999px;margin-right:5px;border:1px solid var(--line);background:#fff}.context-legend .auto{border-color:#BFD9D2}.context-legend .manual{border-color:#E4C978}.context-legend .lock{border-color:#B7C0CB}
+.matrix table,.rate-settings table,.prime-result table{font-size:11.5px!important}.prime-editor table,.sp-editor table{font-size:12.5px!important}.matrix th,.matrix td,.prime-result th,.prime-result td{white-space:nowrap!important}.prime-editor td,.prime-editor th,.sp-editor td,.sp-editor th{padding:7px 9px!important}
+.prime-editor,.sp-editor{border:1px solid #D4DEE6!important;border-radius:12px!important;overflow:hidden!important}.prime-editor input,.sp-editor input{background:#FFFDF3!important}
+button.primary{font-weight:720!important}.gr-button-secondary{border-color:#CAD5DE!important}
+.compact-grid{max-height:540px;overflow:auto}.decision-note{border-left:3px solid var(--green);background:var(--green-soft);padding:8px 10px;border-radius:8px;font-size:12px;color:#385B55}
 footer{display:none!important}
 """
 
@@ -287,6 +291,25 @@ def _commission_summary_html(results: Dict[str, pd.DataFrame], view: str) -> str
     </div>"""
 
 
+
+def _commission_branch_table(results: Dict[str, pd.DataFrame], branch: str, view: str) -> pd.DataFrame:
+    b = branch if branch in BRANCHES else BRANCHES[0]
+    t = results[b]
+    data = {
+        "Mois": MONTHS,
+        "Taux commission Direct (%)": t["Taux commission Direct (%)"].to_numpy(float),
+        "Commission Direct": t["Commission Direct"].to_numpy(float),
+        "Taux récupération Réass (%)": t["Taux récupération commission Réassurance (%)"].to_numpy(float),
+        "Commission Réassurance": t["Commission Réassurance"].to_numpy(float),
+        "Taux commission CPC (%)": t["Taux commission CPC IFRS (%)" if view == "IFRS" else "Taux commission CPC Local (%)"].to_numpy(float),
+    }
+    if view == "IFRS":
+        data["Taux DAC Direct (%)"] = t["Taux DAC Direct IFRS (%)"].to_numpy(float)
+        data["Variation DAC Direct"] = t["Variation DAC Direct IFRS"].to_numpy(float)
+        data["Taux DAC Réass (%)"] = t["Taux DAC Réassurance IFRS (%)"].to_numpy(float)
+        data["Variation DAC Réass"] = t["Variation DAC Réassurance IFRS"].to_numpy(float)
+    return pd.DataFrame(data)
+
 def run_projection(
     hist_n3, hist_n2, hist_n1, anchors,
     gross_manual,
@@ -532,6 +555,7 @@ def run_projection(
         _branch_editor_table(results, b, view),
         _branch_editor_table(results, b, view),
         _branch_result_table(results, b, view),
+        _commission_branch_table(results, b, view),
     )
 
 
@@ -798,6 +822,128 @@ def _find_block_value(ws, block_title: str, line_label: str, branch: str, occurr
     return np.nan
 
 
+
+def _expense_component_block(ws, block_title: str, lines):
+    out = blank_component_table(lines)
+    title_row = None
+    for r in range(1, ws.max_row + 1):
+        if str(ws.cell(r, 1).value or "").strip() == block_title:
+            title_row = r
+            break
+    if title_row is None:
+        return out
+    header_row = title_row + 1
+    headers = [str(ws.cell(header_row, c).value or "").strip() for c in range(1, 10)]
+    branch_cols = {}
+    for b in BRANCHES:
+        if b in headers:
+            branch_cols[b] = headers.index(b) + 1
+    wanted = {str(x).strip(): i for i, x in enumerate(lines)}
+    for r in range(header_row + 1, min(ws.max_row, title_row + 80) + 1):
+        label = str(ws.cell(r, 1).value or "").strip()
+        if label in wanted:
+            idx = wanted[label]
+            for b, c in branch_cols.items():
+                out.loc[idx, b] = ws.cell(r, c).value
+    return out
+
+
+def _with_months(df: pd.DataFrame) -> pd.DataFrame:
+    d = pd.DataFrame(df).copy()
+    d.insert(0, "Mois", MONTHS)
+    return d
+
+
+def _fg_persistent_html(portfolio: pd.DataFrame, fg_rate: pd.DataFrame, result_after_fg: pd.DataFrame,
+                        financial_net: pd.DataFrame, result_after_fin: pd.DataFrame,
+                        branch: str, month: str, view: str) -> str:
+    b = branch if branch in BRANCHES else BRANCHES[0]
+    i = MONTHS.index(month) if month in MONTHS else 11
+    p = pd.DataFrame(portfolio)
+    if p.empty or i >= len(p):
+        return "<div class='kpi'>En attente de calcul</div>"
+    br_rate = _num(pd.DataFrame(fg_rate).loc[i, b], np.nan)
+    port_rate = _num(p.loc[i, "Taux FG portefeuille (%)"], np.nan)
+    br_after = _num(pd.DataFrame(result_after_fg).loc[i, b], 0.0)
+    br_fin = _num(pd.DataFrame(financial_net).loc[i, b], 0.0)
+    br_final = _num(pd.DataFrame(result_after_fin).loc[i, b], 0.0)
+    return f"""
+    <div id='persistent-kpis'>
+      <div style='display:grid;grid-template-columns:repeat(6,minmax(135px,1fr));gap:8px'>
+        <div class='kpi'><span>Contexte</span><br><b>{b} · {month}</b><br><small>{view}</small></div>
+        <div class='kpi'><span>Taux FG · branche</span><br><b>{br_rate:.2f}%</b></div>
+        <div class='kpi'><span>Taux FG · portefeuille</span><br><b>{port_rate:.2f}%</b></div>
+        <div class='kpi'><span>Résultat après FG</span><br><b>{_fmt_currency(br_after)}</b></div>
+        <div class='kpi'><span>Résultat financier net</span><br><b>{_fmt_currency(br_fin)}</b></div>
+        <div class='kpi'><span>Résultat après financier</span><br><b>{_fmt_currency(br_final)}</b></div>
+      </div>
+    </div>"""
+
+
+def _fg_summary_html(portfolio: pd.DataFrame, branch: str, month: str, view: str) -> str:
+    p = pd.DataFrame(portfolio)
+    i = MONTHS.index(month) if month in MONTHS else 11
+    if p.empty or i >= len(p):
+        return ""
+    r = p.iloc[i]
+    return f"""
+    <div style='display:grid;grid-template-columns:repeat(6,minmax(140px,1fr));gap:9px'>
+      <div class='kpi'><span>Prime acquise nette</span><br><b>{_fmt_currency(r['Prime acquise nette'])}</b></div>
+      <div class='kpi'><span>Frais généraux</span><br><b>{_fmt_currency(r['Frais généraux'])}</b></div>
+      <div class='kpi'><span>Taux FG</span><br><b>{r['Taux FG portefeuille (%)']:.2f}%</b></div>
+      <div class='kpi'><span>Résultat après FG</span><br><b>{_fmt_currency(r['Résultat technique après FG'])}</b></div>
+      <div class='kpi'><span>Résultat financier net</span><br><b>{_fmt_currency(r['Résultat financier net'])}</b></div>
+      <div class='kpi'><span>Résultat final</span><br><b>{_fmt_currency(r['Résultat après financier'])}</b></div>
+    </div>"""
+
+
+def run_fg_projection(
+    earned_grid, technical_result_grid, selected_branch, selected_month, view,
+    fg_start, fg_end, fg_rate_settings, fg_rate_manual,
+    pf_start, pf_end, pf_product_manual, pf_charge_manual,
+):
+    earned = _numeric_branch_frame(earned_grid)
+    before = _numeric_branch_frame(technical_result_grid)
+    projected = project_expenses(
+        earned, pd.DataFrame(fg_start), pd.DataFrame(fg_end), pd.DataFrame(fg_rate_settings), pd.DataFrame(fg_rate_manual),
+        pd.DataFrame(pf_start), pd.DataFrame(pf_end), pd.DataFrame(pf_product_manual), pd.DataFrame(pf_charge_manual), before,
+    )
+    portfolio = portfolio_expense_metrics(earned, before, projected)
+    b = selected_branch if selected_branch in BRANCHES else BRANCHES[0]
+    i = MONTHS.index(selected_month) if selected_month in MONTHS else 11
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=MONTHS, y=projected["fg_rate"][b], mode="lines+markers", name="Taux FG (%)", line=dict(width=3)))
+    fig.add_trace(go.Bar(x=MONTHS, y=projected["fg_total"][b], name="Frais généraux", yaxis="y2", opacity=.25))
+    fig.add_trace(go.Scatter(x=MONTHS, y=projected["result_after_fg"][b], mode="lines", name="Résultat après FG", yaxis="y2", line=dict(width=2)))
+    fig.add_trace(go.Scatter(x=MONTHS, y=projected["result_after_financial"][b], mode="lines+markers", name="Résultat après financier", yaxis="y2", line=dict(width=3)))
+    fig.update_layout(
+        title=f"{b} · Frais généraux, financier et résultat", height=420, hovermode="x unified",
+        margin=dict(l=20,r=20,t=55,b=30), yaxis=dict(title="Taux FG (%)"),
+        yaxis2=dict(title="Montants", overlaying="y", side="right", showgrid=False),
+        legend=dict(orientation="h", y=1.13),
+    )
+
+    diag = pd.DataFrame({"Diagnostic": projected["diagnostics"][:200] if projected["diagnostics"] else ["Projection FG et financier cohérente"]})
+    # compact selected-branch table
+    branch_table = pd.DataFrame({
+        "Mois": MONTHS,
+        "Frais généraux": projected["fg_total"][b].to_numpy(float),
+        "Taux FG (%)": projected["fg_rate"][b].to_numpy(float),
+        "Résultat après FG": projected["result_after_fg"][b].to_numpy(float),
+        "Produits financiers": projected["financial_products"][b].to_numpy(float),
+        "Charges financières": projected["financial_charges"][b].to_numpy(float),
+        "Résultat financier net": projected["financial_net"][b].to_numpy(float),
+        "Résultat après financier": projected["result_after_financial"][b].to_numpy(float),
+    })
+    return (
+        _fg_persistent_html(portfolio, projected["fg_rate"], projected["result_after_fg"], projected["financial_net"], projected["result_after_financial"], b, selected_month, view),
+        _fg_summary_html(portfolio, b, selected_month, view), fig, branch_table,
+        _with_months(projected["fg_rate"]), _with_months(projected["fg_total"]), _with_months(projected["result_after_fg"]),
+        _with_months(projected["financial_products"]), _with_months(projected["financial_charges"]), _with_months(projected["financial_net"]),
+        _with_months(projected["result_after_financial"]), portfolio, diag,
+    )
+
 def load_template(file_obj):
     if file_obj is None:
         raise gr.Error("Sélectionnez un fichier Excel.")
@@ -855,257 +1001,301 @@ def load_template(file_obj):
             "REC Clo 100% Réass IFRS": _find_block_value(anc_ws, "REASS IFRS — ATTERRISSAGE", "REC Clôture 100%", b, 1),
         })
     commission_anchors = pd.DataFrame(commission_rows, columns=COMMISSION_ANCHOR_COLS)
-    return h3, h2, h1, anchors, commission_anchors, c_hist, rd_hist, rl_hist, ri_hist, "Fichier chargé avec succès."
+
+    fg_start = blank_component_table(FG_COMPONENTS)
+    fg_end = blank_component_table(FG_COMPONENTS)
+    pf_lines = PF_REVENUES + PF_CHARGES
+    pf_start = blank_component_table(pf_lines)
+    pf_end = blank_component_table(pf_lines)
+    if "FG & Produits financiers" in wb.sheetnames:
+        ews = wb["FG & Produits financiers"]
+        fg_start = _expense_component_block(ews, "FRAIS GÉNÉRAUX — DÉPART (FACULTATIF)", FG_COMPONENTS)
+        fg_end = _expense_component_block(ews, "FRAIS GÉNÉRAUX — ATTERRISSAGE", FG_COMPONENTS)
+        pf_start = _expense_component_block(ews, "PRODUITS FINANCIERS — DÉPART (FACULTATIF)", pf_lines)
+        pf_end = _expense_component_block(ews, "PRODUITS FINANCIERS — ATTERRISSAGE", pf_lines)
+    return h3, h2, h1, anchors, commission_anchors, c_hist, rd_hist, rl_hist, ri_hist, fg_start, fg_end, pf_start, pf_end, "Fichier chargé avec succès."
 
 
 def build_app():
-    with gr.Blocks(title="Projection technique · Primes, Commissions & S/P") as demo:
+    with gr.Blocks(title="Cockpit actuariel · Projection technique") as demo:
         gr.HTML("""
         <div id='hero'>
-          <h1>Projection technique · Primes, Commissions & S/P</h1>
-          <p>Primes · Commissions · S/P exercice & global · Charges · Résultat technique · Local / IFRS</p>
+          <h1>Cockpit actuariel · Projection technique</h1>
+          <p>Piloter les trajectoires techniques, comprendre l'impact et ajuster sans perdre la cohérence Direct / Réassurance / CPC.</p>
         </div>
         """)
 
-        with gr.Row():
-            with gr.Column(scale=2, elem_classes="card"):
-                gr.Markdown("### Données du modèle", elem_classes="section-title")
-                gr.Markdown("Historique de 1 à 3 ans, ancrages globaux et taux historiques.", elem_classes="muted")
-                download = gr.DownloadButton("Télécharger le fichier d’hypothèses", value=str(TEMPLATE_PATH), variant="primary")
-            with gr.Column(scale=3, elem_classes="card"):
-                upload = gr.File(label="Importer le fichier d’hypothèses complété", file_types=[".xlsx"], type="filepath")
-                with gr.Row():
-                    load_btn = gr.Button("Charger les données", variant="primary")
-                    load_status = gr.Textbox(label="État", interactive=False)
-
-        with gr.Accordion("Historique et ancrages", open=False):
-            with gr.Tabs():
-                with gr.Tab("N-3"):
-                    hist_n3 = gr.Dataframe(value=blank_history(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Primes émises cumulées N-3")
-                with gr.Tab("N-2"):
-                    hist_n2 = gr.Dataframe(value=blank_history(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Primes émises cumulées N-2")
-                with gr.Tab("N-1"):
-                    hist_n1 = gr.Dataframe(value=blank_history(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Primes émises cumulées N-1")
-            anchors = gr.Dataframe(value=blank_anchors(), headers=ANCHOR_COLS, interactive=True, elem_classes="matrix", label="Ancrages utiles au module Primes")
-            commission_anchors = gr.State(blank_commission_anchors())
-
+        # Contexte unique et persistant : aucun module ne redemande la branche ou le référentiel.
         with gr.Row(elem_id="prime-toolbar"):
             selected_branch = gr.Dropdown(BRANCHES, value=BRANCHES[0], label="Branche", scale=2)
             view = gr.Radio(["Local", "IFRS"], value="Local", label="Référentiel", scale=1)
-            recalc = gr.Button("Recalculer", variant="primary", scale=1)
+            selected_month = gr.Dropdown(MONTHS, value=MONTHS[-1], label="Période", scale=1)
+            scenario_display = gr.Textbox(value="Scénario ajusté", label="Scénario", interactive=False, scale=1)
+            recalc = gr.Button("Actualiser", variant="secondary", scale=1)
+        gr.HTML("""
+        <div class='context-legend'>
+          <span class='badge auto'>Automatique</span>
+          <span class='badge manual'>Modifié manuellement</span>
+          <span class='badge lock'>Verrouillé</span>
+          <span>Les paramètres globaux ci-dessus s'appliquent à tous les onglets.</span>
+        </div>
+        """)
+        persistent_kpis = gr.HTML("<div id='persistent-kpis'><div class='kpi'><span>État</span><br><b>Chargez les hypothèses</b></div></div>")
 
-        summary = gr.HTML()
+        # States / données partagées.
+        gross_manual = gr.State(blank_month_matrix())
+        commission_anchors = gr.State(blank_commission_anchors())
 
         with gr.Tabs():
-            with gr.Tab("Primes"):
-                with gr.Column(elem_id="prime-workspace"):
-                    branch_kpis = gr.HTML()
-                    chart = gr.Plot(label="Historique & projection")
-                    gr.Markdown("### Ajustement mensuel de la branche", elem_classes="section-title")
-                    gr.Markdown("Modifiez directement une ou plusieurs cellules. Une cellule effacée revient au calcul automatique.", elem_classes="muted")
-                    branch_editor = gr.Dataframe(
-                        value=pd.DataFrame({"Mois":MONTHS,"Prime brute":[np.nan]*12,"Taux cession (%)":[np.nan]*12,"Taux REC Direct (%)":[np.nan]*12,"Taux REC Réass (%)":[np.nan]*12}),
-                        headers=["Mois","Prime brute","Taux cession (%)","Taux REC Direct (%)","Taux REC Réass (%)"],
-                        interactive=True, elem_classes="prime-editor", label="Variables pilotables",
-                        row_count=(12,"fixed"), column_count=(5,"fixed"),
-                    )
-                    branch_reference = gr.State(pd.DataFrame())
-                    with gr.Row():
-                        apply_branch_edits = gr.Button("Appliquer les modifications", variant="primary")
-                        reset_branch_edits = gr.Button("Réinitialiser la branche")
-                    branch_result = gr.Dataframe(
-                        headers=["Mois","Prime Réassurance","Prime nette","Prime acquise Direct","Prime acquise Réass","Prime acquise nette"],
-                        interactive=False, elem_classes="prime-result", label="Résultats calculés",
-                    )
-                    reference_note = gr.Markdown()
-
-                with gr.Accordion("Paramètres de projection", open=False):
-                    with gr.Tabs():
-                        with gr.Tab("Cession"):
-                            gr.Markdown("Mode **Fixe**, **Linéaire** ou **Manuel**. La trajectoire linéaire peut être encadrée par une marge basse/haute.", elem_classes="muted")
-                            cession_landing = gr.Dataframe(interactive=False, elem_classes="matrix", label="Atterrissages et taux implicite")
-                            cession_settings = gr.Dataframe(value=default_rate_settings("cession"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Règles par branche")
-                            cession_hist = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Taux de cession N-1 (%)")
-                            cession_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides mensuels N (%)")
-
-                        with gr.Tab("REC Direct"):
-                            gr.Markdown("Variation REC = Prime brute × taux. REC clôture = REC ouverture fixe + variation.", elem_classes="muted")
-                            rec_direct_settings = gr.Dataframe(value=default_rate_settings("rec"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Règles REC Direct")
-                            rec_direct_hist = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Taux N-1 (%)")
-                            rec_direct_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides N (%)")
-
-                        with gr.Tab("REC Réassurance"):
-                            gr.Markdown("La REC Réassurance est appliquée à la prime cédée. Le taux IFRS 100% reste distinct du Local.", elem_classes="muted")
-                            with gr.Tabs():
-                                with gr.Tab("Local"):
-                                    rec_reass_local_settings = gr.Dataframe(value=default_rate_settings("rec"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Règles REC Réass Local")
-                                    rec_reass_local_hist = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Taux N-1 Local (%)")
-                                    rec_reass_local_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides N Local (%)")
-                                with gr.Tab("IFRS 100%"):
-                                    rec_reass_ifrs_settings = gr.Dataframe(value=default_rate_settings("rec"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Règles REC Réass IFRS")
-                                    rec_reass_ifrs_hist = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Taux N-1 IFRS (%)")
-                                    rec_reass_ifrs_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides N IFRS (%)")
-
-                with gr.Accordion("Vue portefeuille · 12 mois × 8 branches", open=False):
-                    with gr.Row():
-                        gross_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime brute Direct", elem_classes="matrix")
-                        ceded_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime Réassurance", elem_classes="matrix")
-                    with gr.Row():
-                        cession_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux de cession (%)", elem_classes="matrix")
-                        net_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime nette", elem_classes="matrix")
-                    net_earned_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime acquise nette", elem_classes="matrix")
-                    with gr.Accordion("Détail REC", open=False):
+            with gr.Tab("Données"):
+                gr.Markdown("### Source unique du scénario", elem_classes="section-title")
+                gr.Markdown("Chargez les hypothèses une fois : elles alimentent ensuite tous les modules sans ressaisie.", elem_classes="muted")
+                with gr.Row():
+                    with gr.Column(scale=3, elem_classes="card"):
+                        upload = gr.File(label="Importer le fichier d’hypothèses", file_types=[".xlsx"], type="filepath")
                         with gr.Row():
+                            load_btn = gr.Button("Charger les données", variant="primary")
+                            load_status = gr.Textbox(label="État du chargement", interactive=False)
+                    with gr.Column(scale=2, elem_classes="card"):
+                        gr.Markdown("**Modèle de saisie**")
+                        gr.Markdown("Utilisez le fichier standardisé pour conserver le même ordre de branches et les mêmes ancrages dans tous les modules.", elem_classes="muted")
+                        download = gr.DownloadButton("Télécharger le modèle Excel", value=str(TEMPLATE_PATH), variant="secondary")
+                with gr.Accordion("Consulter / corriger les données chargées", open=False):
+                    with gr.Tabs():
+                        with gr.Tab("Historique primes"):
+                            with gr.Accordion("N-3", open=False):
+                                hist_n3 = gr.Dataframe(value=blank_history(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Primes émises cumulées N-3")
+                            with gr.Accordion("N-2", open=False):
+                                hist_n2 = gr.Dataframe(value=blank_history(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Primes émises cumulées N-2")
+                            with gr.Accordion("N-1", open=True):
+                                hist_n1 = gr.Dataframe(value=blank_history(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Primes émises cumulées N-1")
+                        with gr.Tab("Ancrages"):
+                            anchors = gr.Dataframe(value=blank_anchors(), headers=ANCHOR_COLS, interactive=True, elem_classes="matrix", label="Primes / REC · Départ et atterrissage")
+                        with gr.Tab("Frais généraux"):
+                            with gr.Row():
+                                fg_start = gr.Dataframe(value=blank_component_table(FG_COMPONENTS), interactive=True, elem_classes="matrix", label="Départ")
+                                fg_end = gr.Dataframe(value=blank_component_table(FG_COMPONENTS), interactive=True, elem_classes="matrix", label="Atterrissage")
+                        with gr.Tab("Financier"):
+                            pf_lines = PF_REVENUES + PF_CHARGES
+                            with gr.Row():
+                                pf_start = gr.Dataframe(value=blank_component_table(pf_lines), interactive=True, elem_classes="matrix", label="Départ")
+                                pf_end = gr.Dataframe(value=blank_component_table(pf_lines), interactive=True, elem_classes="matrix", label="Atterrissage")
+
+            with gr.Tab("Primes"):
+                gr.Markdown("### Primes · Voir → ajuster → mesurer l'impact", elem_classes="section-title")
+                with gr.Tabs():
+                    with gr.Tab("Vue branche"):
+                        with gr.Column(elem_classes="workspace"):
+                            branch_kpis = gr.HTML()
+                            chart = gr.Plot(label="Historique & projection")
+                            gr.HTML("<div class='decision-note'>Modifiez uniquement les cellules que vous voulez contraindre. Une cellule vidée revient au calcul automatique ; les autres mois restent optimisés.</div>")
+                            branch_editor = gr.Dataframe(
+                                value=pd.DataFrame({"Mois":MONTHS,"Prime brute":[np.nan]*12,"Taux cession (%)":[np.nan]*12,"Taux REC Direct (%)":[np.nan]*12,"Taux REC Réass (%)":[np.nan]*12}),
+                                headers=["Mois","Prime brute","Taux cession (%)","Taux REC Direct (%)","Taux REC Réass (%)"],
+                                interactive=True, elem_classes="prime-editor", label="Variables pilotables · 12 mois",
+                                row_count=(12,"fixed"), column_count=(5,"fixed"),
+                            )
+                            branch_reference = gr.State(pd.DataFrame())
+                            with gr.Row():
+                                apply_branch_edits = gr.Button("Appliquer les changements", variant="primary")
+                                reset_branch_edits = gr.Button("Revenir à l'automatique", variant="secondary")
+                            branch_result = gr.Dataframe(
+                                headers=["Mois","Prime Réassurance","Prime nette","Prime acquise Direct","Prime acquise Réass","Prime acquise nette"],
+                                interactive=False, elem_classes="prime-result", label="Résultats recalculés",
+                            )
+                            reference_note = gr.Markdown()
+                    with gr.Tab("Vue portefeuille"):
+                        summary = gr.HTML()
+                        cession_landing = gr.Dataframe(interactive=False, elem_classes="matrix", label="Atterrissages & taux de cession implicites")
+                        with gr.Tabs():
+                            with gr.Tab("Brut"):
+                                gross_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime brute Direct", elem_classes="matrix")
+                            with gr.Tab("Réassurance"):
+                                ceded_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime Réassurance", elem_classes="matrix")
+                            with gr.Tab("Net"):
+                                net_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime nette", elem_classes="matrix")
+                            with gr.Tab("Acquise nette"):
+                                net_earned_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime acquise nette", elem_classes="matrix")
+                        with gr.Accordion("Détail des taux et REC", open=False):
+                            cession_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux de cession (%)", elem_classes="matrix")
                             rec_direct_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux REC Direct (%)", elem_classes="matrix")
                             rec_direct_var_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Variation REC Direct", elem_classes="matrix")
-                        with gr.Row():
                             rec_direct_close_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="REC clôture Direct", elem_classes="matrix")
                             direct_earned_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime acquise Direct", elem_classes="matrix")
-                        with gr.Row():
                             rec_reass_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux REC Réass (%)", elem_classes="matrix")
                             rec_reass_var_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Variation REC Réass", elem_classes="matrix")
-                        with gr.Row():
                             rec_reass_close_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="REC clôture Réass", elem_classes="matrix")
                             reass_earned_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Prime acquise Réassurance", elem_classes="matrix")
+                    with gr.Tab("Paramètres avancés"):
+                        gr.Markdown("Les trajectoires automatiques restent disponibles sans encombrer l'écran de pilotage.", elem_classes="muted")
+                        with gr.Accordion("Cession", open=True):
+                            cession_settings = gr.Dataframe(value=default_rate_settings("cession"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Règles par branche")
+                            with gr.Row():
+                                cession_hist = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Taux N-1 (%)")
+                                cession_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Ajustements N (%)")
+                        with gr.Accordion("REC Direct", open=False):
+                            rec_direct_settings = gr.Dataframe(value=default_rate_settings("rec"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Règles REC Direct")
+                            with gr.Row():
+                                rec_direct_hist = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Taux N-1 (%)")
+                                rec_direct_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Ajustements N (%)")
+                        with gr.Accordion("REC Réassurance", open=False):
+                            with gr.Row():
+                                rec_reass_local_settings = gr.Dataframe(value=default_rate_settings("rec"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Local")
+                                rec_reass_ifrs_settings = gr.Dataframe(value=default_rate_settings("rec"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="IFRS 100%")
+                            with gr.Row():
+                                rec_reass_local_hist = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Historique Local (%)")
+                                rec_reass_ifrs_hist = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Historique IFRS (%)")
+                            with gr.Row():
+                                rec_reass_local_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Ajustements Local (%)")
+                                rec_reass_ifrs_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Ajustements IFRS (%)")
 
             with gr.Tab("Commissions & DAC"):
-                gr.Markdown("### Commissions · Direct / Réassurance / CPC", elem_classes="section-title")
-                gr.Markdown("Le taux Direct est déduit de **Commission Direct / Prime brute**. La Réassurance dépend du Direct : **Commission Réassurance = Commission Direct × taux de récupération**. Le taux de récupération est déduit des blocs d'arrivée puis peut être fixe, linéaire ou modifié mois par mois.", elem_classes="muted")
-                commission_summary = gr.HTML()
-                commission_landing = gr.Dataframe(interactive=False, elem_classes="matrix", label="Taux implicites issus des ancrages")
-                commission_chart = gr.Plot(label="Commissions, DAC et taux CPC")
-
-                with gr.Accordion("Pilotage des commissions", open=True):
-                    with gr.Row():
-                        direct_commission_settings = gr.Dataframe(value=default_rate_settings("commission"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Commission Direct · règles par branche")
-                        reass_commission_settings = gr.Dataframe(value=default_rate_settings("commission"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Récupération commission Réassurance · règles par branche")
-                    with gr.Row():
-                        direct_commission_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides mensuels · taux commission Direct (%)")
-                        reass_commission_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides mensuels · taux récupération commission Réass (%)")
-
-                    with gr.Row():
-                        commission_point_branch = gr.Dropdown(BRANCHES, value=BRANCHES[0], label="Branche")
-                        commission_point_month = gr.Dropdown(MONTHS, value=MONTHS[0], label="Mois")
-                        direct_commission_override = gr.Number(label="Taux Direct (%)", precision=3)
-                        reass_commission_override = gr.Number(label="Taux récupération Réass (%)", precision=3)
-                    with gr.Row():
-                        apply_direct_commission = gr.Button("Appliquer taux Direct")
-                        apply_reass_commission = gr.Button("Appliquer récupération Réass")
-                        clear_commission_point = gr.Button("Effacer ce mois")
-
-                gr.Markdown("### Résultats commissions · 12 mois × 8 branches", elem_classes="section-title")
-                with gr.Row():
-                    direct_commission_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux commission Direct (%)", elem_classes="matrix")
-                    reass_commission_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux récupération commission Réassurance (%)", elem_classes="matrix")
-                with gr.Row():
-                    direct_commission_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Commission Direct", elem_classes="matrix")
-                    reass_commission_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Commission Réassurance", elem_classes="matrix")
-                cpc_commission_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux de commission CPC sur prime acquise nette (%)", elem_classes="matrix")
-
-                with gr.Accordion("DAC · IFRS uniquement", open=False):
-                    gr.Markdown("DAC = REC 100% × taux DAC. L'ouverture DAC reste fixe sur l'exercice ; la clôture suit la REC 100% projetée. Variation DAC = ouverture − clôture.", elem_classes="muted")
-                    with gr.Row():
-                        direct_dac_settings = gr.Dataframe(value=default_rate_settings("dac"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="DAC Direct · règles par branche")
-                        reass_dac_settings = gr.Dataframe(value=default_rate_settings("dac"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="DAC Réassurance · règles par branche")
-                    with gr.Row():
-                        direct_dac_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides mensuels · taux DAC Direct (%)")
-                        reass_dac_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides mensuels · taux DAC Réass (%)")
-                    with gr.Row():
-                        direct_dac_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux DAC Direct IFRS (%)", elem_classes="matrix")
-                        reass_dac_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux DAC Réass IFRS (%)", elem_classes="matrix")
-                    with gr.Row():
-                        direct_dac_open_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="DAC ouverture Direct IFRS", elem_classes="matrix")
-                        direct_dac_close_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="DAC clôture Direct IFRS", elem_classes="matrix")
-                    direct_dac_var_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Variation DAC Direct IFRS", elem_classes="matrix")
-                    with gr.Row():
-                        reass_dac_open_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="DAC ouverture Réass IFRS", elem_classes="matrix")
-                        reass_dac_close_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="DAC clôture Réass IFRS", elem_classes="matrix")
-                    reass_dac_var_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Variation DAC Réass IFRS", elem_classes="matrix")
+                gr.Markdown("### Commissions & DAC", elem_classes="section-title")
+                with gr.Tabs():
+                    with gr.Tab("Vue branche"):
+                        commission_chart = gr.Plot(label="Commission, récupération Réassurance & taux CPC")
+                        commission_branch_table = gr.Dataframe(interactive=False, elem_classes="prime-result", label="Branche sélectionnée · 12 mois")
+                        gr.HTML("<div class='decision-note'>Le contexte Branche / Période est celui du bandeau supérieur. La commission Réassurance dépend de la commission Direct via le taux de récupération.</div>")
+                        with gr.Row():
+                            direct_commission_override = gr.Number(label="Commission Direct · taux (%)", precision=3)
+                            reass_commission_override = gr.Number(label="Récupération commission Réass (%)", precision=3)
+                        with gr.Row():
+                            apply_direct_commission = gr.Button("Appliquer au mois sélectionné", variant="primary")
+                            apply_reass_commission = gr.Button("Appliquer récupération", variant="secondary")
+                            clear_commission_point = gr.Button("Revenir à l'automatique", variant="secondary")
+                        # Alias : aucun sélecteur Branche/Mois dupliqué.
+                        commission_point_branch = selected_branch
+                        commission_point_month = selected_month
+                    with gr.Tab("Vue portefeuille"):
+                        commission_summary = gr.HTML()
+                        commission_landing = gr.Dataframe(interactive=False, elem_classes="matrix", label="Taux implicites issus des ancrages")
+                        with gr.Tabs():
+                            with gr.Tab("Taux CPC"):
+                                cpc_commission_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux de commission CPC sur prime acquise nette (%)", elem_classes="matrix")
+                            with gr.Tab("Direct"):
+                                direct_commission_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux commission Direct (%)", elem_classes="matrix")
+                                direct_commission_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Commission Direct", elem_classes="matrix")
+                            with gr.Tab("Réassurance"):
+                                reass_commission_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux récupération commission Réassurance (%)", elem_classes="matrix")
+                                reass_commission_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Commission Réassurance", elem_classes="matrix")
+                    with gr.Tab("Paramètres avancés"):
+                        with gr.Accordion("Trajectoires de commission", open=True):
+                            with gr.Row():
+                                direct_commission_settings = gr.Dataframe(value=default_rate_settings("commission"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Commission Direct")
+                                reass_commission_settings = gr.Dataframe(value=default_rate_settings("commission"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Récupération Réassurance")
+                            with gr.Row():
+                                direct_commission_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Ajustements Direct (%)")
+                                reass_commission_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Ajustements récupération Réass (%)")
+                        with gr.Accordion("DAC · IFRS uniquement", open=False):
+                            with gr.Row():
+                                direct_dac_settings = gr.Dataframe(value=default_rate_settings("dac"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="DAC Direct")
+                                reass_dac_settings = gr.Dataframe(value=default_rate_settings("dac"), headers=RATE_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="DAC Réassurance")
+                            with gr.Row():
+                                direct_dac_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Ajustements DAC Direct (%)")
+                                reass_dac_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Ajustements DAC Réass (%)")
+                            with gr.Accordion("Détail calculé", open=False):
+                                direct_dac_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux DAC Direct IFRS (%)", elem_classes="matrix")
+                                reass_dac_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Taux DAC Réass IFRS (%)", elem_classes="matrix")
+                                direct_dac_open_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="DAC ouverture Direct IFRS", elem_classes="matrix")
+                                direct_dac_close_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="DAC clôture Direct IFRS", elem_classes="matrix")
+                                direct_dac_var_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Variation DAC Direct IFRS", elem_classes="matrix")
+                                reass_dac_open_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="DAC ouverture Réass IFRS", elem_classes="matrix")
+                                reass_dac_close_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="DAC clôture Réass IFRS", elem_classes="matrix")
+                                reass_dac_var_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, label="Variation DAC Réass IFRS", elem_classes="matrix")
 
             with gr.Tab("S/P & Charges"):
-                gr.Markdown("### Pilotage S/P · exercice, global et résultat technique", elem_classes="section-title")
-                gr.Markdown(
-                    "Le **S/P exercice** détermine la charge de l'exercice. Le **S/P global** détermine la charge totale ; "
-                    "la charge des antérieurs est le résiduel. Les branches verrouillées restent inchangées ; les autres "
-                    "peuvent être optimisées dans leur plage pour atteindre une cible portefeuille.",
-                    elem_classes="muted",
-                )
-                with gr.Row():
-                    sp_month = gr.Dropdown(MONTHS, value=MONTHS[-1], label="Mois affiché", scale=1)
-                    sp_recalc = gr.Button("Recalculer les S/P", variant="primary", scale=1)
-                sp_summary = gr.HTML()
-                sp_chart = gr.Plot(label="S/P, plages et résultat technique")
-
-                gr.Markdown("### Ajustement de la branche sélectionnée", elem_classes="section-title")
-                sp_branch_editor = gr.Dataframe(
-                    value=pd.DataFrame({"Mois":MONTHS,"S/P exercice (%)":[np.nan]*12,"S/P global (%)":[np.nan]*12}),
-                    headers=["Mois","S/P exercice (%)","S/P global (%)"],
-                    interactive=True, row_count=(12,"fixed"), column_count=(3,"fixed"), elem_classes="sp-editor",
-                    label="Modification mois par mois",
-                )
-                sp_branch_reference = gr.State(pd.DataFrame())
-                with gr.Row():
-                    apply_sp_edits = gr.Button("Appliquer les modifications", variant="primary")
-                    reset_sp_edits = gr.Button("Réinitialiser la branche")
-                sp_branch_result = gr.Dataframe(
-                    headers=["Mois","S/P exercice (%)","S/P global (%)","Charge exercice","Charge antérieurs","Charge globale","Résultat technique avant FG"],
-                    interactive=False, elem_classes="prime-result", label="Charges et résultat technique de la branche",
-                )
-
-                with gr.Accordion("Trajectoires et plages par branche", open=True):
-                    locked_branches = gr.CheckboxGroup(BRANCHES, label="Branches verrouillées pour l'optimisation portefeuille")
-                    with gr.Row():
-                        sp_ex_settings = gr.Dataframe(
-                            value=blank_sp_settings(), headers=SP_SETTING_COLS, interactive=True, elem_classes="rate-settings",
-                            label="S/P exercice · Fixe ou Linéaire · plage autorisée",
+                gr.Markdown("### S/P & Charges · piloter la charge, pas les lignes comptables", elem_classes="section-title")
+                with gr.Tabs():
+                    with gr.Tab("Vue branche"):
+                        sp_summary = gr.HTML()
+                        sp_chart = gr.Plot(label="S/P, bande autorisée et résultat technique")
+                        sp_branch_editor = gr.Dataframe(
+                            value=pd.DataFrame({"Mois":MONTHS,"S/P exercice (%)":[np.nan]*12,"S/P global (%)":[np.nan]*12}),
+                            headers=["Mois","S/P exercice (%)","S/P global (%)"], interactive=True,
+                            row_count=(12,"fixed"), column_count=(3,"fixed"), elem_classes="sp-editor", label="Variables pilotables · branche",
                         )
-                        sp_global_settings = gr.Dataframe(
-                            value=blank_sp_settings(), headers=SP_SETTING_COLS, interactive=True, elem_classes="rate-settings",
-                            label="S/P global · Fixe ou Linéaire · plage autorisée",
-                        )
-                    with gr.Accordion("Overrides mensuels 12 mois × 8 branches", open=False):
+                        sp_branch_reference = gr.State(pd.DataFrame())
                         with gr.Row():
-                            sp_ex_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides S/P exercice (%)")
-                            sp_global_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Overrides S/P global (%)")
+                            apply_sp_edits = gr.Button("Appliquer les changements", variant="primary")
+                            reset_sp_edits = gr.Button("Revenir à l'automatique", variant="secondary")
+                        sp_branch_result = gr.Dataframe(
+                            headers=["Mois","S/P exercice (%)","S/P global (%)","Charge exercice","Charge antérieurs","Charge globale","Résultat technique avant FG"],
+                            interactive=False, elem_classes="prime-result", label="Charges & résultat recalculés",
+                        )
+                    with gr.Tab("Vue portefeuille"):
+                        gr.Markdown("**Objectif portefeuille** · verrouillez les branches à préserver ; l'optimiseur répartit l'effort sur les autres dans leurs plages autorisées.")
+                        locked_branches = gr.CheckboxGroup(BRANCHES, label="Branches verrouillées")
+                        portfolio_mode = gr.Radio(["Libre","Fixe","Linéaire","Manuel"], value="Libre", label="Mode de cible portefeuille")
+                        with gr.Row():
+                            portfolio_ex_start = gr.Number(label="S/P exercice départ (%)", precision=3)
+                            portfolio_ex_end = gr.Number(label="S/P exercice atterrissage (%)", precision=3)
+                            portfolio_global_start = gr.Number(label="S/P global départ (%)", precision=3)
+                            portfolio_global_end = gr.Number(label="S/P global atterrissage (%)", precision=3)
+                        with gr.Accordion("Cibles mensuelles manuelles", open=False):
+                            portfolio_manual = gr.Dataframe(value=blank_portfolio_manual(), headers=["Mois","S/P exercice cible (%)","S/P global cible (%)"], interactive=True, row_count=(12,"fixed"), column_count=(3,"fixed"), label="Cibles mensuelles")
+                        sp_portfolio = gr.Dataframe(interactive=False, elem_classes="matrix", label="Cible, niveau atteint & résultat portefeuille")
+                        with gr.Accordion("Matrices portefeuille", open=False):
+                            sp_ex_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="S/P exercice (%)")
+                            sp_global_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="S/P global (%)")
+                            charge_ex_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Charge exercice")
+                            charge_prior_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Charge antérieurs")
+                            charge_global_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Charge globale")
+                            technical_result_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Résultat technique avant FG")
+                    with gr.Tab("Paramètres avancés"):
+                        with gr.Row():
+                            sp_ex_settings = gr.Dataframe(value=blank_sp_settings(), headers=SP_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Trajectoire S/P exercice")
+                            sp_global_settings = gr.Dataframe(value=blank_sp_settings(), headers=SP_SETTING_COLS, interactive=True, elem_classes="rate-settings", label="Trajectoire S/P global")
+                        with gr.Accordion("Ajustements mensuels", open=False):
+                            with gr.Row():
+                                sp_ex_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="S/P exercice (%)")
+                                sp_global_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="S/P global (%)")
 
-                with gr.Accordion("Cible S/P du portefeuille", open=True):
-                    gr.Markdown("La cible portefeuille est pondérée par la **prime acquise nette**. L'algorithme ne touche qu'aux branches non verrouillées et respecte leurs plages.", elem_classes="muted")
-                    portfolio_mode = gr.Radio(["Libre","Fixe","Linéaire","Manuel"], value="Libre", label="Mode de cible portefeuille")
-                    with gr.Row():
-                        portfolio_ex_start = gr.Number(label="S/P exercice départ (%)", precision=3)
-                        portfolio_ex_end = gr.Number(label="S/P exercice atterrissage (%)", precision=3)
-                        portfolio_global_start = gr.Number(label="S/P global départ (%)", precision=3)
-                        portfolio_global_end = gr.Number(label="S/P global atterrissage (%)", precision=3)
-                    portfolio_manual = gr.Dataframe(
-                        value=blank_portfolio_manual(),
-                        headers=["Mois","S/P exercice cible (%)","S/P global cible (%)"],
-                        interactive=True, row_count=(12,"fixed"), column_count=(3,"fixed"),
-                        label="Cibles portefeuille mensuelles · facultatif",
-                    )
+            with gr.Tab("FG & Financier"):
+                gr.Markdown("### Frais généraux & Financier", elem_classes="section-title")
+                with gr.Tabs():
+                    with gr.Tab("Vue branche"):
+                        fg_summary = gr.HTML()
+                        fg_chart = gr.Plot(label="Frais généraux, financier & résultat")
+                        fg_branch_table = gr.Dataframe(interactive=False, elem_classes="prime-result", label="Branche sélectionnée · 12 mois")
+                    with gr.Tab("Vue portefeuille"):
+                        with gr.Tabs():
+                            with gr.Tab("Taux FG"):
+                                fg_rate_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Taux FG (%)")
+                                fg_total_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Frais généraux")
+                            with gr.Tab("Résultat"):
+                                result_after_fg_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Résultat technique après FG")
+                                result_after_fin_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Résultat après financier")
+                            with gr.Tab("Financier"):
+                                financial_products_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Produits financiers")
+                                financial_charges_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Charges financières")
+                                financial_net_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Résultat financier net")
+                    with gr.Tab("Paramètres avancés"):
+                        with gr.Accordion("Pilotage du taux de frais généraux", open=True):
+                            fg_rate_settings = gr.Dataframe(value=blank_fg_rate_settings(), headers=FG_RATE_COLS, interactive=True, elem_classes="rate-settings", label="Fixe / Linéaire / Manuel")
+                            fg_rate_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Ajustements mensuels du taux FG (%)")
+                        with gr.Accordion("Ajustements du financier", open=False):
+                            with gr.Row():
+                                pf_product_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Produits financiers")
+                                pf_charge_manual = gr.Dataframe(value=blank_month_matrix(), headers=MONTH_GRID_COLS, interactive=True, elem_classes="matrix", label="Charges financières")
 
-                with gr.Accordion("Vue portefeuille · charges & résultat technique", open=False):
-                    sp_portfolio = gr.Dataframe(interactive=False, elem_classes="matrix", label="Synthèse portefeuille mensuelle")
-                    with gr.Row():
-                        sp_ex_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="S/P exercice (%)")
-                        sp_global_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="S/P global (%)")
-                    with gr.Row():
-                        charge_ex_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Charge exercice")
-                        charge_prior_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Charge antérieurs")
-                    with gr.Row():
-                        charge_global_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Charge globale")
-                        technical_result_grid = gr.Dataframe(headers=MONTH_GRID_COLS, interactive=False, elem_classes="matrix", label="Résultat technique avant frais généraux")
-                sp_diagnostics = gr.Dataframe(headers=["Diagnostic"], interactive=False, label="Diagnostic S/P")
+            with gr.Tab("Synthèse"):
+                gr.Markdown("### Vue décisionnelle du portefeuille", elem_classes="section-title")
+                gr.Markdown("Une lecture unique après primes, sinistres, commissions, frais généraux et financier. Utilisez les autres onglets pour agir sur les hypothèses.", elem_classes="muted")
+                fg_portfolio = gr.Dataframe(interactive=False, elem_classes="matrix", label="Synthèse mensuelle consolidée")
 
-            with gr.Tab("Diagnostics"):
-                diagnostics = gr.Dataframe(headers=["Diagnostic"], interactive=False, label="Contrôles")
+            with gr.Tab("Contrôles"):
+                gr.Markdown("### Alertes & diagnostics métier", elem_classes="section-title")
+                gr.Markdown("Les écrans métier restent volontairement sobres. Les détails de contrôle sont centralisés ici.", elem_classes="muted")
+                with gr.Accordion("Primes / REC / Commissions", open=True):
+                    diagnostics = gr.Dataframe(headers=["Diagnostic"], interactive=False)
+                with gr.Accordion("S/P & Charges", open=False):
+                    sp_diagnostics = gr.Dataframe(headers=["Diagnostic"], interactive=False)
+                with gr.Accordion("Frais généraux & Financier", open=False):
+                    fg_diagnostics = gr.Dataframe(headers=["Diagnostic"], interactive=False)
 
-        gross_manual = gr.State(blank_month_matrix())
-
-        load_btn.click(
-            load_template,
-            inputs=[upload],
-            outputs=[hist_n3,hist_n2,hist_n1,anchors,commission_anchors,cession_hist,rec_direct_hist,rec_reass_local_hist,rec_reass_ifrs_hist,load_status],
-        )
+        # ---------- calculs ----------
+        load_outputs = [hist_n3,hist_n2,hist_n1,anchors,commission_anchors,cession_hist,rec_direct_hist,rec_reass_local_hist,rec_reass_ifrs_hist,fg_start,fg_end,pf_start,pf_end,load_status]
+        load_ev = load_btn.click(load_template, inputs=[upload], outputs=load_outputs)
 
         inputs = [
             hist_n3,hist_n2,hist_n1,anchors,gross_manual,
@@ -1113,12 +1303,10 @@ def build_app():
             rec_direct_settings,rec_direct_hist,rec_direct_manual,
             rec_reass_local_settings,rec_reass_local_hist,rec_reass_local_manual,
             rec_reass_ifrs_settings,rec_reass_ifrs_hist,rec_reass_ifrs_manual,
-            view,selected_branch,
-            commission_anchors,
+            view,selected_branch,commission_anchors,
             direct_commission_settings,direct_commission_manual,
             reass_commission_settings,reass_commission_manual,
-            direct_dac_settings,direct_dac_manual,
-            reass_dac_settings,reass_dac_manual,
+            direct_dac_settings,direct_dac_manual,reass_dac_settings,reass_dac_manual,
         ]
         outputs = [
             summary,cession_landing,chart,gross_grid,cession_grid,ceded_grid,net_grid,
@@ -1128,11 +1316,10 @@ def build_app():
             direct_commission_rate_grid,direct_commission_grid,reass_commission_rate_grid,reass_commission_grid,cpc_commission_rate_grid,
             direct_dac_rate_grid,direct_dac_open_grid,direct_dac_close_grid,direct_dac_var_grid,
             reass_dac_rate_grid,reass_dac_open_grid,reass_dac_close_grid,reass_dac_var_grid,
-            diagnostics,reference_note,
-            branch_kpis,branch_editor,branch_reference,branch_result,
+            diagnostics,reference_note,branch_kpis,branch_editor,branch_reference,branch_result,commission_branch_table,
         ]
         sp_inputs = [
-            net_earned_grid,direct_commission_grid,reass_commission_grid,direct_dac_var_grid,view,selected_branch,sp_month,
+            net_earned_grid,direct_commission_grid,reass_commission_grid,direct_dac_var_grid,view,selected_branch,selected_month,
             sp_ex_settings,sp_global_settings,sp_ex_manual,sp_global_manual,locked_branches,
             portfolio_mode,portfolio_ex_start,portfolio_ex_end,portfolio_global_start,portfolio_global_end,portfolio_manual,
         ]
@@ -1140,59 +1327,70 @@ def build_app():
             sp_summary,sp_chart,sp_branch_result,sp_ex_grid,sp_global_grid,charge_ex_grid,charge_prior_grid,
             charge_global_grid,technical_result_grid,sp_portfolio,sp_diagnostics,sp_branch_editor,sp_branch_reference,
         ]
+        fg_inputs = [
+            net_earned_grid,technical_result_grid,selected_branch,selected_month,view,
+            fg_start,fg_end,fg_rate_settings,fg_rate_manual,pf_start,pf_end,pf_product_manual,pf_charge_manual,
+        ]
+        fg_outputs = [
+            persistent_kpis,fg_summary,fg_chart,fg_branch_table,fg_rate_grid,fg_total_grid,result_after_fg_grid,
+            financial_products_grid,financial_charges_grid,financial_net_grid,result_after_fin_grid,fg_portfolio,fg_diagnostics,
+        ]
 
-        ev_recalc = recalc.click(run_projection, inputs=inputs, outputs=outputs)
-        ev_recalc.then(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        ev_view = view.change(run_projection, inputs=inputs, outputs=outputs)
-        ev_view.then(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        ev_branch = selected_branch.change(run_projection, inputs=inputs, outputs=outputs)
-        ev_branch.then(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
+        def full_chain(ev):
+            return ev.then(run_projection, inputs=inputs, outputs=outputs).then(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs).then(run_fg_projection, inputs=fg_inputs, outputs=fg_outputs)
+        def sp_chain(ev):
+            return ev.then(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs).then(run_fg_projection, inputs=fg_inputs, outputs=fg_outputs)
 
-        # Tableau de pilotage compact : seules les cellules modifiées deviennent des overrides.
-        apply_branch_edits.click(
+        full_chain(load_ev)
+        full_chain(recalc.click(lambda: None, inputs=None, outputs=None))
+        full_chain(view.change(lambda: None, inputs=None, outputs=None))
+        full_chain(selected_branch.change(lambda: None, inputs=None, outputs=None))
+        sp_chain(selected_month.change(lambda: None, inputs=None, outputs=None))
+
+        # Feedback immédiat sur les hypothèses éditées par l'utilisateur.
+        # .input limite ces recalculs aux interactions utilisateur et évite les cascades
+        # lors du chargement programmatique du classeur.
+        for comp in [
+            hist_n3,hist_n2,hist_n1,anchors,
+            cession_settings,cession_hist,cession_manual,
+            rec_direct_settings,rec_direct_hist,rec_direct_manual,
+            rec_reass_local_settings,rec_reass_local_hist,rec_reass_local_manual,
+            rec_reass_ifrs_settings,rec_reass_ifrs_hist,rec_reass_ifrs_manual,
+            direct_commission_settings,direct_commission_manual,
+            reass_commission_settings,reass_commission_manual,
+            direct_dac_settings,direct_dac_manual,reass_dac_settings,reass_dac_manual,
+        ]:
+            full_chain(comp.input(lambda: None, inputs=None, outputs=None))
+
+        full_chain(apply_branch_edits.click(
             apply_branch_table,
             [branch_editor,branch_reference,selected_branch,view,gross_manual,cession_manual,rec_direct_manual,rec_reass_local_manual,rec_reass_ifrs_manual],
             [gross_manual,cession_manual,rec_direct_manual,rec_reass_local_manual,rec_reass_ifrs_manual],
-        ).then(run_projection, inputs=inputs, outputs=outputs).then(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-
-        reset_branch_edits.click(
+        ))
+        full_chain(reset_branch_edits.click(
             reset_branch_overrides,
             [selected_branch,gross_manual,cession_manual,rec_direct_manual,rec_reass_local_manual,rec_reass_ifrs_manual],
             [gross_manual,cession_manual,rec_direct_manual,rec_reass_local_manual,rec_reass_ifrs_manual],
-        ).then(run_projection, inputs=inputs, outputs=outputs).then(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
+        ))
 
-        apply_direct_commission.click(apply_point_override, [direct_commission_manual, commission_point_branch, commission_point_month, direct_commission_override], [direct_commission_manual]).then(run_projection, inputs=inputs, outputs=outputs).then(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        apply_reass_commission.click(apply_point_override, [reass_commission_manual, commission_point_branch, commission_point_month, reass_commission_override], [reass_commission_manual]).then(run_projection, inputs=inputs, outputs=outputs).then(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-
+        full_chain(apply_direct_commission.click(apply_point_override, [direct_commission_manual,commission_point_branch,commission_point_month,direct_commission_override], [direct_commission_manual]))
+        full_chain(apply_reass_commission.click(apply_point_override, [reass_commission_manual,commission_point_branch,commission_point_month,reass_commission_override], [reass_commission_manual]))
         def clear_comm_point(dc, rc, branch, month):
             return clear_point_override(dc,branch,month), clear_point_override(rc,branch,month)
-        clear_commission_point.click(clear_comm_point, [direct_commission_manual,reass_commission_manual,commission_point_branch,commission_point_month], [direct_commission_manual,reass_commission_manual]).then(run_projection, inputs=inputs, outputs=outputs).then(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
+        full_chain(clear_commission_point.click(clear_comm_point,[direct_commission_manual,reass_commission_manual,commission_point_branch,commission_point_month],[direct_commission_manual,reass_commission_manual]))
 
-        # Pilotage S/P : recalcul immédiat des charges et du résultat technique.
-        sp_recalc.click(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        sp_month.change(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        locked_branches.change(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        portfolio_mode.change(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        portfolio_ex_start.change(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        portfolio_ex_end.change(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        portfolio_global_start.change(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        portfolio_global_end.change(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        sp_ex_settings.change(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        sp_global_settings.change(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        portfolio_manual.change(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        sp_ex_manual.change(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        sp_global_manual.change(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
+        # S/P changes: charges then FG/financial.
+        for comp in [locked_branches,portfolio_mode,portfolio_ex_start,portfolio_ex_end,portfolio_global_start,portfolio_global_end,
+                     sp_ex_settings,sp_global_settings,portfolio_manual,sp_ex_manual,sp_global_manual]:
+            sp_chain(comp.change(lambda: None, inputs=None, outputs=None))
+        sp_chain(apply_sp_edits.click(apply_sp_branch_editor,[sp_branch_editor,sp_branch_reference,selected_branch,sp_ex_manual,sp_global_manual],[sp_ex_manual,sp_global_manual]))
+        sp_chain(reset_sp_edits.click(reset_sp_branch,[selected_branch,sp_ex_manual,sp_global_manual],[sp_ex_manual,sp_global_manual]))
 
-        apply_sp_edits.click(
-            apply_sp_branch_editor,
-            [sp_branch_editor,sp_branch_reference,selected_branch,sp_ex_manual,sp_global_manual],
-            [sp_ex_manual,sp_global_manual],
-        ).then(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
-        reset_sp_edits.click(
-            reset_sp_branch,[selected_branch,sp_ex_manual,sp_global_manual],[sp_ex_manual,sp_global_manual]
-        ).then(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
+        # FG / financier ne nécessite pas de recalcul des modules précédents.
+        for comp in [fg_start,fg_end,fg_rate_settings,fg_rate_manual,pf_start,pf_end,pf_product_manual,pf_charge_manual]:
+            comp.change(run_fg_projection, inputs=fg_inputs, outputs=fg_outputs)
 
-        demo.load(run_projection, inputs=inputs, outputs=outputs).then(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs)
+        demo.load(run_projection, inputs=inputs, outputs=outputs).then(run_sp_projection, inputs=sp_inputs, outputs=sp_outputs).then(run_fg_projection, inputs=fg_inputs, outputs=fg_outputs)
     return demo
 
 

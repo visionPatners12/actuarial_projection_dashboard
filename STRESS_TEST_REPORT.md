@@ -53,3 +53,9 @@ Campagne exécutée le 26 septembre 2026 sur les moteurs :
 Aucune rupture des identités critiques testées n'a été détectée. Les scénarios économiquement impossibles ou incohérents sont bornés ou signalés par des diagnostics plutôt que de provoquer un crash.
 
 Ce rapport valide la robustesse technique du moteur sur les périmètres déjà implémentés. Il ne remplace pas la validation actuarielle des hypothèses métier qui seront ajoutées dans les prochains modules (paiements, SAP, IBNR, etc.).
+
+## Extension V5 — Frais généraux & financier
+- 41 tests non-stress de l'ensemble du moteur : OK.
+- 100 scénarios aléatoires supplémentaires sur la nouvelle brique FG/financier : OK.
+- Identités contrôlées : taux FG, résultat après FG, résultat financier net, résultat après financier.
+- Construction Gradio et démarrage HTTP validés.

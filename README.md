@@ -1,20 +1,18 @@
-# Projection technique assurance — Primes, Commissions & S/P
+# Cockpit actuariel V6 — UX optimisée
 
-Application Gradio de projection mensuelle par branche.
+Application Gradio de projection technique assurance.
 
-## Modules disponibles
-- Primes Direct / Réassurance / Net
-- REC sur variation et primes acquises
-- Commissions Direct et récupération de commission Réassurance
-- DAC IFRS
-- S/P exercice et S/P global
-- Optimisation vers une cible S/P portefeuille avec branches verrouillées et bandes de tolérance
-- Charges exercice / antérieurs / globale
-- Résultat technique avant frais généraux, Local et IFRS
+## Navigation
+Données → Primes → Commissions & DAC → S/P & Charges → FG & Financier → Synthèse → Contrôles.
 
-## Déploiement Render
-Build command :
+Le contexte Branche / Local-IFRS / Période est global. Les écrans métier utilisent une vue branche compacte, une vue portefeuille dédiée et des paramètres avancés repliés.
+
+## Render
+Build command:
 `pip install --upgrade pip && pip install -r requirements.txt`
 
-Start command :
+Start command:
 `python app.py`
+
+## Fichier d'hypothèses
+Le modèle Excel est embarqué sous `hypotheses_projection_v5.xlsx` et reste importable depuis l'onglet Données.

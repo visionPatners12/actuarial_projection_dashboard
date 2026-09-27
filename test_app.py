@@ -25,10 +25,14 @@ def _anchors():
 
 def test_template_import_blank():
     out=app.load_template(app.TEMPLATE_PATH)
-    assert len(out)==10
+    assert len(out)==14
     assert out[0].shape==(12,9)
     assert out[3].shape==(8,8)
     assert out[4].shape==(8,len(app.COMMISSION_ANCHOR_COLS))
+    assert out[9].shape==(len(app.FG_COMPONENTS),9)
+    assert out[10].shape==(len(app.FG_COMPONENTS),9)
+    assert out[11].shape==(len(app.PF_REVENUES)+len(app.PF_CHARGES),9)
+    assert out[12].shape==(len(app.PF_REVENUES)+len(app.PF_CHARGES),9)
 
 
 def test_ui_projection_outputs_all_branches_and_months():
@@ -41,11 +45,13 @@ def test_ui_projection_outputs_all_branches_and_months():
         app.default_rate_settings('rec'),app.blank_month_matrix(),app.blank_month_matrix(),
         'Local','Automobile'
     )
-    assert len(outs)==38
+    assert len(outs)==39
     for idx in range(3,16):
         df=outs[idx]
         assert list(df.columns)==['Mois']+app.BRANCHES
         assert len(df)==12
+    assert len(outs[-1]) == 12
+    assert 'Taux commission CPC (%)' in outs[-1].columns
 
 
 def test_ifrs_direct_rec_is_cima72_divided_by_072():
